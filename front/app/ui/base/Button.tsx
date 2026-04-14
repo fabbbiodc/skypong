@@ -8,7 +8,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary hover:bg-primary-hover text-white active:bg-primary-pressed",
+          "bg-primary hover:bg-primary-hover text-white active:bg-purple-700",
         secondary: "bg-secondary hover:bg-secondary-hover text-white",
         danger: "bg-danger hover:bg-danger-hover text-white",
         ghost:
@@ -19,6 +19,11 @@ const buttonVariants = cva(
         md: "px-4 py-2 text-sm sm:text-base",
         lg: "px-6 py-3 text-base sm:text-lg",
       },
+      font: {
+        display: "font-display",
+        body: "font-sans",
+        mono: "font-mono",
+      },
       state: {
         default: "",
         hover: "hover:scale-105 active:scale-95",
@@ -27,7 +32,6 @@ const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      // Disabled state applies to all variants
       {
         state: "disabled",
         className: "opacity-50 cursor-not-allowed pointer-events-none",
@@ -36,6 +40,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "primary",
       size: "md",
+      font: "display",
       state: "default",
     },
   },
@@ -43,11 +48,13 @@ const buttonVariants = cva(
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
+type ButtonFont = VariantProps<typeof buttonVariants>["font"];
 type ButtonState = VariantProps<typeof buttonVariants>["state"];
 
 interface ButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  font?: ButtonFont;
   state?: ButtonState;
   href?: string;
   className?: string;
@@ -60,6 +67,7 @@ interface ButtonProps {
 export function Button({
   variant = "primary",
   size = "md",
+  font = "display",
   state = "default",
   href,
   className,
@@ -69,7 +77,7 @@ export function Button({
   onClick,
 }: ButtonProps) {
   const buttonClass = cn(
-    buttonVariants({ variant, size, state }),
+    buttonVariants({ variant, size, font, state }),
     disabled && "opacity-50 cursor-not-allowed pointer-events-none",
     className,
   );
