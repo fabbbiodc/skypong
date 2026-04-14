@@ -7,19 +7,19 @@ function clickHandler(event) {
   const formData = new FormData(event.target);
   const selectedMode = formData.get("mode");
   // console.log("Selected mode:", selectedMode);
-  // Aquí puedes manejar la selección del modo de juego
+  // Here you can handle the game mode selection
 }
 
 export default function ModalModeSelector({ close, isModalOpen }) {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
-    // 1. Activamos la clase de animación de salida
+    // 1. Activate exit animation class
     setIsClosing(true);
 
-    // 2. Esperamos a que termine la animación (0.3s según tu config)
+    // 2. Wait for animation to finish (0.3s according to your config)
     setTimeout(() => {
-      onClose(); // 3. Ahora sí, desmontamos el componente
+      onClose(); // 3. Now unmount the component
     }, 300);
   };
   return (

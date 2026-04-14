@@ -12,9 +12,9 @@ export const PLAYER_STATUS = {
 
 function parseDate(dateStr: string): Date {
   if (!dateStr) return new Date();
-  // Si ya tiene T y Z es ISO válido, no tocar
+  // If it already has T and Z, it's valid ISO, don't modify
   if (dateStr.includes("T") || dateStr.endsWith("Z")) return new Date(dateStr);
-  // Si es formato SQLite "2026-03-07 14:05:03", convertir
+  // If it's SQLite format "2026-03-07 14:05:03", convert
   return new Date(dateStr.replace(" ", "T") + "Z");
 }
 

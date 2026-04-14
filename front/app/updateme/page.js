@@ -66,7 +66,7 @@ export default function ProfilePagePrivate() {
         setPlayer(data);
       } catch (err) {
         console.error("Error en fetchMyProfile:", err);
-        setServerError("Error de conexión");
+        setServerError(t.serverError.connectionError);
       } finally {
         setIsLoading(false);
       }

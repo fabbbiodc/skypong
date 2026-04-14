@@ -34,11 +34,11 @@ export default function PlayerDeleteUI() {
       });
 
       if (response.ok) {
-        // Redirigir al inicio o página de despedida
+        // Redirect to home or goodbye page
         logout();
         router.push("/");
       } else {
-        console.error("Error al borrar cuenta");
+        console.error("Error deleting account");
         setIsDeleting(false);
       }
     } catch (error) {
