@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import Grainient from './base/Grainient';
+import { usePathname } from "next/navigation";
+import Grainient from "./base/Grainient";
 
 /** Full-screen animated gradient background shown on all pages except /canvas. */
 export default function GrainientBackground() {
   const pathname = usePathname();
 
-  if (pathname === '/canvas') return null;
+  if (pathname === "/canvas") return null;
 
   return (
     <div className="grainient-bg-wrapper">

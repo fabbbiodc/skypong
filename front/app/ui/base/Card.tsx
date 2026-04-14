@@ -1,30 +1,30 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 const cardVariants = cva(
   // Base styles - white background with responsive padding
-  'bg-white rounded-xl transition-all duration-200',
+  "bg-white rounded-xl transition-all duration-200",
   {
     variants: {
       variant: {
-        default: 'border border-gray-200',
-        elevated: 'shadow-md hover:shadow-lg',
-        bordered: 'border-2 border-primary',
-        ghost: 'border border-transparent hover:border-gray-200',
+        default: "border border-gray-200",
+        elevated: "shadow-md hover:shadow-lg",
+        bordered: "border-2 border-primary",
+        ghost: "border border-transparent hover:border-gray-200",
       },
       padding: {
-        none: 'p-0',
-        sm: 'p-3 md:p-4',
-        md: 'p-4 md:p-6',
-        lg: 'p-6 md:p-8',
+        none: "p-0",
+        sm: "p-3 md:p-4",
+        md: "p-4 md:p-6",
+        lg: "p-6 md:p-8",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      padding: 'md',
+      variant: "default",
+      padding: "md",
     },
-  }
+  },
 );
 
 interface CardProps extends VariantProps<typeof cardVariants> {
@@ -48,7 +48,7 @@ export function Card({
 }: CardProps) {
   const cardClass = cn(
     cardVariants({ variant, padding, className }),
-    onClick && 'cursor-pointer hover:border-primary'
+    onClick && "cursor-pointer hover:border-primary",
   );
 
   return (
@@ -63,9 +63,7 @@ export function Card({
               </h3>
             )}
             {subtitle && (
-              <p className="text-sm md:text-base text-muted mt-1">
-                {subtitle}
-              </p>
+              <p className="text-sm md:text-base text-muted mt-1">{subtitle}</p>
             )}
           </div>
         </div>

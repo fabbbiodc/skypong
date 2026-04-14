@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useTranslation } from '../../hooks/use-translation';
+import { useTranslation } from "../../hooks/use-translation";
 
 export type Room = {
   id: string;
@@ -30,29 +30,33 @@ export default function JoinRoom({
 
   return (
     <section className="join-room">
-      <h2>{t?.play?.roomListTitle || 'Room list'}</h2>
+      <h2>{t?.play?.roomListTitle || "Room list"}</h2>
 
       <button type="button" onClick={onRefresh} disabled={isLoading}>
-        {isLoading ? (t?.signInPage?.loading ?? 'Loading...') : (t?.signInPage?.refresh || 'Refresh')}
+        {isLoading
+          ? (t?.signInPage?.loading ?? "Loading...")
+          : t?.signInPage?.refresh || "Refresh"}
       </button>
 
       {error ? <p>{error}</p> : null}
 
-      {!isLoading && rooms.length === 0 ? <p>{t?.play?.noRoomAvailable || 'No rooms available'}</p> : null}
+      {!isLoading && rooms.length === 0 ? (
+        <p>{t?.play?.noRoomAvailable || "No rooms available"}</p>
+      ) : null}
 
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>
             <span>{room.name}</span>
             <button type="button" onClick={() => onJoin(room.id)}>
-              {t?.play?.JoinRoomBtn || 'Join Room'}
+              {t?.play?.JoinRoomBtn || "Join Room"}
             </button>
           </li>
         ))}
       </ul>
 
       <button type="button" onClick={onBack}>
-        {t?.navigation?.goBack ?? 'Back'}
+        {t?.navigation?.goBack ?? "Back"}
       </button>
     </section>
   );

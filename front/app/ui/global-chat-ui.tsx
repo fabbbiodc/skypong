@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useAuth } from '../context/auth-context';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "../context/auth-context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import { useTranslation } from '../hooks/use-translation';
-import { Button } from './base/Button';
-import { TextField } from './base/TextField';
-import { Badge } from './base/Badge';
-import { Card } from './base/Card';
-import { cn } from '../lib/utils';
+import { useTranslation } from "../hooks/use-translation";
+import { Button } from "./base/Button";
+import { TextField } from "./base/TextField";
+import { Badge } from "./base/Badge";
+import { Card } from "./base/Card";
+import { cn } from "../lib/utils";
 
 type ChatMessage = {
   sender: string;
@@ -20,7 +20,7 @@ type ChatMessage = {
 export default function GlobalChatUI() {
   const { user, authloading } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [connected, setConnected] = useState(false);
   const [isMinimized, setIsMinimized] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -30,14 +30,14 @@ export default function GlobalChatUI() {
   const { t } = useTranslation();
 
   const wsUrl = useMemo(() => {
-    if (typeof window === 'undefined') return '';
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    if (typeof window === "undefined") return "";
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     return `${protocol}//${window.location.host}/api/chat/ws`;
   }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
@@ -58,12 +58,13 @@ export default function GlobalChatUI() {
       socket.onclose = (event) => {
         if (!active) return;
         setConnected(false);
-        
+
         // Only reconnect if close wasn't intentional and code indicates we should retry
-        const shouldReconnect = !intentionalCloseRef.current && 
-                                event.code !== 1000 && 
-                                event.code !== 1001;
-        
+        const shouldReconnect =
+          !intentionalCloseRef.current &&
+          event.code !== 1000 &&
+          event.code !== 1001;
+
         if (shouldReconnect) {
           reconnectRef.current = window.setTimeout(connect, 2000);
         }
@@ -75,8 +76,11 @@ export default function GlobalChatUI() {
           intentionalCloseRef.current = true;
         }
         // Close with proper code to avoid browser error messages
-        if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
-          socket.close(1000, 'Connection error');
+        if (
+          socket.readyState === WebSocket.OPEN ||
+          socket.readyState === WebSocket.CONNECTING
+        ) {
+          socket.close(1000, "Connection error");
         }
       };
 
@@ -105,12 +109,12 @@ export default function GlobalChatUI() {
         socketRef.current = null;
 
         if (socket.readyState === WebSocket.OPEN) {
-          socket.close(1000, 'Component unmounting');
+          socket.close(1000, "Component unmounting");
         } else if (socket.readyState === WebSocket.CONNECTING) {
           // Replace handlers with no-ops to prevent state updates and reconnection,
           // then close cleanly once the handshake completes. This avoids the browser
           // warning "WebSocket is closed before the connection is established."
-          socket.onopen = () => socket.close(1000, 'Component unmounting');
+          socket.onopen = () => socket.close(1000, "Component unmounting");
           socket.onerror = () => {};
           socket.onclose = () => {};
           socket.onmessage = () => {};
@@ -126,25 +130,29 @@ export default function GlobalChatUI() {
 
   const sendMessage = () => {
     const value = text.trim();
-    if (!value || !socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
+    if (
+      !value ||
+      !socketRef.current ||
+      socketRef.current.readyState !== WebSocket.OPEN
+    ) {
       return;
     }
 
     socketRef.current.send(JSON.stringify({ text: value }));
-    setText('');
+    setText("");
   };
 
   return (
     <section className="fixed right-4 bottom-4 z-30">
       {isMinimized ? (
-        <Button 
+        <Button
           variant="primary"
           size="md"
           font="display"
           onClick={() => setIsMinimized(false)}
           className={cn(
             "shadow-lg hover:shadow-xl transition-all duration-300",
-            "gap-2"
+            "gap-2",
           )}
           aria-label="Open global chat"
         >
@@ -152,8 +160,8 @@ export default function GlobalChatUI() {
           <span>Chat</span>
         </Button>
       ) : (
-        <Card 
-          variant="elevated" 
+        <Card
+          variant="elevated"
           padding="sm"
           className="w-[min(320px,calc(100vw-2rem))] shadow-2xl animate-fade-in"
         >
@@ -162,15 +170,15 @@ export default function GlobalChatUI() {
             <div className="flex items-center gap-2">
               <FontAwesomeIcon icon={faCommentDots} className="text-primary" />
               <span className="font-display font-bold text-gray-900">
-                {t?.chat?.title || 'Global Chat'}
+                {t?.chat?.title || "Global Chat"}
               </span>
-              <Badge 
-                variant={connected ? 'success' : 'neutral'} 
-                size="sm" 
+              <Badge
+                variant={connected ? "success" : "neutral"}
+                size="sm"
                 shape="pill"
                 className="animate-pulse"
               >
-                {connected ? '●' : '○'}
+                {connected ? "●" : "○"}
               </Badge>
             </div>
             <Button
@@ -188,24 +196,23 @@ export default function GlobalChatUI() {
           <div className="h-[220px] overflow-y-auto rounded-lg bg-gray-50 border border-gray-200 p-3 mb-3 scroll-smooth">
             {messages.length === 0 ? (
               <p className="text-sm text-gray-500 text-center py-4">
-                {t?.chat?.noMessages || 'No messages yet. Start the conversation!'}
+                {t?.chat?.noMessages ||
+                  "No messages yet. Start the conversation!"}
               </p>
             ) : (
               <div className="space-y-2">
                 {messages.map((message, index) => (
-                  <div 
-                    key={`${message.timestamp || 'no-ts'}-${index}`} 
+                  <div
+                    key={`${message.timestamp || "no-ts"}-${index}`}
                     className={cn(
                       "pb-2 border-b border-gray-200 last:border-0",
-                      "break-words text-sm"
+                      "break-words text-sm",
                     )}
                   >
                     <span className="font-semibold text-primary">
                       {message.sender}:
-                    </span>{' '}
-                    <span className="text-gray-700">
-                      {message.text}
-                    </span>
+                    </span>{" "}
+                    <span className="text-gray-700">{message.text}</span>
                   </div>
                 ))}
                 <div ref={messagesEndRef} />
@@ -214,7 +221,7 @@ export default function GlobalChatUI() {
           </div>
 
           {/* Input Form */}
-          <form 
+          <form
             onSubmit={(e) => {
               e.preventDefault();
               sendMessage();
@@ -224,27 +231,27 @@ export default function GlobalChatUI() {
             <TextField
               value={text}
               onChange={setText}
-              placeholder={t?.chat?.placeholder || 'Type message...'}
+              placeholder={t?.chat?.placeholder || "Type message..."}
               variant="outlined"
               size="sm"
               className="flex-1"
               disabled={!connected}
             />
-            <Button 
+            <Button
               type="submit"
               variant="primary"
               size="sm"
               disabled={!connected || !text.trim()}
               className="shrink-0"
             >
-              {t?.chat?.send || 'Send'}
+              {t?.chat?.send || "Send"}
             </Button>
           </form>
 
           {/* Connection Status */}
           {!connected && (
             <p className="text-xs text-danger mt-2 text-center">
-              {t?.chat?.disconnected || 'Disconnected. Reconnecting...'}
+              {t?.chat?.disconnected || "Disconnected. Reconnecting..."}
             </p>
           )}
         </Card>

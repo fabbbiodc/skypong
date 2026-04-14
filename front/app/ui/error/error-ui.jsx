@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ErrorBox component using design system error classes
@@ -9,27 +9,28 @@
  */
 
 const sizeClasses = {
-  mini: 'text-xs',
-  small: 'text-sm',
-  medium: 'text-base',
-  big: 'text-lg',
-  extra: 'text-xl',
+  mini: "text-xs",
+  small: "text-sm",
+  medium: "text-base",
+  big: "text-lg",
+  extra: "text-xl",
 };
 
 const boxClasses = {
-  none: '',
-  regular: 'rounded-lg border border-red-500 bg-red-50 p-3',
+  none: "",
+  regular: "rounded-lg border border-red-500 bg-red-50 p-3",
 };
 
-export default function ErrorBox({ size = 'small', box = 'none', display, msg }) {
+export default function ErrorBox({
+  size = "small",
+  box = "none",
+  display,
+  msg,
+}) {
   if (!msg) return null;
 
   const sizeClass = sizeClasses[size] || sizeClasses.small;
   const boxClass = boxClasses[box] || boxClasses.none;
 
-  return (
-    <p className={`error-message ${sizeClass} ${boxClass}`}>
-      {msg}
-    </p>
-  );
+  return <p className={`error-message ${sizeClass} ${boxClass}`}>{msg}</p>;
 }

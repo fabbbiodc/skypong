@@ -4,12 +4,12 @@ import { Mesh, Scene } from "@babylonjs/core";
  * Override/add visual or physics logic as required in platform-specific subclasses.
  */
 export declare class BaseBall {
-    mesh: Mesh;
-    constructor(scene: Scene);
-    getPosition(): {
-        x: number;
-        y: number;
-        z: number;
-    };
-    setEnabled(enabled: boolean): void;
+  mesh: Mesh;
+  constructor(scene: Scene);
+  getPosition(): {
+    x: number;
+    y: number;
+    z: number;
+  };
+  setEnabled(enabled: boolean): void;
 }

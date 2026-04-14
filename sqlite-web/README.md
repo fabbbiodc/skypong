@@ -49,7 +49,7 @@ The service can display **multiple databases simultaneously**.
 # Technologies
 
 | Technology           | Purpose                                     |
-|----------------------|---------------------------------------------| 
+| -------------------- | ------------------------------------------- |
 | Python 3.12 (Alpine) | Runtime environment                         |
 | sqlite-web           | Web UI for SQLite databases                 |
 | Flask                | Underlying web framework used by sqlite-web |
@@ -129,7 +129,7 @@ sqlite_web --host=0.0.0.0 --port=$PORT <databases>
 # Environment Variables
 
 | Variable | Default | Description        |
-|----------|---------|--------------------|
+| -------- | ------- | ------------------ |
 | PORT     | 8080    | Web interface port |
 
 Example:

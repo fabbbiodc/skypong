@@ -12,11 +12,21 @@ export class GameUIManager {
   public gameOverOverlay: GameOverOverlay;
   public pauseOverlay: PauseOverlay;
 
-  constructor(scene: Scene, config: GameSessionConfig, onBackToMenu: () => void, onResume?: () => void, onRetry?: () => void) {
-    this.texture = AdvancedDynamicTexture.CreateFullscreenUI("GameUI", true, scene);
-    
+  constructor(
+    scene: Scene,
+    config: GameSessionConfig,
+    onBackToMenu: () => void,
+    onResume?: () => void,
+    onRetry?: () => void,
+  ) {
+    this.texture = AdvancedDynamicTexture.CreateFullscreenUI(
+      "GameUI",
+      true,
+      scene,
+    );
+
     // Only apply idealWidth scaling on desktop/tablet (width >= 768px)
-    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    if (typeof window !== "undefined" && window.innerWidth >= 768) {
       this.texture.idealWidth = 1920;
     }
 
@@ -24,7 +34,7 @@ export class GameUIManager {
       (this.texture.layer as any).renderingGroupId = 2;
     }
 
-    const language: Language = config.language ?? 'en';
+    const language: Language = config.language ?? "en";
 
     this.pauseOverlay = new PauseOverlay(
       this.texture,
@@ -40,7 +50,13 @@ export class GameUIManager {
     );
 
     this.hud = new GameHUD(this.texture, language, config.gameMode);
-    this.gameOverOverlay = new GameOverOverlay(this.texture, onBackToMenu, config, onRetry, language);
+    this.gameOverOverlay = new GameOverOverlay(
+      this.texture,
+      onBackToMenu,
+      config,
+      onRetry,
+      language,
+    );
   }
 
   public showGameHUD(player1Name: string, player2Name: string): void {

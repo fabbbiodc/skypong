@@ -1,96 +1,95 @@
 {
-    "annotations": { "list": [] },
-    "description": "Microservices latency and error breakdown (Fastify HTTP metrics).",
-    "editable": true,
-    "graphTooltip": 1,
-    "id": null,
-    "panels": [
-      {
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
-        "gridPos": { "h": 7, "w": 24, "x": 0, "y": 0 },
-        "id": 1,
-        "targets": [
-          {
-            "refId": "A",
-            "expr": "topk(10, sum by (job, route, method, status_code) (rate(http_request_duration_seconds_count[1m])))",
-            "legendFormat": "{{job}} {{method}} {{route}} {{status_code}}"
-          }
-        ],
-        "title": "Top routes by RPS (last 1m)",
-        "type": "timeseries"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
-        "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
-        "id": 2,
-        "targets": [
-          {
-            "refId": "A",
-            "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
-            "legendFormat": "p95 {{job}}"
-          },
-          {
-            "refId": "B",
-            "expr": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
-            "legendFormat": "p99 {{job}}"
-          }
-        ],
-        "title": "Latency p95 / p99 by service",
-        "type": "timeseries"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
-        "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
-        "id": 3,
-        "targets": [
-          {
-            "refId": "A",
-            "expr": "histogram_quantile(0.95, sum by (le, job, route, method) (rate(http_request_duration_seconds_bucket[5m])))",
-            "legendFormat": "{{job}} {{method}} {{route}}"
-          }
-        ],
-        "title": "Latency p95 by route",
-        "type": "timeseries"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
-        "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] },
-        "gridPos": { "h": 7, "w": 12, "x": 0, "y": 15 },
-        "id": 4,
-        "targets": [
-          {
-            "refId": "A",
-            "expr": "100 * sum by (job) (rate(http_request_duration_seconds_count{status_code=~\"5..\"}[5m])) / sum by (job) (rate(http_request_duration_seconds_count[5m]))",
-            "legendFormat": "{{job}}"
-          }
-        ],
-        "title": "5xx error rate (%)",
-        "type": "timeseries"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
-        "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
-        "gridPos": { "h": 7, "w": 12, "x": 12, "y": 15 },
-        "id": 5,
-        "targets": [
-          {
-            "refId": "A",
-            "expr": "sum by (job, status_code) (rate(http_request_duration_seconds_count{status_code=~\"4..|5..\"}[1m]))",
-            "legendFormat": "{{job}} {{status_code}}"
-          }
-        ],
-        "title": "Errors RPS (4xx/5xx) by service",
-        "type": "timeseries"
-      }
-    ],
-    "refresh": "10s",
-    "schemaVersion": 39,
-    "tags": [ "transcendence", "latency" ],
-    "time": { "from": "now-15m", "to": "now" },
-    "title": "Microservices Latency (Transcendence)",
-    "uid": "transcendence_microservices_latency",
-    "version": 1
-  }
-  
+  "annotations": { "list": [] },
+  "description": "Microservices latency and error breakdown (Fastify HTTP metrics).",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 7, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, sum by (job, route, method, status_code) (rate(http_request_duration_seconds_count[1m])))",
+          "legendFormat": "{{job}} {{method}} {{route}} {{status_code}}"
+        }
+      ],
+      "title": "Top routes by RPS (last 1m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
+      "id": 2,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95 {{job}}"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p99 {{job}}"
+        }
+      ],
+      "title": "Latency p95 / p99 by service",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
+      "id": 3,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, job, route, method) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{job}} {{method}} {{route}}"
+        }
+      ],
+      "title": "Latency p95 by route",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 15 },
+      "id": 4,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * sum by (job) (rate(http_request_duration_seconds_count{status_code=~\"5..\"}[5m])) / sum by (job) (rate(http_request_duration_seconds_count[5m]))",
+          "legendFormat": "{{job}}"
+        }
+      ],
+      "title": "5xx error rate (%)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 15 },
+      "id": 5,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (job, status_code) (rate(http_request_duration_seconds_count{status_code=~\"4..|5..\"}[1m]))",
+          "legendFormat": "{{job}} {{status_code}}"
+        }
+      ],
+      "title": "Errors RPS (4xx/5xx) by service",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": ["transcendence", "latency"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "Microservices Latency (Transcendence)",
+  "uid": "transcendence_microservices_latency",
+  "version": 1
+}

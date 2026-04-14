@@ -80,7 +80,14 @@ export class GameLoop {
   }
 
   public updateBallPosition(x: number, y: number, z: number): void {
-    if (x === undefined || y === undefined || z === undefined || isNaN(x) || isNaN(y) || isNaN(z)) {
+    if (
+      x === undefined ||
+      y === undefined ||
+      z === undefined ||
+      isNaN(x) ||
+      isNaN(y) ||
+      isNaN(z)
+    ) {
       return;
     }
     this._targetPosition.set(x, y, z);
@@ -88,7 +95,14 @@ export class GameLoop {
   }
 
   public updateBallVelocity(vx: number, vy: number, vz: number): void {
-    if (vx === undefined || vy === undefined || vz === undefined || isNaN(vx) || isNaN(vy) || isNaN(vz)) {
+    if (
+      vx === undefined ||
+      vy === undefined ||
+      vz === undefined ||
+      isNaN(vx) ||
+      isNaN(vy) ||
+      isNaN(vz)
+    ) {
       return;
     }
     this._targetVelocity.set(vx, vy, vz);
@@ -98,7 +112,10 @@ export class GameLoop {
     if (x === undefined || z === undefined || isNaN(x) || isNaN(z)) {
       return;
     }
-    const target = paddleIndex === 1 ? this._targetPaddlePosition : this._targetPaddle2Position;
+    const target =
+      paddleIndex === 1
+        ? this._targetPaddlePosition
+        : this._targetPaddle2Position;
     const paddleObj = paddleIndex === 1 ? this._paddle : this._paddle2;
     target.set(x, paddleObj.mesh.position.y, z);
   }
@@ -118,11 +135,11 @@ export class GameLoop {
   public setGameOver(isGameOver: boolean): void {
     this._isGameOver = isGameOver;
   }
-  
+
   public pause(): void {
     this._isPaused = true;
   }
-  
+
   public resume(): void {
     this._isPaused = false;
   }
@@ -138,7 +155,7 @@ export class GameLoop {
   public notifyCollision(): void {
     this._lastCollisionAt = performance.now();
   }
-  
+
   public setInitialStates(
     ballEnabled: boolean | undefined,
     paddle1Enabled: boolean | undefined,
@@ -183,10 +200,11 @@ export class GameLoop {
     if (this._isPaused) {
       return;
     }
-    
+
     const deltaTime = this._engine.getDeltaTime();
     const collisionDetected =
-      performance.now() - this._lastCollisionAt < CLIENT_TIMING.COLLISION.WINDOW_MS;
+      performance.now() - this._lastCollisionAt <
+      CLIENT_TIMING.COLLISION.WINDOW_MS;
     const now = performance.now();
 
     // Calculate extrapolation: predict where ball will be based on velocity
@@ -194,18 +212,18 @@ export class GameLoop {
     // NOTE: Server velocity is in units-per-frame, must convert to units-per-second
     const SERVER_FPS = 60; // Server physics update rate
     const timeSinceUpdate = now - this._lastServerUpdateTime;
-    
+
     // During collision window, reduce extrapolation to avoid overshooting the correction
     // Outside collision window, extrapolate more aggressively up to 150ms
     const maxExtrapolation = collisionDetected ? 50 : 150; // Less aggressive during collision
     const extrapolationTime = Math.min(timeSinceUpdate, maxExtrapolation);
-    
+
     const extrapolatedPosition = this._targetPosition.clone();
-    
+
     // Arena bounds for wall reflection (ball center must stay within these)
     const minX = GMCN.BORDERS.LEFT_EDGE + GMCN.BALL.RADIUS;
     const maxX = GMCN.BORDERS.RIGHT_EDGE - GMCN.BALL.RADIUS;
-    
+
     // Extrapolate with wall reflection: simulate bounces off side walls
     // instead of naively projecting past them (which caused "bounce away from edge" artifacts)
     if (extrapolationTime > 0) {
@@ -214,14 +232,14 @@ export class GameLoop {
       const vxPerSec = this._targetVelocity.x * SERVER_FPS;
       const vyPerSec = this._targetVelocity.y * SERVER_FPS;
       const vzPerSec = this._targetVelocity.z * SERVER_FPS;
-      
+
       // Y and Z: no walls to reflect off, extrapolate linearly
       extrapolatedPosition.y += vyPerSec * extrapolationAmount;
       extrapolatedPosition.z += vzPerSec * extrapolationAmount;
-      
+
       // X axis: simulate wall reflections (mirrors server physics)
       let newX = extrapolatedPosition.x + vxPerSec * extrapolationAmount;
-      
+
       // Reflect off walls up to 3 times (handles very high speeds)
       for (let i = 0; i < 3; i++) {
         if (newX < minX) {
@@ -232,18 +250,24 @@ export class GameLoop {
           break; // Within bounds, done
         }
       }
-      
+
       extrapolatedPosition.x = newX;
     }
-    
-    // Safety clamp: ensure extrapolated position never exceeds arena bounds
-    extrapolatedPosition.x = Math.max(minX, Math.min(maxX, extrapolatedPosition.x));
 
-    if (++this._speedUpdateCounter >= NETWORK.SYNC.SPEED_UPDATE_INTERVAL_FRAMES) {
+    // Safety clamp: ensure extrapolated position never exceeds arena bounds
+    extrapolatedPosition.x = Math.max(
+      minX,
+      Math.min(maxX, extrapolatedPosition.x),
+    );
+
+    if (
+      ++this._speedUpdateCounter >= NETWORK.SYNC.SPEED_UPDATE_INTERVAL_FRAMES
+    ) {
       const elapsed = (now - this._lastSpeedSampleAt) / 1000;
       this._speed =
         elapsed > 0
-          ? Vector3.Distance(this._ball.mesh.position, this._lastBallPosition) / elapsed
+          ? Vector3.Distance(this._ball.mesh.position, this._lastBallPosition) /
+            elapsed
           : 0;
       this._lastBallPosition.copyFrom(this._ball.mesh.position);
       this._lastSpeedSampleAt = now;
@@ -259,25 +283,38 @@ export class GameLoop {
     // Reduces the visual gap between render position and actual position at bounce time
     const distToWall = Math.min(
       Math.abs(extrapolatedPosition.x - minX),
-      Math.abs(extrapolatedPosition.x - maxX)
+      Math.abs(extrapolatedPosition.x - maxX),
     );
     const nearWallBoost = distToWall < 0.3 ? 1.5 : 1.0;
 
-    const ballLerpFactor = 1 - Math.exp(-ballSmoothingSpeed * nearWallBoost * (deltaTime / 1000));
-    const paddleLerpFactor = 1 - Math.exp(-paddleSmoothingSpeed * (deltaTime / 1000));
+    const ballLerpFactor =
+      1 - Math.exp(-ballSmoothingSpeed * nearWallBoost * (deltaTime / 1000));
+    const paddleLerpFactor =
+      1 - Math.exp(-paddleSmoothingSpeed * (deltaTime / 1000));
 
     // Pass extrapolated position and velocity to ball
     this._ball.update(
-      extrapolatedPosition, 
-      ballLerpFactor, 
-      this._isBallEnabled, 
+      extrapolatedPosition,
+      ballLerpFactor,
+      this._isBallEnabled,
       deltaTime,
-      this._targetVelocity
+      this._targetVelocity,
     );
-    this._paddle.update(this._targetPaddlePosition, paddleLerpFactor, this._isPaddle1Enabled);
-    this._paddle2.update(this._targetPaddle2Position, paddleLerpFactor, this._isPaddle2Enabled);
+    this._paddle.update(
+      this._targetPaddlePosition,
+      paddleLerpFactor,
+      this._isPaddle1Enabled,
+    );
+    this._paddle2.update(
+      this._targetPaddle2Position,
+      paddleLerpFactor,
+      this._isPaddle2Enabled,
+    );
 
-    if (++this._inputSendCounter >= NETWORK.SYNC.INPUT_SEND_INTERVAL_FRAMES && !this._isGameOver) {
+    if (
+      ++this._inputSendCounter >= NETWORK.SYNC.INPUT_SEND_INTERVAL_FRAMES &&
+      !this._isGameOver
+    ) {
       this._roomManager.sendInput({
         paddle1: this._inputController.getPaddle1InputState(),
         paddle2: this._inputController.getPaddle2InputState(),

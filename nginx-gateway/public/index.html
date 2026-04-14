@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
@@ -49,14 +49,18 @@
     <main>
       <h1>Architecture ready ✅</h1>
       <p>
-        This Nginx gateway serves this static frontend and routes the APIs and secure
-        WebSocket channel (WSS) to the game, auth, profiles,
-        and statistics microservices.
+        This Nginx gateway serves this static frontend and routes the APIs and
+        secure WebSocket channel (WSS) to the game, auth, profiles, and
+        statistics microservices.
       </p>
       <ul>
         <li><code>/api/auth</code> → auth-service</li>
-        <li><code>/api/game</code> + <code>/ws</code> → game-service (Colyseus)</li>
-        <li><code>/game-engine</code> → game-frontend (cliente propio del engine)</li>
+        <li>
+          <code>/api/game</code> + <code>/ws</code> → game-service (Colyseus)
+        </li>
+        <li>
+          <code>/game-engine</code> → game-frontend (cliente propio del engine)
+        </li>
         <li><code>/api/profile</code> → profile-service</li>
         <li><code>/api/statistics</code> → statistics-service</li>
       </ul>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useTranslation } from '../../hooks/use-translation';
+import { useState } from "react";
+import { useTranslation } from "../../hooks/use-translation";
 
 type Props = {
   onCreate: (roomName: string) => void;
@@ -10,11 +10,16 @@ type Props = {
   isBusy?: boolean;
 };
 
-export default function CreateRoom({ onCreate, onBack, error = null, isBusy = false }: Props) {
+export default function CreateRoom({
+  onCreate,
+  onBack,
+  error = null,
+  isBusy = false,
+}: Props) {
   const { t } = useTranslation();
-  const [roomName, setRoomName] = useState('');
-  const createLabel = t?.gameMode?.remote?.title ?? 'Create room';
-  const backLabel = t?.navigation?.goBack ?? 'Back';
+  const [roomName, setRoomName] = useState("");
+  const createLabel = t?.gameMode?.remote?.title ?? "Create room";
+  const backLabel = t?.navigation?.goBack ?? "Back";
 
   const canSubmit = roomName.trim().length > 0 && !isBusy;
 
@@ -25,13 +30,17 @@ export default function CreateRoom({ onCreate, onBack, error = null, isBusy = fa
       <input
         value={roomName}
         onChange={(event) => setRoomName(event.target.value)}
-        placeholder={t?.game?.roomNameField || 'Room Name'}
+        placeholder={t?.game?.roomNameField || "Room Name"}
         disabled={isBusy}
       />
 
       {error ? <p>{error}</p> : null}
 
-      <button type="button" onClick={() => onCreate(roomName.trim())} disabled={!canSubmit}>
+      <button
+        type="button"
+        onClick={() => onCreate(roomName.trim())}
+        disabled={!canSubmit}
+      >
         {createLabel}
       </button>
 

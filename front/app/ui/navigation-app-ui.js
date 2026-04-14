@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,6 @@ import { useAuth } from "../context/auth-context";
 import { Button } from "./base/Button";
 import { Avatar } from "./base/Avatar";
 import SkypongLogo from "./skypong-logo.js";
-
 
 export default function NavigationAppUI({
   home,
@@ -31,17 +30,20 @@ export default function NavigationAppUI({
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
-          
+
           // Show nav when scrolling up or at top
           if (currentScrollY < lastScrollY.current || currentScrollY < 10) {
             setIsNavVisible(true);
-          } 
+          }
           // Hide nav when scrolling down (after 50px to avoid jitter)
-          else if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+          else if (
+            currentScrollY > lastScrollY.current &&
+            currentScrollY > 50
+          ) {
             setIsNavVisible(false);
             setIsDropdownOpen(false); // Close dropdown when hiding nav
           }
-          
+
           lastScrollY.current = currentScrollY;
           ticking.current = false;
         });
@@ -49,10 +51,10 @@ export default function NavigationAppUI({
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -65,18 +67,18 @@ export default function NavigationAppUI({
     };
 
     if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
 
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     await logout();
-    router.push('/');
+    router.push("/");
   };
 
   const handleNavigate = (path) => {
@@ -85,7 +87,9 @@ export default function NavigationAppUI({
   };
 
   return (
-    <nav className={`navigation-app ${isNavVisible ? 'nav-visible' : 'nav-hidden'}`}>
+    <nav
+      className={`navigation-app ${isNavVisible ? "nav-visible" : "nav-hidden"}`}
+    >
       {/* Left side: SKYPONG logo (hidden on homepage) */}
       <SkypongLogo />
 
@@ -98,21 +102,29 @@ export default function NavigationAppUI({
               {t?.navigation?.login}
             </Button>
             <Button href="/signup" variant="primary" size="md" font="display">
-              {t?.navigation?.signUp || 'SignUp'}
+              {t?.navigation?.signUp || "SignUp"}
             </Button>
           </>
         ) : (
           // Logged in users: Avatar with dropdown menu
           <div className="relative" ref={dropdownRef}>
             <div className="text-sm flex items-stretch justify-center p-2">
-
-                <span className="text-right mr-2 flex items-center" dangerouslySetInnerHTML={{ __html: t.user.hi({ name: user?.nickname || 'User', className: "rainbowtext ml-2", url: "/me" }) }}></span>
-                <Avatar
+              <span
+                className="text-right mr-2 flex items-center"
+                dangerouslySetInnerHTML={{
+                  __html: t.user.hi({
+                    name: user?.nickname || "User",
+                    className: "rainbowtext ml-2",
+                    url: "/me",
+                  }),
+                }}
+              ></span>
+              <Avatar
                 src={user?.avatarUrl}
                 fallbackText={user?.nickname || "User"}
                 size="md"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                />
+              />
             </div>
 
             {/* Dropdown menu */}
@@ -124,7 +136,7 @@ export default function NavigationAppUI({
                     variant="primary"
                     size="md"
                     font="body"
-                    onClick={() => handleNavigate('/play')}
+                    onClick={() => handleNavigate("/play")}
                   >
                     {t.navigation.play}
                   </Button>
@@ -132,7 +144,7 @@ export default function NavigationAppUI({
                     variant="ghost"
                     size="md"
                     font="body"
-                    onClick={() => handleNavigate('/me')}
+                    onClick={() => handleNavigate("/me")}
                   >
                     {t.navigation.profile}
                   </Button>
@@ -140,7 +152,7 @@ export default function NavigationAppUI({
                     variant="ghost"
                     size="md"
                     font="body"
-                    onClick={() => handleNavigate('/updateme')}
+                    onClick={() => handleNavigate("/updateme")}
                   >
                     {t.navigation.settings}
                   </Button>
@@ -150,7 +162,7 @@ export default function NavigationAppUI({
                     font="body"
                     onClick={handleLogout}
                   >
-                    {t?.navigation?.logout || 'Logout'}
+                    {t?.navigation?.logout || "Logout"}
                   </Button>
                 </div>
               </>

@@ -6,14 +6,10 @@ import { GMCN } from "@skypong/common/constants";
  * Extend for visuals as necessary in client.
  */
 export class BaseTable {
-    public mesh: Mesh;
+  public mesh: Mesh;
 
-    constructor(scene: Scene, name: string = "sharedTable") {
-        this.mesh = MeshBuilder.CreateBox(
-            name,
-            GMCN.TABLE.SIZE,
-            scene,
-        );
-        this.mesh.position.y = GMCN.TABLE.Y_POSITION;
-    }
+  constructor(scene: Scene, name: string = "sharedTable") {
+    this.mesh = MeshBuilder.CreateBox(name, GMCN.TABLE.SIZE, scene);
+    this.mesh.position.y = GMCN.TABLE.Y_POSITION;
+  }
 }

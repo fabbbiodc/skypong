@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import GameScreen from '../ui/game-front/GameScreen';
-import { decodeGameConfig } from '../lib/game/launch-config';
-import { useTranslation } from '../hooks/use-translation';
+import { useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import GameScreen from "../ui/game-front/GameScreen";
+import { decodeGameConfig } from "../lib/game/launch-config";
+import { useTranslation } from "../hooks/use-translation";
 
 /** Final gameplay route that renders the game canvas with verified configuration. */
 export default function CanvasPage() {
@@ -13,7 +13,7 @@ export default function CanvasPage() {
   const { t } = useTranslation();
 
   const config = useMemo(() => {
-    const encoded = searchParams.get('config') ?? '';
+    const encoded = searchParams.get("config") ?? "";
     try {
       return decodeGameConfig(encoded);
     } catch {
@@ -25,12 +25,15 @@ export default function CanvasPage() {
     return (
       <section>
         <p>{t?.game?.errors.invalidConfiguration}</p>
-        <button type="button" onClick={() => router.replace('/play?error=invalid-config')}>
+        <button
+          type="button"
+          onClick={() => router.replace("/play?error=invalid-config")}
+        >
           {t?.common?.back || "Back"}
         </button>
       </section>
     );
   }
 
-  return <GameScreen config={config} onExit={() => router.replace('/play')} />;
+  return <GameScreen config={config} onExit={() => router.replace("/play")} />;
 }

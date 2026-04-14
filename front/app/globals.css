@@ -9,64 +9,84 @@
      - --color-primary → bg-primary, text-primary, border-primary, etc.
      - Hover variants use naming pattern: primary-hover, secondary-hover, etc.
      ============================================================================ */
-  
+
   /* Color System - Primary, Secondary, Danger, Ghost */
-  --color-primary: #9333ea;           /* purple-600 - generates bg-primary, text-primary, etc. */
-  --color-primary-hover: #7e22ce;     /* purple-700 - generates bg-primary-hover, etc. */
-  --color-secondary: #4b5563;         /* gray-600 */
-  --color-secondary-hover: #374151;   /* gray-700 */
-  --color-danger: #dc2626;            /* red-600 */
-  --color-danger-hover: #b91c1c;      /* red-700 */
+  --color-primary: #9333ea; /* purple-600 - generates bg-primary, text-primary, etc. */
+  --color-primary-hover: #7e22ce; /* purple-700 - generates bg-primary-hover, etc. */
+  --color-secondary: #4b5563; /* gray-600 */
+  --color-secondary-hover: #374151; /* gray-700 */
+  --color-danger: #dc2626; /* red-600 */
+  --color-danger-hover: #b91c1c; /* red-700 */
   --color-ghost: transparent;
-  --color-ghost-hover: #f3f4f6;       /* gray-100 */
-  
+  --color-ghost-hover: #f3f4f6; /* gray-100 */
+
   /* Chip Colors - Default, Success, Warning, Error */
-  --color-chip-default: #f3f4f6;      /* gray-100 - bg color */
+  --color-chip-default: #f3f4f6; /* gray-100 - bg color */
   --color-chip-default-text: #1f2937; /* gray-800 - text color */
-  --color-chip-success: #d1fae5;      /* green-100 - bg color */
+  --color-chip-success: #d1fae5; /* green-100 - bg color */
   --color-chip-success-text: #065f46; /* green-800 - text color */
-  --color-chip-warning: #fef3c7;      /* yellow-100 - bg color */
+  --color-chip-warning: #fef3c7; /* yellow-100 - bg color */
   --color-chip-warning-text: #92400e; /* yellow-800 - text color */
-  --color-chip-error: #fee2e2;        /* red-100 - bg color */
-  --color-chip-error-text: #991b1b;   /* red-800 - text color */
-  
+  --color-chip-error: #fee2e2; /* red-100 - bg color */
+  --color-chip-error-text: #991b1b; /* red-800 - text color */
+
   /* Focus and Border Colors */
-  --color-focus: #a855f7;                 /* purple-500 */
-  --color-border: #d1d5db;                /* gray-300 - default border */
-  --color-border-hover: #9ca3af;          /* gray-400 */
-  --color-border-error: #ef4444;          /* red-500 */
+  --color-focus: #a855f7; /* purple-500 */
+  --color-border: #d1d5db; /* gray-300 - default border */
+  --color-border-hover: #9ca3af; /* gray-400 */
+  --color-border-error: #ef4444; /* red-500 */
 
   /* Input/TextField backgrounds */
-  --color-input-filled: #D4C2FC;          /* gray-100 */
-  --color-input-filled-hover: #e5e7eb;    /* gray-200 */
-  --color-input-filled-focus: #ffffff;    /* white */
-  
+  --color-input-filled: #d4c2fc; /* gray-100 */
+  --color-input-filled-hover: #e5e7eb; /* gray-200 */
+  --color-input-filled-focus: #ffffff; /* white */
+
   /* Page Background */
-  --color-page-bg: transparent;            /* Transparent to show Grainient background */
-  
+  --color-page-bg: transparent; /* Transparent to show Grainient background */
+
   /* Muted text color */
-  --color-muted: #6b7280;                 /* gray-500 - muted text */
-  
+  --color-muted: #6b7280; /* gray-500 - muted text */
+
   /* ============================================================================
      ANIMATIONS
      ============================================================================ */
-  
+
   /* Definimos los keyframes */
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   @keyframes disapear {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
   @keyframes scale-to-right {
-    from { width: 100%; transform-origin: right; }
-    to { width: 0; transform-origin: right; }
+    from {
+      width: 100%;
+      transform-origin: right;
+    }
+    to {
+      width: 0;
+      transform-origin: right;
+    }
   }
   @keyframes scale-from-right {
-    from { width: 0; transform-origin: right; }
-    to { width: 100%; transform-origin: right; }
+    from {
+      width: 0;
+      transform-origin: right;
+    }
+    to {
+      width: 100%;
+      transform-origin: right;
+    }
   }
   /* Creamos las clases de utilidad */
   --animate-fade-in: fade-in 0.5s ease-out forwards;
@@ -95,48 +115,44 @@
 }
 
 /* Ahora sí puedes usarlas con @apply */
-.appear
-{
-    display: block;
-    @apply animate-fade-in;
+.appear {
+  display: block;
+  @apply animate-fade-in;
 }
 
-.disapear 
-{
-    @apply animate-disapear;
-    display: none;
+.disapear {
+  @apply animate-disapear;
+  display: none;
 }
 
-.opened
-{
-    @apply animate-scale-from-right-0;
-    flex-basis: 50%
+.opened {
+  @apply animate-scale-from-right-0;
+  flex-basis: 50%;
 }
 
-.closed
-{
-    @apply animate-scale-to-right-0;
+.closed {
+  @apply animate-scale-to-right-0;
 }
 
 /* Hero Section Styles */
 .hero-title {
   font-family: var(--font-space-grotesk);
   font-weight: 700;
-  font-size: 2.5rem;           /* Mobile: 40px */
+  font-size: 2.5rem; /* Mobile: 40px */
   line-height: 1.1;
   color: var(--color-primary);
-  
+
   /* Responsive font sizes */
   @media (min-width: 640px) {
-    font-size: 3.5rem;         /* sm: 56px */
+    font-size: 3.5rem; /* sm: 56px */
   }
-  
+
   @media (min-width: 768px) {
-    font-size: 4.5rem;         /* md: 72px */
+    font-size: 4.5rem; /* md: 72px */
   }
-  
+
   @media (min-width: 1024px) {
-    font-size: 6rem;           /* lg: 96px (original size) */
+    font-size: 6rem; /* lg: 96px (original size) */
   }
 }
 
@@ -152,39 +168,38 @@
 
 /* Button Sizes - Responsive */
 .btn-sm {
-  font-size: 0.75rem;        /* Mobile: 12px */
+  font-size: 0.75rem; /* Mobile: 12px */
   padding: 0.375rem 0.75rem; /* Mobile: 6px 12px */
-  
+
   @media (min-width: 640px) {
-    font-size: 0.875rem;     /* sm: 14px */
-    padding: 0.5rem 1rem;    /* sm: 8px 16px */
+    font-size: 0.875rem; /* sm: 14px */
+    padding: 0.5rem 1rem; /* sm: 8px 16px */
   }
 }
 
 .btn-md {
-  font-size: 0.875rem;       /* Mobile: 14px */
-  padding: 0.5rem 1rem;      /* Mobile: 8px 16px */
-  
+  font-size: 0.875rem; /* Mobile: 14px */
+  padding: 0.5rem 1rem; /* Mobile: 8px 16px */
+
   @media (min-width: 640px) {
-    font-size: 1rem;         /* sm: 16px */
+    font-size: 1rem; /* sm: 16px */
     padding: 0.75rem 1.5rem; /* sm: 12px 24px */
   }
 }
 
 .btn-lg {
-  font-size: 1rem;           /* Mobile: 16px */
-  padding: 0.75rem 1.5rem;   /* Mobile: 12px 24px */
-  
+  font-size: 1rem; /* Mobile: 16px */
+  padding: 0.75rem 1.5rem; /* Mobile: 12px 24px */
+
   @media (min-width: 640px) {
-    font-size: 1.125rem;     /* sm: 18px */
-    padding: 1rem 2rem;      /* sm: 16px 32px */
+    font-size: 1.125rem; /* sm: 18px */
+    padding: 1rem 2rem; /* sm: 16px 32px */
   }
 }
 
 /* Estilos adicionales */
-.modal-mode-selector-container 
-{
-    width: 0   /* Inicialmente cerrado */;
+.modal-mode-selector-container {
+  width: 0 /* Inicialmente cerrado */;
 }
 
 /* Navigation - Centralized fixed positioning and responsive sizing */
@@ -196,17 +211,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;     /* 12px top/bottom, 16px left/right */
+  padding: 0.75rem 1rem; /* 12px top/bottom, 16px left/right */
   width: 100%;
-  font-size: 1.25rem;        /* Mobile: 20px */
+  font-size: 1.25rem; /* Mobile: 20px */
   transition: transform 0.3s ease-in-out;
-  
+
   @media (min-width: 640px) {
-    font-size: 1.5rem;       /* sm: 24px */
+    font-size: 1.5rem; /* sm: 24px */
   }
-  
+
   @media (min-width: 1024px) {
-    font-size: 1.875rem;     /* lg: 30px */
+    font-size: 1.875rem; /* lg: 30px */
   }
 }
 
@@ -221,8 +236,8 @@
 
 /* Page content wrapper with navigation - prevents overlap on mobile */
 .page-wrapper-with-nav {
-  padding-top: 7rem;           /* 112px - clears navbar (max 88px) with comfortable buffer (24px) */
-  padding-bottom: 2rem;        /* 32px */
+  padding-top: 7rem; /* 112px - clears navbar (max 88px) with comfortable buffer (24px) */
+  padding-bottom: 2rem; /* 32px */
 }
 
 /* Footer Terms & Policy - Centralized vertical layout with responsive sizing */
@@ -237,19 +252,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;               /* Mobile: 8px gap */
+  gap: 0.5rem; /* Mobile: 8px gap */
   padding: 0.75rem;
   list-style: none;
-  font-size: 0.875rem;       /* Mobile: 14px */
-  
+  font-size: 0.875rem; /* Mobile: 14px */
+
   @media (min-width: 640px) {
-    gap: 0.75rem;            /* sm: 12px gap */
-    font-size: 1rem;         /* sm: 16px */
+    gap: 0.75rem; /* sm: 12px gap */
+    font-size: 1rem; /* sm: 16px */
   }
-  
+
   @media (min-width: 1024px) {
-    gap: 1rem;               /* lg: 16px gap */
-    font-size: 1.125rem;     /* lg: 18px */
+    gap: 1rem; /* lg: 16px gap */
+    font-size: 1.125rem; /* lg: 18px */
   }
 }
 
@@ -263,91 +278,88 @@
   opacity: 0.7;
 }
 
-
-
 /* Page Content Container - Centralized responsive container for main content */
 .page-content-container {
   /* Layout - centered container with flex */
   display: flex;
   flex-direction: column;
-  justify-content: center;           /* Center content vertically */
-  align-items: center;               /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
   margin: 0 auto;
-  overflow-y: auto;                  /* Enable vertical scrolling */
-  overflow-x: hidden;                /* Prevent horizontal scrolling */
-  
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+
   /* Sizing - responsive width */
-  width: 90%;                        /* Mobile default */
+  width: 90%; /* Mobile default */
   max-width: 100%;
-  
+
   /* Styling */
-  background-color: #ffffff;         /* White background */
-  border-radius: 2.5rem;             /* Rounded corners (40px) */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
-  
+  background-color: #ffffff; /* White background */
+  border-radius: 2.5rem; /* Rounded corners (40px) */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
   /* Spacing - generous padding for better UX */
-  padding: 2rem 1.5rem;              /* Mobile: 32px vertical, 24px horizontal */
-  
+  padding: 2rem 1.5rem; /* Mobile: 32px vertical, 24px horizontal */
+
   /* Breakpoint: sm (640px+) */
   @media (min-width: 640px) {
     width: 85%;
-    padding: 2.5rem 2rem;            /* 40px vertical, 32px horizontal */
+    padding: 2.5rem 2rem; /* 40px vertical, 32px horizontal */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
   }
-  
+
   /* Breakpoint: md (768px+) - tablet */
   @media (min-width: 768px) {
-    width: 80%;                      /* 80% for smaller devices */
-    padding: 3rem 2.5rem;            /* 48px vertical, 40px horizontal */
+    width: 80%; /* 80% for smaller devices */
+    padding: 3rem 2.5rem; /* 48px vertical, 40px horizontal */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
-  
+
   /* Breakpoint: lg (1024px+) - desktop */
   @media (min-width: 1024px) {
-    width: 50%;                      /* 50% on desktop */
-    height: 70vh;                    /* 70% viewport height */
-    flex: none;                      /* Remove flex-grow to allow fixed height */
-    padding: 3.5rem 3rem;            /* 56px vertical, 48px horizontal */
+    width: 50%; /* 50% on desktop */
+    height: 70vh; /* 70% viewport height */
+    flex: none; /* Remove flex-grow to allow fixed height */
+    padding: 3.5rem 3rem; /* 56px vertical, 48px horizontal */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
   }
-  
+
   /* Breakpoint: xl (1280px+) - large desktop */
   @media (min-width: 1280px) {
     width: 50%;
-    height: 70vh;                    /* 70% viewport height */
-    flex: none;                      /* Remove flex-grow to allow fixed height */
-    padding: 4rem 3.5rem;            /* 64px vertical, 56px horizontal */
+    height: 70vh; /* 70% viewport height */
+    flex: none; /* Remove flex-grow to allow fixed height */
+    padding: 4rem 3.5rem; /* 64px vertical, 56px horizontal */
   }
 }
 
 /* Scrollable variant - for pages with lots of content (profiles, leaderboards, etc.) */
 .page-content-container-scrollable {
   /* Inherits all base styles from .page-content-container but allows growth */
-  
+
   /* Layout - centered container with flex */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;       /* Start at top for scrollable content */
-  align-items: center;               /* Center content horizontally */
+  justify-content: flex-start; /* Start at top for scrollable content */
+  align-items: center; /* Center content horizontally */
   margin: 0 auto;
-  overflow-y: auto;                  /* Enable vertical scrolling */
-  overflow-x: hidden;                /* Prevent horizontal scrolling */
-  
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+
   /* Sizing - responsive width, natural height */
-  width: 90%;                        /* Mobile default */
+  width: 90%; /* Mobile default */
   max-width: 100%;
-  
+
   /* Styling - same as regular container */
-  background-color: #ffffff;         /* White background */
-  border-radius: 2.5rem;             /* Rounded corners (40px) */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
-  
+  background-color: #ffffff; /* White background */
+  border-radius: 2.5rem; /* Rounded corners (40px) */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
   /* Spacing - generous padding for better UX */
-  padding: 2rem 1.5rem;              /* Mobile: 32px vertical, 24px horizontal */
-  
+  padding: 2rem 1.5rem; /* Mobile: 32px vertical, 24px horizontal */
+
   max-width: 80rem;
 }
-
 
 /* ============================================================================
    CONTENT CONTAINER UTILITIES
@@ -358,24 +370,23 @@
 
 .content-container-sm {
   width: 100%;
-  max-width: 28rem;        /* 448px - forms, small content */
+  max-width: 28rem; /* 448px - forms, small content */
 }
 
 .content-container-md {
   width: 100%;
-  max-width: 42rem;        /* 672px - settings pages, medium content */
+  max-width: 42rem; /* 672px - settings pages, medium content */
 }
 
 .content-container-lg {
   width: 100%;
-  max-width: 48rem;        /* 768px - articles, legal pages */
+  max-width: 48rem; /* 768px - articles, legal pages */
 }
 
 .content-container-xl {
   width: 100%;
-  max-width: 56rem;        /* 896px - profiles, wide layouts */
+  max-width: 56rem; /* 896px - profiles, wide layouts */
 }
-
 
 /* ============================================================================
    ERROR & ALERT UTILITIES
@@ -384,33 +395,32 @@
    ============================================================================ */
 
 .error-message-space {
-  min-height: 1.5rem;      /* Reserve space to prevent layout shift */
+  min-height: 1.5rem; /* Reserve space to prevent layout shift */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 }
 
 .error-message {
-  color: #dc2626;          /* red-600 */
-  font-size: 0.875rem;     /* 14px */
+  color: #dc2626; /* red-600 */
+  font-size: 0.875rem; /* 14px */
   text-align: center;
   margin: 0;
 }
 
 .error-box {
-  background-color: #fee2e2;  /* red-100 */
-  border: 1px solid #fecaca;  /* red-200 */
-  border-radius: 0.5rem;      /* 8px */
-  padding: 0.75rem 1rem;      /* 12px 16px */
-  margin-bottom: 1rem;        /* 16px */
+  background-color: #fee2e2; /* red-100 */
+  border: 1px solid #fecaca; /* red-200 */
+  border-radius: 0.5rem; /* 8px */
+  padding: 0.75rem 1rem; /* 12px 16px */
+  margin-bottom: 1rem; /* 16px */
 }
 
 .error-box p {
-  color: #dc2626;             /* red-600 */
-  font-size: 0.875rem;        /* 14px */
+  color: #dc2626; /* red-600 */
+  font-size: 0.875rem; /* 14px */
   margin: 0;
 }
-
 
 /* ============================================================================
    BUTTON UTILITIES
@@ -420,58 +430,57 @@
 
 .btn-submit {
   width: 100%;
-  background-color: #fbbf24;   /* yellow-400 */
-  color: #78350f;              /* yellow-900 */
+  background-color: #fbbf24; /* yellow-400 */
+  color: #78350f; /* yellow-900 */
   font-weight: 600;
-  padding: 0.75rem 1.5rem;     /* 12px 24px */
-  border-radius: 0.5rem;       /* 8px */
+  padding: 0.75rem 1.5rem; /* 12px 24px */
+  border-radius: 0.5rem; /* 8px */
   transition: background-color 0.2s ease;
 }
 
 .btn-submit:hover {
-  background-color: #f59e0b;   /* yellow-500 */
+  background-color: #f59e0b; /* yellow-500 */
 }
 
 .btn-danger {
-  background-color: #dc2626;   /* red-600 */
+  background-color: #dc2626; /* red-600 */
   color: #ffffff;
   font-weight: 600;
-  padding: 0.5rem 1rem;        /* 8px 16px */
-  border-radius: 0.5rem;       /* 8px */
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.5rem; /* 8px */
   transition: background-color 0.2s ease;
 }
 
 .btn-danger:hover {
-  background-color: #b91c1c;   /* red-700 */
+  background-color: #b91c1c; /* red-700 */
 }
 
 .btn-upload {
-  background-color: #3b82f6;   /* blue-500 */
+  background-color: #3b82f6; /* blue-500 */
   color: #ffffff;
   font-weight: 500;
-  padding: 0.5rem 1rem;        /* 8px 16px */
-  border-radius: 0.5rem;       /* 8px */
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.5rem; /* 8px */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .btn-upload:hover {
-  background-color: #2563eb;   /* blue-600 */
+  background-color: #2563eb; /* blue-600 */
 }
 
 .btn-cancel {
-  background-color: #6b7280;   /* gray-500 */
+  background-color: #6b7280; /* gray-500 */
   color: #ffffff;
   font-weight: 500;
-  padding: 0.5rem 1rem;        /* 8px 16px */
-  border-radius: 0.5rem;       /* 8px */
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.5rem; /* 8px */
   transition: background-color 0.2s ease;
 }
 
 .btn-cancel:hover {
-  background-color: #4b5563;   /* gray-600 */
+  background-color: #4b5563; /* gray-600 */
 }
-
 
 /* ============================================================================
    LINK UTILITIES
@@ -480,22 +489,21 @@
    ============================================================================ */
 
 .link-primary {
-  color: #9333ea;              /* primary purple */
-  text-decoration: underline;  /* underline by default */
+  color: #9333ea; /* primary purple */
+  text-decoration: underline; /* underline by default */
   transition: color 0.2s ease;
 }
 
 .link-primary:hover {
-  color: #7e22ce;              /* primary-hover - darker purple */
+  color: #7e22ce; /* primary-hover - darker purple */
   text-decoration: underline;
 }
 
 .back-button-position {
   position: absolute;
-  top: 0.75rem;                /* 12px - matches navigation padding */
-  left: 1rem;                  /* 16px - matches navigation padding */
+  top: 0.75rem; /* 12px - matches navigation padding */
+  left: 1rem; /* 16px - matches navigation padding */
 }
-
 
 /* ============================================================================
    FORM UTILITIES
@@ -506,17 +514,16 @@
 .form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;                 /* 24px */
-  padding: 2rem 0;             /* 32px vertical */
+  gap: 1.5rem; /* 24px */
+  padding: 2rem 0; /* 32px vertical */
 }
 
 .form-bordered {
-  border: 4px solid #fbbf24;   /* yellow-400 / amber-400 */
-  border-radius: 0.5rem;       /* 8px */
-  padding: 1.5rem;             /* 24px */
+  border: 4px solid #fbbf24; /* yellow-400 / amber-400 */
+  border-radius: 0.5rem; /* 8px */
+  padding: 1.5rem; /* 24px */
   background-color: #ffffff;
 }
-
 
 /* ============================================================================
    MODAL UTILITIES
@@ -539,8 +546,8 @@
 
 .modal-content {
   background-color: #ffffff;
-  border-radius: 0.5rem;       /* 8px */
-  padding: 2rem;               /* 32px */
+  border-radius: 0.5rem; /* 8px */
+  padding: 2rem; /* 32px */
   max-width: 90%;
   max-height: 90vh;
   overflow-y: auto;
@@ -548,9 +555,8 @@
 }
 
 .modal-content-sm {
-  max-width: 28rem;            /* 448px - small modals */
+  max-width: 28rem; /* 448px - small modals */
 }
-
 
 /* ============================================================================
    CONTENT DISPLAY UTILITIES
@@ -561,13 +567,13 @@
 .scrollable-content {
   max-height: 60vh;
   overflow-y: auto;
-  padding-right: 0.5rem;       /* 8px - space for scrollbar */
+  padding-right: 0.5rem; /* 8px - space for scrollbar */
 }
 
 .bg-content-light {
-  background-color: #f9fafb;   /* gray-50 */
-  border-radius: 0.5rem;       /* 8px */
-  padding: 1rem;               /* 16px */
+  background-color: #f9fafb; /* gray-50 */
+  border-radius: 0.5rem; /* 8px */
+  padding: 1rem; /* 16px */
 }
 
 .legal-content {
@@ -623,7 +629,9 @@
 }
 
 .legal-content code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   background-color: #e5e7eb;
   border-radius: 0.25rem;
   padding: 0.125rem 0.35rem;
@@ -663,22 +671,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;                 /* 24px - more space between text and button */
-  padding: 0.75rem 1rem;       /* 12px 16px - comfortable spacing */
+  gap: 1.5rem; /* 24px - more space between text and button */
+  padding: 0.75rem 1rem; /* 12px 16px - comfortable spacing */
 }
 
 .room-name {
-  font-family: var(--font-display);  /* Space Grotesk display font */
-  color: var(--color-primary);       /* Primary purple color */
-  font-size: 1.125rem;               /* 18px - slightly larger */
-  font-weight: 600;                  /* semi-bold */
-  flex: 1;                           /* take available space */
-  min-width: 0;                      /* allow text truncation */
-  overflow: hidden;                  /* hide overflow */
-  text-overflow: ellipsis;           /* show ... for long names */
-  white-space: nowrap;               /* don't wrap */
+  font-family: var(--font-display); /* Space Grotesk display font */
+  color: var(--color-primary); /* Primary purple color */
+  font-size: 1.125rem; /* 18px - slightly larger */
+  font-weight: 600; /* semi-bold */
+  flex: 1; /* take available space */
+  min-width: 0; /* allow text truncation */
+  overflow: hidden; /* hide overflow */
+  text-overflow: ellipsis; /* show ... for long names */
+  white-space: nowrap; /* don't wrap */
 }
-
 
 /* ============================================================================
    TEXT COLOR UTILITIES
@@ -687,13 +694,12 @@
    ============================================================================ */
 
 .text-muted {
-  color: #64748b;              /* slate-500 */
+  color: #64748b; /* slate-500 */
 }
 
 .text-secondary {
-  color: #6b7280;              /* gray-500 */
+  color: #6b7280; /* gray-500 */
 }
-
 
 /* ============================================================================
    SPACING UTILITIES
@@ -702,13 +708,12 @@
    ============================================================================ */
 
 .spacing-section {
-  margin-bottom: 1.5rem;       /* 24px */
+  margin-bottom: 1.5rem; /* 24px */
 }
 
 .spacing-top-section {
-  margin-top: 2rem;            /* 32px */
+  margin-top: 2rem; /* 32px */
 }
-
 
 /* ============================================================================
    NAVIGATION COMPONENTS
@@ -721,15 +726,15 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;              /* 12px gap between buttons */
-  margin-right: 0.25rem;     /* Small margin from right edge */
+  gap: 0.75rem; /* 12px gap between buttons */
+  margin-right: 0.25rem; /* Small margin from right edge */
 }
 
 /* SKYPONG logo/home button styling */
 .skypong-logo {
-  font-family: var(--font-display);  /* Space Grotesk */
-  color: var(--color-primary);       /* Purple */
-  font-size: 1.5rem;                 /* Responsive with parent container */
+  font-family: var(--font-display); /* Space Grotesk */
+  color: var(--color-primary); /* Purple */
+  font-size: 1.5rem; /* Responsive with parent container */
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
@@ -750,7 +755,7 @@
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 0.5rem;
-  min-width: 12rem;               /* 192px */
+  min-width: 12rem; /* 192px */
   z-index: 60;
   display: flex;
   flex-direction: column;
@@ -817,19 +822,19 @@
 }
 
 .row-border-transparent:hover {
-  border-color: #9333ea;                /* primary purple */
+  border-color: #9333ea; /* primary purple */
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
 }
 
 /* Shared highlighted row - For current user or special states */
 .row-highlighted {
-  background-color: #faf5ff;            /* purple-50 */
-  border: 1.5px solid #9333ea;          /* primary purple border */
+  background-color: #faf5ff; /* purple-50 */
+  border: 1.5px solid #9333ea; /* primary purple border */
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
 }
 
 .row-highlighted:hover {
-  border-color: #7e22ce;                /* darker purple on hover */
+  border-color: #7e22ce; /* darker purple on hover */
   box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
 }
 
@@ -843,87 +848,84 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  border: 1.5px solid transparent;      /* transparent border by default */
+  border: 1.5px solid transparent; /* transparent border by default */
   border-radius: 0.75rem;
-  background-color: #ffffff;            /* white background */
+  background-color: #ffffff; /* white background */
   transition: all 0.2s ease;
 }
 
 .game-row:hover {
-  border-color: #9333ea;                /* primary color on hover only */
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);  /* single subtle shadow */
+  border-color: #9333ea; /* primary color on hover only */
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12); /* single subtle shadow */
 }
 
 @media (min-width: 768px) {
-    .game-row {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;     /* distribute items evenly */
-        gap: 1rem;
-    }
+  .game-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* distribute items evenly */
+    gap: 1rem;
+  }
 }
 
 @media (min-width: 1024px) {
-    .game-row {
-        gap: 1.25rem;                       /* larger gap on wider screens */
-    }
+  .game-row {
+    gap: 1.25rem; /* larger gap on wider screens */
+  }
 }
-
 
 /* Game players - Player vs Player display */
 .game-players {
-    display: flex;
-    align-items: center;
-    justify-content: center;              /* center player names */
-    gap: 1.5rem;
-    font-size: 0.875rem;                  /* 14px base */
-    font-family: var(--font-body);        /* Funnel Sans for body text */
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center player names */
+  gap: 1.5rem;
+  font-size: 0.875rem; /* 14px base */
+  font-family: var(--font-body); /* Funnel Sans for body text */
+  flex-wrap: wrap;
 }
 
-.game-players .game-player-info
-{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #faf5ff;            /* purple-50 */
-    border-radius: 0.75rem;
-    padding: 10px;
-    min-width: 10rem;
-    border: 1px solid rgba(147, 51, 234, 0.15);  /* subtle purple border */
+.game-players .game-player-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #faf5ff; /* purple-50 */
+  border-radius: 0.75rem;
+  padding: 10px;
+  min-width: 10rem;
+  border: 1px solid rgba(147, 51, 234, 0.15); /* subtle purple border */
 }
 
 @media (min-width: 768px) {
   .game-players {
-      flex-wrap: nowrap;
-      font-size: 1rem;                    /* 16px on desktop */
-    }
+    flex-wrap: nowrap;
+    font-size: 1rem; /* 16px on desktop */
+  }
 }
-.game-vs-text 
-{
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: 2rem;
+.game-vs-text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
 }
 
 /* Player name styling within game-players */
 .game-players .player-name {
-  font-weight: 600;                     /* semi-bold */
-  color: #111827;                       /* gray-900 */
+  font-weight: 600; /* semi-bold */
+  color: #111827; /* gray-900 */
 }
 
 /* Player name links */
 .game-players .player-name-link {
   font-weight: 600;
-  color: #9333ea;                       /* primary color for links */
-  text-decoration: underline;           /* underline by default */
+  color: #9333ea; /* primary color for links */
+  text-decoration: underline; /* underline by default */
   transition: all 0.2s ease;
 }
 
 .game-players .player-name-link:hover {
-  color: #7e22ce;                       /* primary-hover - darker on hover */
+  color: #7e22ce; /* primary-hover - darker on hover */
   text-decoration: underline;
 }
 
@@ -938,38 +940,38 @@
   gap: 0.75rem;
   padding: 0.875rem 1rem;
   border-radius: 0.75rem;
-  border: 1.5px solid transparent;      /* transparent border by default - matches game-row */
+  border: 1.5px solid transparent; /* transparent border by default - matches game-row */
   background-color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .leaderboard-row:hover {
-  border-color: #9333ea;                /* primary color on hover only */
+  border-color: #9333ea; /* primary color on hover only */
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
 }
 
 @media (min-width: 768px) {
   .leaderboard-row {
-    gap: 0.75rem;                       /* reduced gap to prevent overflow */
+    gap: 0.75rem; /* reduced gap to prevent overflow */
     padding: 1rem 1.25rem;
   }
 }
 
 @media (min-width: 1024px) {
   .leaderboard-row {
-    gap: 1.25rem;                       /* larger gap on wider screens - matches game-row */
+    gap: 1.25rem; /* larger gap on wider screens - matches game-row */
   }
 }
 
 /* Leaderboard row highlighted - Current user */
 .leaderboard-row-highlighted {
-  background-color: #faf5ff;            /* purple-50 */
-  border: 1.5px solid #9333ea;          /* primary purple border */
+  background-color: #faf5ff; /* purple-50 */
+  border: 1.5px solid #9333ea; /* primary purple border */
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
 }
 
 .leaderboard-row-highlighted:hover {
-  border-color: #7e22ce;                /* darker purple on hover */
+  border-color: #7e22ce; /* darker purple on hover */
   box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
 }
 
@@ -979,7 +981,7 @@
   font-weight: 700;
   min-width: 2rem;
   text-align: center;
-  flex-shrink: 0;                       /* prevent shrinking on small screens */
+  flex-shrink: 0; /* prevent shrinking on small screens */
 }
 
 /* Leaderboard info - Player details container */
@@ -1013,11 +1015,11 @@
 }
 
 .leaderboard-bar-win {
-  background-color: #22c55e;            /* green-500 - filled */
+  background-color: #22c55e; /* green-500 - filled */
 }
 
 .leaderboard-bar-loss {
-  background-color: #ef4444;            /* red-500 - filled */
+  background-color: #ef4444; /* red-500 - filled */
 }
 
 /* ============================================================================
@@ -1038,7 +1040,7 @@
 
 /* Achievement unlocked - Primary accent for unlocked */
 .achievement-unlocked {
-  background-color: #faf5ff;      /* purple-50 */
+  background-color: #faf5ff; /* purple-50 */
   border: 1px solid rgba(147, 51, 234, 0.3);
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.1);
 }
@@ -1050,7 +1052,7 @@
 
 /* Achievement locked - Grayscale/muted for locked */
 .achievement-locked {
-  background-color: #f9fafb;      /* gray-50 */
+  background-color: #f9fafb; /* gray-50 */
   border: 1px solid #e5e7eb;
   opacity: 0.7;
 }
@@ -1089,43 +1091,43 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  border: 1.5px solid transparent;      /* transparent border by default */
-  background-color: #ffffff;            /* white background */
+  border: 1.5px solid transparent; /* transparent border by default */
+  background-color: #ffffff; /* white background */
   transition: all 0.2s ease;
 }
 
 .friend-row:hover {
-  border-color: #9333ea;                /* primary color on hover only */
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);  /* slightly stronger shadow */
+  border-color: #9333ea; /* primary color on hover only */
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12); /* slightly stronger shadow */
 }
 
 @media (min-width: 768px) {
   .friend-row {
-    gap: 0.75rem;                       /* keep compact on tablet */
+    gap: 0.75rem; /* keep compact on tablet */
   }
 }
 
 @media (min-width: 1024px) {
   .friend-row {
-    gap: 1rem;                          /* more spacious on desktop */
+    gap: 1rem; /* more spacious on desktop */
   }
 }
 
 /* Friend row variants */
 /* Incoming friend request - Purple accent */
 .friend-row-incoming {
-  background-color: #faf5ff;            /* purple-50 */
-  border: 1.5px solid rgba(147, 51, 234, 0.3);  /* subtle purple border */
+  background-color: #faf5ff; /* purple-50 */
+  border: 1.5px solid rgba(147, 51, 234, 0.3); /* subtle purple border */
 }
 
 .friend-row-incoming:hover {
-  border-color: #9333ea;                /* primary purple on hover */
+  border-color: #9333ea; /* primary purple on hover */
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
 }
 
 /* Outgoing friend request - Slightly muted/pending */
 .friend-row-outgoing {
-  opacity: 0.75;                        /* slightly dimmed to indicate pending */
+  opacity: 0.75; /* slightly dimmed to indicate pending */
 }
 
 /* Friend info */
@@ -1139,15 +1141,15 @@
 
 /* Friend name link - Clickable friend names */
 .friend-name-link {
-  font-weight: 600;                     /* semi-bold */
-  color: #9333ea;                       /* primary color for links */
-  text-decoration: underline;           /* underline by default */
+  font-weight: 600; /* semi-bold */
+  color: #9333ea; /* primary color for links */
+  text-decoration: underline; /* underline by default */
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .friend-name-link:hover {
-  color: #7e22ce;                       /* primary-hover - darker on hover */
+  color: #7e22ce; /* primary-hover - darker on hover */
   text-decoration: underline;
 }
 
@@ -1235,14 +1237,13 @@
 
 /* Profile content area (below tabs) */
 .profile-tab-content {
-  @apply pt-6 space-y-6;  /* pt-6 adds top padding for breathing room */
+  @apply pt-6 space-y-6; /* pt-6 adds top padding for breathing room */
 }
 
 /* Profile section spacing */
 .profile-section {
   @apply mb-6 md:mb-8;
 }
-
 
 .rainbowtext {
   background: linear-gradient(
@@ -1267,8 +1268,12 @@
 }
 
 @keyframes rainbow-shift {
-  from { background-position: 0% center; }
-  to   { background-position: 200% center; }
+  from {
+    background-position: 0% center;
+  }
+  to {
+    background-position: 200% center;
+  }
 }
 
 /* ============================================================================
@@ -1292,4 +1297,4 @@
 /* ============================================================================
    CHAT - Now using design system components (Button, TextField, Card, Badge)
    ============================================================================ */
-   /* Custom chat styles removed - using base components from /ui/base/ */
+/* Custom chat styles removed - using base components from /ui/base/ */

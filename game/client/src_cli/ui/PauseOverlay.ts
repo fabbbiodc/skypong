@@ -15,10 +15,13 @@ export class PauseOverlay {
     private _texture: AdvancedDynamicTexture,
     private _onResume: () => void,
     private _onQuit: () => void,
-    language: Language = 'en',
+    language: Language = "en",
   ) {
     this._texts = UITexts[language].pause;
-    this._container = GUIElements.CreateContainer("pauseContainer", GUI_STYLES.CONTAINER.OVERLAY);
+    this._container = GUIElements.CreateContainer(
+      "pauseContainer",
+      GUI_STYLES.CONTAINER.OVERLAY,
+    );
     this._container.isVisible = false;
     this._container.zIndex = 100;
     this._container.adaptWidthToChildren = false;
@@ -29,7 +32,11 @@ export class PauseOverlay {
       ...GUI_STYLES.PAUSE_TITLE,
       top: GUI_STYLES.PAUSE_POSITIONS.TITLE.top,
     };
-    this._titleText = GUIElements.CreateText("pauseTitle", this._texts.title, titleStyle);
+    this._titleText = GUIElements.CreateText(
+      "pauseTitle",
+      this._texts.title,
+      titleStyle,
+    );
     this._container.addControl(this._titleText);
 
     const resumeStyle = {
@@ -37,8 +44,11 @@ export class PauseOverlay {
       ...GUI_STYLES.PAUSE_POSITIONS.RESUME_BUTTON,
       zIndex: 101,
     };
-    this._resumeButton = GUIElements.CreateTextButton("resumeButton", this._texts.resume, resumeStyle, () =>
-      this._onResume(),
+    this._resumeButton = GUIElements.CreateTextButton(
+      "resumeButton",
+      this._texts.resume,
+      resumeStyle,
+      () => this._onResume(),
     );
     this._container.addControl(this._resumeButton);
     const quitStyle = {
@@ -46,8 +56,11 @@ export class PauseOverlay {
       ...GUI_STYLES.PAUSE_POSITIONS.QUIT_BUTTON,
       zIndex: 101,
     };
-    this._quitButton = GUIElements.CreateTextButton("quitButton", this._texts.quitToMenu, quitStyle, () =>
-      this._onQuit(),
+    this._quitButton = GUIElements.CreateTextButton(
+      "quitButton",
+      this._texts.quitToMenu,
+      quitStyle,
+      () => this._onQuit(),
     );
     this._container.addControl(this._quitButton);
   }

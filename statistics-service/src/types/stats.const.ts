@@ -1,19 +1,19 @@
 export const LEADERBOARD_INDEXES = {
   rate: {
-    column: 'rate',
-    order: 'DESC',
+    column: "rate",
+    order: "DESC",
   },
   winrate: {
-    column: 'winrate',
-    order: 'DESC',
+    column: "winrate",
+    order: "DESC",
   },
   played: {
-    column: 'played',
-    order: 'DESC',
+    column: "played",
+    order: "DESC",
   },
   wins: {
-    column: 'wins',
-    order: 'DESC',
+    column: "wins",
+    order: "DESC",
   },
 } as const;
 

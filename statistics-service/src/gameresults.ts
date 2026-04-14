@@ -1,7 +1,7 @@
-import { getStatisticsDB } from './database/dbStats';
-import { getDbHelpers } from './utils/helpers';
-import * as StatsTypes from './types/stats.types';
-import * as StatsEnums from './types/stats.enums';
+import { getStatisticsDB } from "./database/dbStats";
+import { getDbHelpers } from "./utils/helpers";
+import * as StatsTypes from "./types/stats.types";
+import * as StatsEnums from "./types/stats.enums";
 
 export { StatsEnums };
 
@@ -14,14 +14,16 @@ const AI_USER_IDS = new Set<string>(Object.values(StatsEnums.AIUserType));
 // --- MAIN FUNCTIONS ---
 
 function detectGameMode(user1Id: string, user2Id: string): StatsEnums.GameMode {
-  	if (AI_USER_IDS.has(user1Id) || AI_USER_IDS.has(user2Id)) {
-		return StatsEnums.GameMode.AI;
-  	}
+  if (AI_USER_IDS.has(user1Id) || AI_USER_IDS.has(user2Id)) {
+    return StatsEnums.GameMode.AI;
+  }
 
-  	return StatsEnums.GameMode.REMOTE;
+  return StatsEnums.GameMode.REMOTE;
 }
 
-export async function getGamesHistoryByUserId(userId: string): Promise<StatsTypes.GameHistoryRow[]> {
+export async function getGamesHistoryByUserId(
+  userId: string,
+): Promise<StatsTypes.GameHistoryRow[]> {
   const { all } = db;
 
   const rows = await all<StatsTypes.GameHistoryRow>(
@@ -41,34 +43,31 @@ export async function getGamesHistoryByUserId(userId: string): Promise<StatsType
     WHERE user1_id = ? OR user2_id = ?
     ORDER BY end_at DESC
     `,
-    [userId, userId]
+    [userId, userId],
   );
 
   return rows ?? [];
 }
 
 export async function addGameStats(game: StatsTypes.GameResult): Promise<void> {
+  const { run } = db;
 
-      	const { run } = db;
+  if (game.players.length !== 2) {
+    throw new Error("Game must have exactly 2 players");
+  }
 
-      	if (game.players.length !== 2) {
-	    	throw new Error('Game must have exactly 2 players');
-      	}
+  let [p1, p2] = game.players;
 
+  if (p1.user_id > p2.user_id) {
+    [p1, p2] = [p2, p1];
+  }
 
-      	let [p1, p2] = game.players;
+  const game_mode = detectGameMode(p1.user_id, p2.user_id);
 
+  console.log("[stats addGameStats game mode: ]", game_mode);
 
-      	if (p1.user_id > p2.user_id) {
-	    	[p1, p2] = [p2, p1];
-	}
-
-		const game_mode = detectGameMode(p1.user_id, p2.user_id);	
-
-		console.log("[stats addGameStats game mode: ]", game_mode);
-
-      	await run(
-	    	`
+  await run(
+    `
 	    	INSERT OR IGNORE INTO games_and_results (
 		  	game_id,
 
@@ -88,22 +87,22 @@ export async function addGameStats(game: StatsTypes.GameResult): Promise<void> {
 
 	    	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	    	`,
-	    	[
-		  	game.game_id,
+    [
+      game.game_id,
 
-		  	p1.user_id,
-		  	p2.user_id,
+      p1.user_id,
+      p2.user_id,
 
-		  	p1.user_score,
-		  	p2.user_score,
+      p1.user_score,
+      p2.user_score,
 
-		  	p1.user_result,
-		  	p2.user_result,
+      p1.user_result,
+      p2.user_result,
 
-		  	game.start_at,
-		  	game.end_at,
+      game.start_at,
+      game.end_at,
 
-			game_mode
-	    	]
-      	);
+      game_mode,
+    ],
+  );
 }

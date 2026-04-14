@@ -127,7 +127,12 @@ export class AIGameRoom extends Room<MyGameState> {
 
   update(deltaTime: number) {
     // Skip updates if game is over or player has left
-    if (this.state.gameOver || this.isDisposed || !this.playerClient || this.state.isPaused) {
+    if (
+      this.state.gameOver ||
+      this.isDisposed ||
+      !this.playerClient ||
+      this.state.isPaused
+    ) {
       return;
     }
 
@@ -373,7 +378,7 @@ export class AIGameRoom extends Room<MyGameState> {
     this.gameStats?.setPlayer2Id("ai-" + this.difficulty);
     this.gameStats?.setPlayer2Name("ai-" + this.difficulty);
     this.loggedIn = !!options.playerId;
-    Logger.info(`[LoggedIn] ${this.loggedIn}`)
+    Logger.info(`[LoggedIn] ${this.loggedIn}`);
     this.state.gameStarted = true;
     this.lock(); // Lock room to prevent additional joins
     Logger.info(

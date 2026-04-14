@@ -1,12 +1,18 @@
-import type { GameConfig } from './launch-config';
-import { useTranslation } from '../../hooks/use-translation';
+import type { GameConfig } from "./launch-config";
+import { useTranslation } from "../../hooks/use-translation";
 /**
  * Configuration payload expected by the Babylon game engine launcher.
  */
 export interface EngineLaunchConfig {
   readonly playerName: string;
   readonly playerColor: string;
-  readonly gameMode: 'ai-easy' | 'ai-medium' | 'ai-hard' | 'local-2p' | 'online-create' | 'online-join';
+  readonly gameMode:
+    | "ai-easy"
+    | "ai-medium"
+    | "ai-hard"
+    | "local-2p"
+    | "online-create"
+    | "online-join";
   readonly player2Name?: string;
   readonly player2Color?: string;
   readonly roomId?: string;
@@ -16,30 +22,31 @@ export interface EngineLaunchConfig {
  * Maps the front-end game setup configuration to the game engine launch contract.
  */
 export function toEngineLaunchConfig(config: GameConfig): EngineLaunchConfig {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-  if (config.mode === 'AI') {
+  if (config.mode === "AI") {
     return {
-      playerName: `${t?.game?.player(1) || 'Player 1'}`,
+      playerName: `${t?.game?.player(1) || "Player 1"}`,
       playerColor: config.ballColor,
-      gameMode: `ai-${config.difficulty.toLowerCase()}` as EngineLaunchConfig['gameMode'],
+      gameMode:
+        `ai-${config.difficulty.toLowerCase()}` as EngineLaunchConfig["gameMode"],
     };
   }
 
-  if (config.mode === 'LOCAL') {
+  if (config.mode === "LOCAL") {
     return {
-      playerName: `${t?.game.player(1) || 'Player 1'}`,
-      playerColor: '#00A6ED',
-      gameMode: 'local-2p',
-      player2Name: `${t?.game.player(2) || 'Player 2'}`,
-      player2Color: '#F6511D',
+      playerName: `${t?.game.player(1) || "Player 1"}`,
+      playerColor: "#00A6ED",
+      gameMode: "local-2p",
+      player2Name: `${t?.game.player(2) || "Player 2"}`,
+      player2Color: "#F6511D",
     };
   }
 
   return {
-    playerName:`${t?.game?.player(1) || 'Player 1'}`,
+    playerName: `${t?.game?.player(1) || "Player 1"}`,
     playerColor: config.ballColor,
-    gameMode: config.onlineRole === 'join' ? 'online-join' : 'online-create',
+    gameMode: config.onlineRole === "join" ? "online-join" : "online-create",
     roomId: config.roomId,
   };
 }

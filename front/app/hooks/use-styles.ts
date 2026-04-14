@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import SelectStyles from '../lib/mobiledetection/detectMobile';
-
+import { useState, useEffect } from "react";
+import SelectStyles from "../lib/mobiledetection/detectMobile";
 
 export const useStyles = (mobileStyles: any, desktopStyles: any) => {
   const [styles, setStyles] = useState(mobileStyles);
@@ -11,7 +10,6 @@ export const useStyles = (mobileStyles: any, desktopStyles: any) => {
     // Al montar el componente, leemos el locale actual
     setStyles(SelectStyles(mobileStyles, desktopStyles));
   }, []);
-
 
   return { styles };
 };

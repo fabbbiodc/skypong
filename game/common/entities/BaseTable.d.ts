@@ -4,6 +4,6 @@ import { Mesh, Scene } from "@babylonjs/core";
  * Extend for visuals as necessary in client.
  */
 export declare class BaseTable {
-    mesh: Mesh;
-    constructor(scene: Scene, name?: string);
+  mesh: Mesh;
+  constructor(scene: Scene, name?: string);
 }

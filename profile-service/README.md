@@ -29,22 +29,26 @@ HTTP Routes → Service Layer → Repository Layer → SQLite Database
 ### Layer Responsibilities
 
 **Routes**
+
 - Handle HTTP requests
 - Parse headers and parameters
 - Validate input
 - Call service logic
 
 **Service Layer**
+
 - Implements domain logic
 - Validates user actions
 - Coordinates repositories and external services
 
 **Repository Layer**
+
 - Executes SQL queries
 - Works directly with SQLite
 - Returns structured data
 
 **Database Layer**
+
 - Initializes database
 - Creates tables and indexes
 - Manages database connection

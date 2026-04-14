@@ -4,12 +4,12 @@ import { Mesh, Scene } from "@babylonjs/core";
  * Extend/add material/physics/animation logic in subclasses.
  */
 export declare class BasePaddle {
-    mesh: Mesh;
-    constructor(scene: Scene, name?: string);
-    getPosition(): {
-        x: number;
-        y: number;
-        z: number;
-    };
-    setEnabled(enabled: boolean): void;
+  mesh: Mesh;
+  constructor(scene: Scene, name?: string);
+  getPosition(): {
+    x: number;
+    y: number;
+    z: number;
+  };
+  setEnabled(enabled: boolean): void;
 }

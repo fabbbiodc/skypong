@@ -7,16 +7,12 @@ import { GMCN } from "@skypong/common/constants";
 import { BaseTable } from "@skypong/common/entities/BaseTable";
 
 export class ServerTable extends BaseTable {
-    public mesh!: Mesh;
+  public mesh!: Mesh;
 
-    constructor(scene: Scene) {
-        super(scene, "table");
-        this.mesh = MeshBuilder.CreateBox(
-            "table",
-            GMCN.TABLE.SIZE,
-            scene,
-        );
+  constructor(scene: Scene) {
+    super(scene, "table");
+    this.mesh = MeshBuilder.CreateBox("table", GMCN.TABLE.SIZE, scene);
 
-        this.mesh.position.y = GMCN.TABLE.Y_POSITION;
-    }
+    this.mesh.position.y = GMCN.TABLE.Y_POSITION;
+  }
 }

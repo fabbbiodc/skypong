@@ -7,21 +7,21 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ## Features
 
-* Tracks game results between **exactly 2 players**
-* Stores statistics in **SQLite**
-* Leaderboard with multiple indexes: `rate`, `winrate`, `wins`, `played`
-* Synchronization workers for statistics and leaderboard
-* REST API for submitting game results and fetching leaderboard
-* Token-based internal authentication
+- Tracks game results between **exactly 2 players**
+- Stores statistics in **SQLite**
+- Leaderboard with multiple indexes: `rate`, `winrate`, `wins`, `played`
+- Synchronization workers for statistics and leaderboard
+- REST API for submitting game results and fetching leaderboard
+- Token-based internal authentication
 
 ---
 
 ## Prerequisites
 
-* Node.js 20+
-* npm
-* Docker
-* Git
+- Node.js 20+
+- npm
+- Docker
+- Git
 
 ---
 
@@ -56,27 +56,26 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ## NPM Scripts
 
-* `npm run dev` — Run in development mode with hot reload (`ts-node-dev`)
-* `npm run build` — Compile TypeScript to `dist/`
-* `npm start` — Run compiled JS from `dist/`
+- `npm run dev` — Run in development mode with hot reload (`ts-node-dev`)
+- `npm run build` — Compile TypeScript to `dist/`
+- `npm start` — Run compiled JS from `dist/`
 
 ---
 
 ## Configuration & Security
 
-* **Service token** for internal API access: Set via `SERVICE_TOKEN` environment variable.
-* **SQLite databases** (created automatically in project root or `./data`):
-
-  * `statistics.db` — Stores game results
-  * `leaderboard.db` — Stores cached leaderboard data
+- **Service token** for internal API access: Set via `SERVICE_TOKEN` environment variable.
+- **SQLite databases** (created automatically in project root or `./data`):
+  - `statistics.db` — Stores game results
+  - `leaderboard.db` — Stores cached leaderboard data
 
 ---
 
 ## Docker
 
-* Container exposes **port 6000**
-* Volume `./data` persists SQLite databases
-* Set `SERVICE_TOKEN` in container environment for security
+- Container exposes **port 6000**
+- Volume `./data` persists SQLite databases
+- Set `SERVICE_TOKEN` in container environment for security
 
 ---
 
@@ -84,9 +83,9 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ### Add Game Result
 
-* **POST** `/internal/statistics/gameresult/update`
-* **Headers**: `Authorization: Bearer <SERVICE_TOKEN>`
-* **Body schema**:
+- **POST** `/internal/statistics/gameresult/update`
+- **Headers**: `Authorization: Bearer <SERVICE_TOKEN>`
+- **Body schema**:
 
 ```
 {
@@ -108,17 +107,17 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 }
 ```
 
-* Must have exactly 2 players.
+- Must have exactly 2 players.
 
 ### Get Leaderboard
 
-* **GET** `/statistics/leaderboard`
-* **Query params**:
+- **GET** `/statistics/leaderboard`
+- **Query params**:
+  - `by` — leaderboard index (`rate`, `winrate`, `wins`, `played`)
+  - `limit` — number of results (default 50)
+  - `offset` — offset for pagination (default 0)
 
-  * `by` — leaderboard index (`rate`, `winrate`, `wins`, `played`)
-  * `limit` — number of results (default 50)
-  * `offset` — offset for pagination (default 0)
-* **Response**:
+- **Response**:
 
 ```
 {
@@ -140,9 +139,9 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ### Get Games History by User
 
-* **GET** `/internal/statistics/games/history/:id`
-* **Headers**: `Authorization: Bearer <SERVICE_TOKEN>`
-* Returns all games where user participated.
+- **GET** `/internal/statistics/games/history/:id`
+- **Headers**: `Authorization: Bearer <SERVICE_TOKEN>`
+- Returns all games where user participated.
 
 ---
 
@@ -150,19 +149,18 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ### Statistics DB (`statistics.db`)
 
-* Table `games_and_results`:
-
-  * `game_id`, `user1_id`, `user2_id`, `user1_score`, `user2_score`
-  * `user1_result`, `user2_result`, `start_at`, `end_at`
-  * `processed`, `processing`, `processed_at`, `created_at`
-  * `game_mode` (`ai` | `remote-pvp`)
+- Table `games_and_results`:
+  - `game_id`, `user1_id`, `user2_id`, `user1_score`, `user2_score`
+  - `user1_result`, `user2_result`, `start_at`, `end_at`
+  - `processed`, `processing`, `processed_at`, `created_at`
+  - `game_mode` (`ai` | `remote-pvp`)
 
 ### Leaderboard DB (`leaderboard.db`)
 
-* Table `leaderboard_cache`:
+- Table `leaderboard_cache`:
+  - `user_id`, `played`, `wins`, `losses`, `winrate`, `rate`, `updated_at`
 
-  * `user_id`, `played`, `wins`, `losses`, `winrate`, `rate`, `updated_at`
-* Indexes: `rate`, `winrate`, `played`, `wins`
+- Indexes: `rate`, `winrate`, `played`, `wins`
 
 ---
 
@@ -170,16 +168,16 @@ Tracks game results between players, updates a leaderboard, and synchronizes wit
 
 ### Statistics Worker
 
-* Fetches unprocessed games from `games_and_results`
-* Sends updates to **Profile Service API**
-* Marks games as processed
-* Runs in a loop with exponential backoff
+- Fetches unprocessed games from `games_and_results`
+- Sends updates to **Profile Service API**
+- Marks games as processed
+- Runs in a loop with exponential backoff
 
 ### Leaderboard Worker
 
-* Fetches leaderboard updates from Profile Service API
-* Updates `leaderboard_cache`
-* Runs in a loop with exponential backoff
+- Fetches leaderboard updates from Profile Service API
+- Updates `leaderboard_cache`
+- Runs in a loop with exponential backoff
 
 ---
 
@@ -217,16 +215,15 @@ npm start
 
 ## Shutdown
 
-* Handles `SIGINT` and `SIGTERM`
-* Stops Fastify server
-* Closes SQLite databases
-* Stops statistics and leaderboard workers
+- Handles `SIGINT` and `SIGTERM`
+- Stops Fastify server
+- Closes SQLite databases
+- Stops statistics and leaderboard workers
 
 ---
 
 ## Notes
 
-* Requires **Profile Service** for leaderboard synchronization
-* Ensure both `statistics.db` and `leaderboard.db` are writable
-* Default internal token is `"secret"` for local development; change in production
-
+- Requires **Profile Service** for leaderboard synchronization
+- Ensure both `statistics.db` and `leaderboard.db` are writable
+- Default internal token is `"secret"` for local development; change in production

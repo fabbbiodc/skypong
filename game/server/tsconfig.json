@@ -1,26 +1,20 @@
 {
-    "compilerOptions": {
-        "target": "ES2020",
-        "module": "CommonJS",
-        "strict": true,
-        "esModuleInterop": true,
-        "baseUrl": ".",
-        "outDir": "./dist",
-        "paths": {
-            "@skypong/common/*": [
-                "../common/*"
-            ],
-            "@skypong/common": [
-                "../common/GameState.ts"
-            ]
-        },
-        "experimentalDecorators": true,
-        "skipLibCheck": true
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "@skypong/common/*": ["../common/*"],
+      "@skypong/common": ["../common/GameState.ts"]
     },
-    "include": ["src_serv/**/*"],
-    "ts-node": {
-        "require": [
-            "tsconfig-paths/register"
-        ]
-    }
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "include": ["src_serv/**/*"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

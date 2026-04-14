@@ -1,32 +1,32 @@
 /**
  * AchievementsSection
- * 
+ *
  * Props:
  *   stats: { wins: number, losses: number, winrate: number }
- * 
+ *
  * Usage:
  *   <AchievementsSection stats={player.stats} />
  */
 
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import { useTranslation } from "../../context/language-context";
 import { ProgressBar, Badge } from "../base";
 import { cn } from "@/lib/utils";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faGamepad, 
-  faCalendar, 
-  faMedal, 
-  faBolt, 
-  faFire, 
-  faCrown, 
-  faBullseye, 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faGamepad,
+  faCalendar,
+  faMedal,
+  faBolt,
+  faFire,
+  faCrown,
+  faBullseye,
   faTrophy,
   faStar,
-  faLock
-} from '@fortawesome/free-solid-svg-icons';
+  faLock,
+} from "@fortawesome/free-solid-svg-icons";
 
 // ─── Achievement unlock logic ────────────────────────────────────────────────
 function computeAchievements(stats: any, t: any) {
@@ -140,30 +140,27 @@ function computeAchievements(stats: any, t: any) {
 
 // ─── Single achievement card ──────────────────────────────────────────────────
 function AchievementCard({ achievement }: { achievement: any }) {
-  const { icon, title, description, unlocked, comingSoon, progress, goal } = achievement;
+  const { icon, title, description, unlocked, comingSoon, progress, goal } =
+    achievement;
   const hasProgress = progress !== undefined && goal !== undefined;
   const { t } = useTranslation();
 
   return (
     <div
       className={cn(
-        'achievement-card',
-        unlocked ? 'achievement-unlocked' : 'achievement-locked'
+        "achievement-card",
+        unlocked ? "achievement-unlocked" : "achievement-locked",
       )}
     >
       {/* Icon */}
-      <div className="achievement-icon">
-        {icon}
-      </div>
+      <div className="achievement-icon">{icon}</div>
 
       {/* Content */}
       <div className="achievement-content">
         <h4 className="text-sm md:text-base font-semibold font-display text-gray-900 mb-1">
           {title}
         </h4>
-        <p className="text-xs md:text-sm text-muted mb-3">
-          {description}
-        </p>
+        <p className="text-xs md:text-sm text-muted mb-3">{description}</p>
 
         {/* Progress bar for achievements with progress */}
         {hasProgress && (

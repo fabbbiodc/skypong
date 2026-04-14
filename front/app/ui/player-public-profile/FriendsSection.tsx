@@ -27,18 +27,18 @@ import api from "../../api/api";
 import Toast from "../messaging/toast";
 import Loader from "../loader/loader-ui";
 import { Avatar, Badge, Button, Tabs } from "../base";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faUser, 
-  faBan, 
-  faCheck, 
-  faUsers, 
-  faInbox, 
-  faPaperPlane, 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faBan,
+  faCheck,
+  faUsers,
+  faInbox,
+  faPaperPlane,
   faTriangleExclamation,
   faGhost,
-  faRotateRight
-} from '@fortawesome/free-solid-svg-icons';
+  faRotateRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Friend {
@@ -68,14 +68,15 @@ const ACTIVE_MINS = 1;
 // ─── Utility functions ────────────────────────────────────────────────────────
 function isConnected(sessionexpiredat?: string, isLogged?: boolean): boolean {
   if (!sessionexpiredat || !isLogged) return false;
-  const expired = Date.now() < new Date(sessionexpiredat.replace(' ', 'T') + 'Z').getTime();
+  const expired =
+    Date.now() < new Date(sessionexpiredat.replace(" ", "T") + "Z").getTime();
   return expired;
 }
 
 function isAbsent(lastLogin?: string): boolean {
   if (!lastLogin) return false;
   const now = Date.now();
-  const date = now - new Date(lastLogin.replace(' ', 'T') + 'Z').getTime();
+  const date = now - new Date(lastLogin.replace(" ", "T") + "Z").getTime();
   const mins = date / 60000;
   return mins >= ACTIVE_MINS;
 }
@@ -105,20 +106,24 @@ interface FriendRowProps {
   blocked: boolean;
 }
 
-function FriendRow({ friend, onRemove, onBlock, onUnblock, onProfile, busy, blocked }: FriendRowProps) {
+function FriendRow({
+  friend,
+  onRemove,
+  onBlock,
+  onUnblock,
+  onProfile,
+  busy,
+  blocked,
+}: FriendRowProps) {
   const absent = isAbsent(friend.last_access_at);
   const connected = isConnected(friend?.access_expires_at, friend.logged);
   const { t } = useTranslation();
 
   return (
     <div className="friend-row">
-      <Avatar
-        src={friend.avatarUrl}
-        fallbackText={friend.nickname}
-        size="md"
-      />
+      <Avatar src={friend.avatarUrl} fallbackText={friend.nickname} size="md" />
       <div className="friend-info">
-        <div 
+        <div
           className="friend-name-link text-sm truncate"
           onClick={() => onProfile(friend.user_id)}
         >
@@ -147,7 +152,8 @@ function FriendRow({ friend, onRemove, onBlock, onUnblock, onProfile, busy, bloc
           size="sm"
           onClick={() => onProfile(friend.user_id)}
         >
-          <FontAwesomeIcon icon={faUser} className="text-primary" /> {t.navigation.profile}
+          <FontAwesomeIcon icon={faUser} className="text-primary" />{" "}
+          {t.navigation.profile}
         </Button>
         {!blocked ? (
           <>
@@ -192,13 +198,19 @@ interface IncomingRowProps {
   busy: boolean;
 }
 
-function IncomingRow({ r, onAccept, onReject, onProfile, busy }: IncomingRowProps) {
+function IncomingRow({
+  r,
+  onAccept,
+  onReject,
+  onProfile,
+  busy,
+}: IncomingRowProps) {
   const { t } = useTranslation();
   return (
     <div className="friend-row friend-row-incoming">
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
       <div className="friend-info">
-        <div 
+        <div
           className="friend-name-link text-sm"
           onClick={() => onProfile(r.user_id)}
         >
@@ -245,7 +257,7 @@ function OutgoingRow({ r, onCancel, onProfile, busy }: OutgoingRowProps) {
     <div className="friend-row friend-row-outgoing">
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
       <div className="friend-info">
-        <div 
+        <div
           className="friend-name-link text-sm"
           onClick={() => onProfile(r.user_id)}
         >
@@ -271,7 +283,13 @@ function OutgoingRow({ r, onCancel, onProfile, busy }: OutgoingRowProps) {
 }
 
 // ─── Section label ────────────────────────────────────────────────────────────
-function SectionLabel({ label, variant }: { label: string; variant: "success" | "muted" | "danger" }) {
+function SectionLabel({
+  label,
+  variant,
+}: {
+  label: string;
+  variant: "success" | "muted" | "danger";
+}) {
   const colors = {
     success: "bg-green-600",
     muted: "bg-gray-400",
@@ -289,7 +307,11 @@ function SectionLabel({ label, variant }: { label: string; variant: "success" | 
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function FriendsSection({ currentUserId, csrfToken, onNavigateProfile }: FriendsSectionProps) {
+export default function FriendsSection({
+  currentUserId,
+  csrfToken,
+  onNavigateProfile,
+}: FriendsSectionProps) {
   const [activeTab, setActiveTab] = useState("friends");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [incoming, setIncoming] = useState<Friend[]>([]);
@@ -302,16 +324,23 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
 
   const csrf = csrfToken;
 
-  const notify = (msg: string, type: "ok" | "err" = "ok") => setToast({ msg, type });
+  const notify = (msg: string, type: "ok" | "err" = "ok") =>
+    setToast({ msg, type });
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
     setFetchError(null);
     try {
       const [f, inc, out] = await Promise.all([
-        api("/api/profile/friends", { headers: { 'x-csrf-token': csrf } } as any),
-        api("/api/profile/friends/requests/incoming", { headers: { 'x-csrf-token': csrf } } as any),
-        api("/api/profile/friends/requests/outgoing", { headers: { 'x-csrf-token': csrf } } as any),
+        api("/api/profile/friends", {
+          headers: { "x-csrf-token": csrf },
+        } as any),
+        api("/api/profile/friends/requests/incoming", {
+          headers: { "x-csrf-token": csrf },
+        } as any),
+        api("/api/profile/friends/requests/outgoing", {
+          headers: { "x-csrf-token": csrf },
+        } as any),
       ]);
       setFriends(Array.isArray(f) ? f : []);
       setIncoming(Array.isArray(inc) ? inc : []);
@@ -341,26 +370,72 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
   };
 
   const handleAccept = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}/accept`, { method: "POST", headers: { 'x-csrf-token': csrf } } as any), t.player.requestAccepted || "✓ Request accepted");
-  
-  const handleReject = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}/reject`, { method: "POST", headers: { 'x-csrf-token': csrf } } as any), t.player.requestRejected || "Request rejected");
-  
-  const handleCancel = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}/cancel`, { method: "POST", headers: { 'x-csrf-token': csrf } } as any), t.player.requestCancelled || "Request cancelled");
-  
-  const handleRemove = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}`, { method: "DELETE", headers: { 'x-csrf-token': csrf } } as any), t.player.friendRemoved || "Friend removed");
-  
-  const handleBlock = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}/block`, { method: "POST", headers: { 'x-csrf-token': csrf }, body: { userId: currentUserId } } as any), t.player.playerBloqued || "Player blocked");
-  
-  const handleUnblock = (id: string) =>
-    act(() => api(`/api/profile/friends/${id}/unblock`, { method: "POST", headers: { 'x-csrf-token': csrf }, body: { userId: currentUserId } } as any), t.player.playerUnbloqued || "Player unblocked");
+    act(
+      () =>
+        api(`/api/profile/friends/${id}/accept`, {
+          method: "POST",
+          headers: { "x-csrf-token": csrf },
+        } as any),
+      t.player.requestAccepted || "✓ Request accepted",
+    );
 
-  const activeFriends = friends.filter(f => f.logged && !isBlocked(f.status));
-  const inactiveFriends = friends.filter(f => (isAbsent(f.last_access_at) || !f.logged) && !isBlocked(f.status));
-  const blockedFriends = friends.filter(f => isBlocked(f.status));
+  const handleReject = (id: string) =>
+    act(
+      () =>
+        api(`/api/profile/friends/${id}/reject`, {
+          method: "POST",
+          headers: { "x-csrf-token": csrf },
+        } as any),
+      t.player.requestRejected || "Request rejected",
+    );
+
+  const handleCancel = (id: string) =>
+    act(
+      () =>
+        api(`/api/profile/friends/${id}/cancel`, {
+          method: "POST",
+          headers: { "x-csrf-token": csrf },
+        } as any),
+      t.player.requestCancelled || "Request cancelled",
+    );
+
+  const handleRemove = (id: string) =>
+    act(
+      () =>
+        api(`/api/profile/friends/${id}`, {
+          method: "DELETE",
+          headers: { "x-csrf-token": csrf },
+        } as any),
+      t.player.friendRemoved || "Friend removed",
+    );
+
+  const handleBlock = (id: string) =>
+    act(
+      () =>
+        api(`/api/profile/friends/${id}/block`, {
+          method: "POST",
+          headers: { "x-csrf-token": csrf },
+          body: { userId: currentUserId },
+        } as any),
+      t.player.playerBloqued || "Player blocked",
+    );
+
+  const handleUnblock = (id: string) =>
+    act(
+      () =>
+        api(`/api/profile/friends/${id}/unblock`, {
+          method: "POST",
+          headers: { "x-csrf-token": csrf },
+          body: { userId: currentUserId },
+        } as any),
+      t.player.playerUnbloqued || "Player unblocked",
+    );
+
+  const activeFriends = friends.filter((f) => f.logged && !isBlocked(f.status));
+  const inactiveFriends = friends.filter(
+    (f) => (isAbsent(f.last_access_at) || !f.logged) && !isBlocked(f.status),
+  );
+  const blockedFriends = friends.filter((f) => isBlocked(f.status));
 
   const tabs = [
     {
@@ -388,15 +463,12 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-wide uppercase">
-          <FontAwesomeIcon icon={faUsers} className="text-primary" /> {t.player.friends}
+          <FontAwesomeIcon icon={faUsers} className="text-primary" />{" "}
+          {t.player.friends}
         </h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={fetchAll}
-          disabled={loading}
-        >
-          <FontAwesomeIcon icon={faRotateRight} className="text-primary" /> {t.game.refresh}
+        <Button variant="ghost" size="sm" onClick={fetchAll} disabled={loading}>
+          <FontAwesomeIcon icon={faRotateRight} className="text-primary" />{" "}
+          {t.game.refresh}
         </Button>
       </div>
 
@@ -408,14 +480,23 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
         <Loader classes="" message={t.form.loading} />
       ) : fetchError ? (
         <div className="text-center py-8 text-sm text-red-600">
-          <FontAwesomeIcon icon={faTriangleExclamation} className="text-primary" /> {fetchError}
+          <FontAwesomeIcon
+            icon={faTriangleExclamation}
+            className="text-primary"
+          />{" "}
+          {fetchError}
         </div>
       ) : (
         <div className="profile-tab-content">
           {/* Friends tab */}
-          {activeTab === "friends" && (
-            friends.length === 0 ? (
-              <Empty icon={<FontAwesomeIcon icon={faGhost} className="text-primary" />} text={t.player.younofriends} />
+          {activeTab === "friends" &&
+            (friends.length === 0 ? (
+              <Empty
+                icon={
+                  <FontAwesomeIcon icon={faGhost} className="text-primary" />
+                }
+                text={t.player.younofriends}
+              />
             ) : (
               <>
                 {activeFriends.length > 0 && (
@@ -424,14 +505,14 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                       label={`${t.player.actives} — ${activeFriends.length}`}
                       variant="success"
                     />
-                    {activeFriends.map(f => (
+                    {activeFriends.map((f) => (
                       <FriendRow
                         key={f.user_id}
                         friend={f}
                         onRemove={handleRemove}
                         onBlock={handleBlock}
                         onUnblock={handleUnblock}
-                        onProfile={id => onNavigateProfile?.(id)}
+                        onProfile={(id) => onNavigateProfile?.(id)}
                         busy={busy}
                         blocked={false}
                       />
@@ -444,14 +525,14 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                       label={`${t.player.inactives} — ${inactiveFriends.length}`}
                       variant="muted"
                     />
-                    {inactiveFriends.map(f => (
+                    {inactiveFriends.map((f) => (
                       <FriendRow
                         key={f.user_id}
                         friend={f}
                         onRemove={handleRemove}
                         onBlock={handleBlock}
                         onUnblock={handleUnblock}
-                        onProfile={id => onNavigateProfile?.(id)}
+                        onProfile={(id) => onNavigateProfile?.(id)}
                         busy={busy}
                         blocked={false}
                       />
@@ -464,14 +545,14 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                       label={`${t.player.blockeds} — ${blockedFriends.length}`}
                       variant="danger"
                     />
-                    {blockedFriends.map(f => (
+                    {blockedFriends.map((f) => (
                       <FriendRow
                         key={f.user_id}
                         friend={f}
                         onRemove={handleRemove}
                         onBlock={handleBlock}
                         onUnblock={handleUnblock}
-                        onProfile={id => onNavigateProfile?.(id)}
+                        onProfile={(id) => onNavigateProfile?.(id)}
                         busy={busy}
                         blocked={true}
                       />
@@ -479,15 +560,19 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                   </>
                 )}
               </>
-            )
-          )}
+            ))}
 
           {/* Incoming tab */}
-          {activeTab === "incoming" && (
-            incoming.length === 0 ? (
-              <Empty icon={<FontAwesomeIcon icon={faInbox} className="text-primary" />} text={t.player.noincomingRequests} />
+          {activeTab === "incoming" &&
+            (incoming.length === 0 ? (
+              <Empty
+                icon={
+                  <FontAwesomeIcon icon={faInbox} className="text-primary" />
+                }
+                text={t.player.noincomingRequests}
+              />
             ) : (
-              incoming.map(r => (
+              incoming.map((r) => (
                 <IncomingRow
                   key={r.user_id}
                   r={r}
@@ -497,15 +582,22 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                   busy={busy}
                 />
               ))
-            )
-          )}
+            ))}
 
           {/* Outgoing tab */}
-          {activeTab === "outgoing" && (
-            outgoing.length === 0 ? (
-              <Empty icon={<FontAwesomeIcon icon={faPaperPlane} className="text-primary" />} text={t.player.nooutgoingRequests} />
+          {activeTab === "outgoing" &&
+            (outgoing.length === 0 ? (
+              <Empty
+                icon={
+                  <FontAwesomeIcon
+                    icon={faPaperPlane}
+                    className="text-primary"
+                  />
+                }
+                text={t.player.nooutgoingRequests}
+              />
             ) : (
-              outgoing.map(r => (
+              outgoing.map((r) => (
                 <OutgoingRow
                   key={r.user_id}
                   r={r}
@@ -514,12 +606,13 @@ export default function FriendsSection({ currentUserId, csrfToken, onNavigatePro
                   busy={busy}
                 />
               ))
-            )
-          )}
+            ))}
         </div>
       )}
 
-      {toast && <Toast msg={toast.msg} type={toast.type} clear={() => setToast(null)} />}
+      {toast && (
+        <Toast msg={toast.msg} type={toast.type} clear={() => setToast(null)} />
+      )}
     </div>
   );
 }

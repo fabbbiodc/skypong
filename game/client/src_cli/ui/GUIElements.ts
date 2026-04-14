@@ -1,8 +1,24 @@
-import { Button, TextBlock, Rectangle, Control, Image, StackPanel } from "@babylonjs/gui";
-import { ITextStyle, IButtonStyle, IContainerStyle, IIconButtonStyle } from "../config/GUIStyles";
+import {
+  Button,
+  TextBlock,
+  Rectangle,
+  Control,
+  Image,
+  StackPanel,
+} from "@babylonjs/gui";
+import {
+  ITextStyle,
+  IButtonStyle,
+  IContainerStyle,
+  IIconButtonStyle,
+} from "../config/GUIStyles";
 
 export class GUIElements {
-  public static CreateText(name: string, content: string, style: ITextStyle): TextBlock {
+  public static CreateText(
+    name: string,
+    content: string,
+    style: ITextStyle,
+  ): TextBlock {
     const text = new TextBlock(name);
     text.text = content;
     text.color = style.color;
@@ -16,8 +32,10 @@ export class GUIElements {
     if (style.shadowOffsetX) text.shadowOffsetX = style.shadowOffsetX;
     if (style.shadowOffsetY) text.shadowOffsetY = style.shadowOffsetY;
     if (style.shadowBlur) text.shadowBlur = style.shadowBlur;
-    if (style.horizontalAlignment) text.horizontalAlignment = style.horizontalAlignment;
-    if (style.verticalAlignment) text.verticalAlignment = style.verticalAlignment;
+    if (style.horizontalAlignment)
+      text.horizontalAlignment = style.horizontalAlignment;
+    if (style.verticalAlignment)
+      text.verticalAlignment = style.verticalAlignment;
     if (style.top) text.top = style.top;
     if (style.paddingTop) text.paddingTop = style.paddingTop;
     if (style.paddingBottom) text.paddingBottom = style.paddingBottom;
@@ -53,11 +71,14 @@ export class GUIElements {
     btn.thickness = 0;
     btn.fontSize = style.fontSize;
 
-    if (style.horizontalAlignment) btn.horizontalAlignment = style.horizontalAlignment;
-    if (style.verticalAlignment) btn.verticalAlignment = style.verticalAlignment;
+    if (style.horizontalAlignment)
+      btn.horizontalAlignment = style.horizontalAlignment;
+    if (style.verticalAlignment)
+      btn.verticalAlignment = style.verticalAlignment;
     if (style.top) btn.top = style.top;
     if (style.zIndex) btn.zIndex = style.zIndex;
-    if (style.adaptWidthToChildren) btn.adaptWidthToChildren = style.adaptWidthToChildren;
+    if (style.adaptWidthToChildren)
+      btn.adaptWidthToChildren = style.adaptWidthToChildren;
     if (style.paddingLeft) btn.paddingLeft = style.paddingLeft;
     if (style.paddingRight) btn.paddingRight = style.paddingRight;
 
@@ -100,12 +121,16 @@ export class GUIElements {
     return button;
   }
 
-  public static CreateContainer(name: string, style: IContainerStyle): Rectangle {
+  public static CreateContainer(
+    name: string,
+    style: IContainerStyle,
+  ): Rectangle {
     const rect = new Rectangle(name);
     rect.background = style.background;
     rect.cornerRadius = style.cornerRadius;
     rect.thickness = style.thickness;
-    rect.verticalAlignment = style.verticalAlignment ?? Control.VERTICAL_ALIGNMENT_CENTER;
+    rect.verticalAlignment =
+      style.verticalAlignment ?? Control.VERTICAL_ALIGNMENT_CENTER;
     if (style.width) rect.width = style.width;
     if (style.height) rect.height = style.height;
     rect.adaptWidthToChildren = true;
@@ -122,7 +147,8 @@ export class GUIElements {
     panel.isVertical = isVertical;
     panel.background = style.background;
 
-    if (style.verticalAlignment !== undefined) panel.verticalAlignment = style.verticalAlignment;
+    if (style.verticalAlignment !== undefined)
+      panel.verticalAlignment = style.verticalAlignment;
     if (style.horizontalAlignment !== undefined)
       panel.horizontalAlignment = style.horizontalAlignment;
     if (style.paddingTop) panel.paddingTop = style.paddingTop;

@@ -1,26 +1,35 @@
 // app/context/AuthContext.tsx
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 const AuthContext = createContext({
-    user: null,
-    authloading: true,
-    hasCredentials: false,
-    logout: async () => {},
-    checkAuth: async () => { return false; } // Útil para re-validar tras login
+  user: null,
+  authloading: true,
+  hasCredentials: false,
+  logout: async () => {},
+  checkAuth: async () => {
+    return false;
+  }, // Útil para re-validar tras login
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState(null);
   const [authloading, setAuthloading] = useState(true);
-  const [hasCredentials , setHasCredentials] = useState(false);
+  const [hasCredentials, setHasCredentials] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
-  const signRoutes = ['/login', '/signup'];
-  const privateRoutes = ['/updateme', '/me'];
+  const signRoutes = ["/login", "/signup"];
+  const privateRoutes = ["/updateme", "/me"];
 
   // Mutex: if checkAuth is already in-flight, reuse the same promise
   const inflightRef = useRef<Promise<boolean> | null>(null);
@@ -34,10 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuthloading(true);
 
       try {
-        const getCSRF = () => document.cookie
-          .split('; ')
-          .find(row => row.startsWith('csrf_token='))
-          ?.split('=')[1];
+        const getCSRF = () =>
+          document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("csrf_token="))
+            ?.split("=")[1];
 
         let csrfToken = getCSRF();
 
@@ -46,16 +56,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return false;
         }
 
-		const refresh = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include', headers: { 'x-csrf-token': csrfToken || '' } });
-		if (!refresh.ok) {
-		  setUser(null);
-		  return false;
-		}
-		csrfToken = getCSRF();
+        const refresh = await fetch("/api/auth/refresh", {
+          method: "POST",
+          credentials: "include",
+          headers: { "x-csrf-token": csrfToken || "" },
+        });
+        if (!refresh.ok) {
+          setUser(null);
+          return false;
+        }
+        csrfToken = getCSRF();
 
-        const res = await fetch('/api/profile/me', {
-          credentials: 'include',
-          headers: { 'x-csrf-token': csrfToken || '' },
+        const res = await fetch("/api/profile/me", {
+          credentials: "include",
+          headers: { "x-csrf-token": csrfToken || "" },
         });
 
         if (res.status === 401 || !res.ok) {
@@ -92,50 +106,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const isPrivateRoute = privateRoutes.includes(pathname);
 
       if (loggedIn && isSignRoute) {
-        router.replace('/me');
+        router.replace("/me");
       } else if (!loggedIn && isPrivateRoute) {
-        router.replace('/login');
+        router.replace("/login");
       }
     })();
   }, [pathname, router, checkAuth]);
 
   const logout = async () => {
     try {
-/*		const csrfToken = document.cookie
+      /*		const csrfToken = document.cookie
         .split('; ')
         .find(row => row.startsWith('csrf_token='))
         ?.split('=')[1];*/
 
-		const getCSRF = () => document.cookie
-          .split('; ')
-          .find(row => row.startsWith('csrf_token='))
-          ?.split('=')[1];
+      const getCSRF = () =>
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("csrf_token="))
+          ?.split("=")[1];
 
-		let csrfToken = getCSRF();
-
+      let csrfToken = getCSRF();
 
       // 1. Obtener el CSRF token de las cookies (document.cookie)
       // Tu backend Fastify lo guarda en una cookie no httpOnly llamada 'csrf_token'
 
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
         // body: JSON.stringify({ user: { id: user.id }}),
       });
     } catch (err) {
-        console.error("Error durante el logout:", err);
-        return;
+      console.error("Error durante el logout:", err);
+      return;
     } finally {
       // 2. Limpiar el estado local e ir a home pase lo que pase
       setUser(null);
       setHasCredentials(false);
-      router.push('/login');
+      router.push("/login");
       router.refresh(); // Limpia la caché de Next.js
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, authloading, hasCredentials, logout, checkAuth }}>
+    <AuthContext.Provider
+      value={{ user, authloading, hasCredentials, logout, checkAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );

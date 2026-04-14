@@ -1,10 +1,10 @@
 export type GameMode =
-  | 'ai-easy'
-  | 'ai-medium'
-  | 'ai-hard'
-  | 'local-2p'
-  | 'online-create'
-  | 'online-join';
+  | "ai-easy"
+  | "ai-medium"
+  | "ai-hard"
+  | "local-2p"
+  | "online-create"
+  | "online-join";
 
 export interface GameSessionConfig {
   playerId?: string;
@@ -15,18 +15,18 @@ export interface GameSessionConfig {
   player2Name?: string;
   player2Color?: string;
   roomId?: string;
-  cameraView?: 'angled' | 'top-down';
+  cameraView?: "angled" | "top-down";
   winningScore?: number;
-  language?: 'en' | 'es' | 'it';
+  language?: "en" | "es" | "it";
 }
 
 export const VALID_GAME_MODES: GameMode[] = [
-  'local-2p',
-  'online-create',
-  'online-join',
-  'ai-easy',
-  'ai-medium',
-  'ai-hard'
+  "local-2p",
+  "online-create",
+  "online-join",
+  "ai-easy",
+  "ai-medium",
+  "ai-hard",
 ];
 
 export function encodeConfig(config: GameSessionConfig): string {
@@ -34,11 +34,15 @@ export function encodeConfig(config: GameSessionConfig): string {
     const jsonString = JSON.stringify(config);
     return btoa(jsonString);
   } catch (error) {
-    throw new Error('Failed to encode configuration: ' + (error as Error).message);
+    throw new Error(
+      "Failed to encode configuration: " + (error as Error).message,
+    );
   }
 }
 
-export function decodeConfig(base64String: string | null): GameSessionConfig | null {
+export function decodeConfig(
+  base64String: string | null,
+): GameSessionConfig | null {
   if (!base64String) {
     return null;
   }
@@ -66,11 +70,11 @@ export function decodeConfig(base64String: string | null): GameSessionConfig | n
     return null;
   }
 
-  if (gameMode === 'local-2p' && !config.player2Name) {
+  if (gameMode === "local-2p" && !config.player2Name) {
     return null;
   }
 
-  if (gameMode === 'online-join' && !config.roomId) {
+  if (gameMode === "online-join" && !config.roomId) {
     return null;
   }
 

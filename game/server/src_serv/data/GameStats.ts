@@ -1,6 +1,5 @@
 const SERVICE_TOKEN = process.env.SERVICE_TOKEN;
-const STATS_SERVICE_URL =
-  process.env.STATS_SERVICE_URL;
+const STATS_SERVICE_URL = process.env.STATS_SERVICE_URL;
 
 import axios from "axios";
 

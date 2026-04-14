@@ -313,7 +313,6 @@ Prometheus/Grafana/Alertmanager are part of the default stack, enabling performa
 - Multiple services improve modularity but increase orchestration complexity.
 - Gateway-centered routing is operationally clean but adds a single critical edge component.
 
-
 ---
 
 # ft_transcendence Module Compliance Audit
@@ -327,56 +326,69 @@ Estimated total points: **24**
 ## 2. Fulfilled Modules
 
 ### 2.1 Major: Framework for both frontend and backend
+
 - Frontend stack is based on **Next.js + React**.
 - Backend stack uses **Fastify** services and **Express/Colyseus** for game realtime server.
 
 ### 2.2 Major: Real-time features using WebSockets
+
 - Realtime game server uses Colyseus websocket transport.
 - Chat websocket is handled in profile-service and proxied via nginx.
 
 ### 2.3 Major: Allow users to interact with other users
+
 - Friends system includes send/accept/reject/cancel/remove/block/unblock.
 - Global chat is available in frontend and backend websocket handling.
 
 ### 2.4 Minor: Multiple languages (>=3)
+
 - Languages implemented: English, Spanish, Italian.
 - Language switcher present in navigation UI.
 
 ### 2.5 Minor: Additional browsers support
+
 - Frontend implementation uses standard web technologies; no browser-locked APIs.
 - Should be defended by showing live run on at least two browsers beyond Chrome during evaluation.
 
 ### 2.6 Major: Standard user management and authentication
+
 - Endpoints for signup/login/verify/logout/password change/account deletion.
 - Access/refresh token flow with JWT verification and session checks.
 
 ### 2.7 Minor: Game statistics and match history
+
 - Statistics service stores game results and exposes leaderboard/history.
 - Profile/statistics integration supports retrieving per-user match history.
 
 ### 2.8 Major: AI Opponent
+
 - AI room (`ai_game_room`) and AI controller (`AIPaddleController`) are implemented in game server.
 
 ### 2.9 Major: Implement a complete web-based game where users can play against each other.
+
 - The game can be real-time multiplayer.
 - Players must be able to play live matches.
 - The game must have clear rules and win/loss conditions.
 - The game can be 2D or 3D.
 
 ### 2.10 Major: Remote players (2 separate computers)
+
 - PvP Colyseus room supports 2 real-time players connected remotely.
 - Room listing/join flow and game-state sync are implemented.
 
 ### 2.11 Major: Advanced 3D graphics with Babylon.js
+
 - Game backend simulation uses Babylon.js engine primitives and 2D scene entities.
 - Game client/server architecture is designed around Babylon.js-compatible 2D gameplay.
 
 ### 2.12 Minor: Gamification system
+
 - Achievements section and progression rules are implemented in the profile UI layer.
 
 ### 2.13 Major: Monitoring with Prometheus and Grafana
+
 - Compose stack includes Prometheus, Grafana, cAdvisor, nginx exporter and dashboards.
 
 ### 2.14 Major: Backend as microservices
-- Service decomposition is present (auth/profile/statistics/game/gateway/front/observability).
 
+- Service decomposition is present (auth/profile/statistics/game/gateway/front/observability).

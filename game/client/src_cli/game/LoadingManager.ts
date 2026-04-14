@@ -1,11 +1,11 @@
-import { RoomManager } from './RoomManager';
+import { RoomManager } from "./RoomManager";
 import {
   LoadingPhase,
   LoadingState,
   ErrorCode,
   INITIAL_LOADING_STATE,
   PHASE_MESSAGES,
-} from '../types/LoadingTypes';
+} from "../types/LoadingTypes";
 
 export interface LoadingManagerConfig {
   roomManager: RoomManager;
@@ -32,7 +32,7 @@ export class LoadingManager {
   }
 
   public start(initialGameStarted: boolean): void {
-    this._setPhase('connecting');
+    this._setPhase("connecting");
 
     if (this._isOnline) {
       this._roomManager.signalClientReady();
@@ -42,9 +42,9 @@ export class LoadingManager {
     this._waitingForOpponent = shouldWaitForOpponent;
 
     if (shouldWaitForOpponent) {
-      this._setPhase('waiting-for-opponent');
+      this._setPhase("waiting-for-opponent");
     } else {
-      this._setPhase('ready');
+      this._setPhase("ready");
     }
   }
 
@@ -65,28 +65,28 @@ export class LoadingManager {
   }
 
   public triggerLaunch(): void {
-    if (this._hasLaunched || this._state.phase === 'error') return;
+    if (this._hasLaunched || this._state.phase === "error") return;
     this._hasLaunched = true;
-    this._setPhase('starting');
+    this._setPhase("starting");
   }
 
   public handleGameStarted(): void {
     if (this._waitingForOpponent) {
       this._waitingForOpponent = false;
-      this._setPhase('ready');
+      this._setPhase("ready");
     }
   }
 
   public handleRoomExpired(): void {
-    this._setError('room-expired', 'No opponent joined within 2 minutes.');
+    this._setError("room-expired", "No opponent joined within 2 minutes.");
   }
 
   public handleConnectionError(details?: string): void {
-    this._setError('connection-failed', details);
+    this._setError("connection-failed", details);
   }
 
   public handleConfigError(): void {
-    this._setError('configuration-invalid', 'No game configuration provided');
+    this._setError("configuration-invalid", "No game configuration provided");
   }
 
   public dispose(): void {
@@ -108,8 +108,8 @@ export class LoadingManager {
   private _setError(code: ErrorCode, details?: string): void {
     this._state = {
       ...this._state,
-      phase: 'error',
-      message: '',
+      phase: "error",
+      message: "",
       error: { code, details },
     };
     this._notifyStateChange();

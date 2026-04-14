@@ -85,11 +85,11 @@ The output of the authentication seed (user IDs) is used by the profile and stat
 
 The seed service populates three independent SQLite databases.
 
-| Database | Domain | Responsibility |
-|--------|--------|--------|
-| auth.db | Authentication | Stores user credentials |
-| profile.db | Social/Profile | Stores player profiles and friendships |
-| statistics.db | Gameplay | Stores match history and results |
+| Database      | Domain         | Responsibility                         |
+| ------------- | -------------- | -------------------------------------- |
+| auth.db       | Authentication | Stores user credentials                |
+| profile.db    | Social/Profile | Stores player profiles and friendships |
+| statistics.db | Gameplay       | Stores match history and results       |
 
 This separation mirrors the architecture of the backend services that own these databases.
 
@@ -127,7 +127,7 @@ User IDs generated during authentication seeding are reused across the other dom
 # Technologies
 
 | Technology | Purpose                      |
-|------------|------------------------------|
+| ---------- | ---------------------------- |
 | Node.js 20 | Runtime environment          |
 | SQLite3    | Embedded relational database |
 | UUID       | Unique identifier generation |

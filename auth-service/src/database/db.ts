@@ -1,18 +1,20 @@
-import fs from 'fs';
-import path from 'path';
-import sqlite3 from 'sqlite3';
+import fs from "fs";
+import path from "path";
+import sqlite3 from "sqlite3";
 
-const dataDir = process.env.AUTH_DATA_DIR?.trim() || path.resolve(process.cwd(), 'data');
-const dbPath = process.env.AUTH_DB_PATH?.trim() || path.join(dataDir, 'auth.db');
+const dataDir =
+  process.env.AUTH_DATA_DIR?.trim() || path.resolve(process.cwd(), "data");
+const dbPath =
+  process.env.AUTH_DB_PATH?.trim() || path.join(dataDir, "auth.db");
 
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
-const db = new sqlite3.Database(dbPath, err => {
-	if (err) {
-		console.error('Failed to connect to SQlite', err);
-	} else {
-		console.log('Connected to SQlite:', dbPath);
-	}
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error("Failed to connect to SQlite", err);
+  } else {
+    console.log("Connected to SQlite:", dbPath);
+  }
 });
 
 export function initDB(): Promise<void> {
@@ -20,7 +22,7 @@ export function initDB(): Promise<void> {
     db.serialize(() => {
       (async () => {
         try {
-          db.run('PRAGMA journal_mode = WAL');
+          db.run("PRAGMA journal_mode = WAL");
 
           db.run(`
             CREATE TABLE IF NOT EXISTS users (
@@ -35,7 +37,7 @@ export function initDB(): Promise<void> {
             )
           `);
 
-		  db.run(`
+          db.run(`
 			CREATE TABLE IF NOT EXISTS user_sessions (
 				id TEXT PRIMARY KEY,
 				user_id TEXT UNIQUE NOT NULL,
@@ -46,7 +48,9 @@ export function initDB(): Promise<void> {
 				);
 			`);
 
-		  db.run (`CREATE INDEX IF NOT EXISTS idx_sessions_exp ON user_sessions(expires_at);`);
+          db.run(
+            `CREATE INDEX IF NOT EXISTS idx_sessions_exp ON user_sessions(expires_at);`,
+          );
 
           resolve();
         } catch (err) {
@@ -57,7 +61,6 @@ export function initDB(): Promise<void> {
   });
 }
 
-
 export function getDB() {
-	return db;
-};
+  return db;
+}

@@ -1,24 +1,24 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 const statCardVariants = cva(
   // Base styles
-  'flex flex-col items-center justify-center rounded-xl border-2 p-4 transition-all duration-200',
+  "flex flex-col items-center justify-center rounded-xl border-2 p-4 transition-all duration-200",
   {
     variants: {
       variant: {
-        default: 'bg-white border-gray-200 hover:border-gray-300',
-        primary: 'bg-purple-50 border-primary hover:border-primary-hover',
-        success: 'bg-green-50 border-green-500 hover:border-green-600',
-        danger: 'bg-red-50 border-red-500 hover:border-red-600',
-        warning: 'bg-amber-50 border-amber-500 hover:border-amber-600',
+        default: "bg-white border-gray-200 hover:border-gray-300",
+        primary: "bg-purple-50 border-primary hover:border-primary-hover",
+        success: "bg-green-50 border-green-500 hover:border-green-600",
+        danger: "bg-red-50 border-red-500 hover:border-red-600",
+        warning: "bg-amber-50 border-amber-500 hover:border-amber-600",
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: "default",
     },
-  }
+  },
 );
 
 interface StatCardProps extends VariantProps<typeof statCardVariants> {
@@ -26,7 +26,7 @@ interface StatCardProps extends VariantProps<typeof statCardVariants> {
   label: string;
   value: string | number;
   icon?: ReactNode;
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
   trendValue?: string;
 }
 
@@ -40,16 +40,16 @@ export function StatCard({
   trendValue,
 }: StatCardProps) {
   const trendColor = {
-    up: 'text-green-600',
-    down: 'text-red-600',
-    neutral: 'text-gray-500',
-  }[trend || 'neutral'];
+    up: "text-green-600",
+    down: "text-red-600",
+    neutral: "text-gray-500",
+  }[trend || "neutral"];
 
   const trendIcon = {
-    up: '↑',
-    down: '↓',
-    neutral: '→',
-  }[trend || 'neutral'];
+    up: "↑",
+    down: "↓",
+    neutral: "→",
+  }[trend || "neutral"];
 
   return (
     <div className={cn(statCardVariants({ variant, className }))}>
@@ -61,7 +61,7 @@ export function StatCard({
         {label}
       </div>
       {trend && trendValue && (
-        <div className={cn('text-xs md:text-sm font-medium mt-2', trendColor)}>
+        <div className={cn("text-xs md:text-sm font-medium mt-2", trendColor)}>
           {trendIcon} {trendValue}
         </div>
       )}

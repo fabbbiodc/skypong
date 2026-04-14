@@ -9,28 +9,28 @@ export class CloudObject {
 
   constructor(scene: Scene, position: Vector3) {
     CloudObject._scene = scene;
-    
+
     if (CloudObject.spriteManager) {
       CloudObject.spriteManager.dispose();
       CloudObject.spriteManager = null;
     }
-    
+
     CloudObject.spriteManager = new SpriteManager(
       "cloudsManager",
       "textures/cloud.png",
       100,
       256,
-      scene
+      scene,
     );
 
     CloudObject.loadingPromise = new Promise<void>((resolve) => {
       const texture = CloudObject.spriteManager!.texture;
-      
+
       if (texture.isReady()) {
         resolve();
         return;
       }
-      
+
       texture.onLoadObservable.addOnce(() => {
         resolve();
       });
@@ -45,14 +45,14 @@ export class CloudObject {
     this.sprite.position = position;
 
     this.sprite.color = new Color4(1, 1, 1, 1);
-    
-    this.sprite.size = 20; 
+
+    this.sprite.size = 20;
   }
 
   public static async waitForLoad(): Promise<void> {
     if (CloudObject.loadingPromise) {
       await CloudObject.loadingPromise;
-      
+
       if (CloudObject._scene) {
         CloudObject._scene.render();
       }

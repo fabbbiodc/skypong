@@ -1,12 +1,11 @@
-
 // Shared in-flight refresh promise so concurrent 401s only trigger one refresh
 let refreshInFlight = null;
 
 function getCSRF() {
   return document.cookie
-    .split('; ')
-    .find(row => row.startsWith('csrf_token='))
-    ?.split('=')[1];
+    .split("; ")
+    .find((row) => row.startsWith("csrf_token="))
+    ?.split("=")[1];
 }
 
 async function tryRefresh() {
@@ -17,10 +16,10 @@ async function tryRefresh() {
   refreshInFlight = (async () => {
     try {
       const csrf = getCSRF();
-      const res = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'x-csrf-token': csrf || '' },
+      const res = await fetch("/api/auth/refresh", {
+        method: "POST",
+        credentials: "include",
+        headers: { "x-csrf-token": csrf || "" },
       });
       return res.ok;
     } catch {
@@ -49,8 +48,8 @@ export default async function api(url, { method = "GET", body, headers } = {}) {
     const refreshed = await tryRefresh();
     if (refreshed) {
       // Update CSRF header if the caller included one
-      if (headers && typeof headers === 'object' && 'x-csrf-token' in headers) {
-        headers = { ...headers, 'x-csrf-token': getCSRF() || '' };
+      if (headers && typeof headers === "object" && "x-csrf-token" in headers) {
+        headers = { ...headers, "x-csrf-token": getCSRF() || "" };
       }
       res = await doFetch();
     }

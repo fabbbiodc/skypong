@@ -1,6 +1,16 @@
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "@babylonjs/gui";
+import {
+  AdvancedDynamicTexture,
+  TextBlock,
+  StackPanel,
+  Control,
+} from "@babylonjs/gui";
 import { GUI_STYLES } from "../config/GUIStyles";
-import { UITexts, Language, HUDTexts, ControlHintTexts } from "../config/UITexts";
+import {
+  UITexts,
+  Language,
+  HUDTexts,
+  ControlHintTexts,
+} from "../config/UITexts";
 import { GUIElements } from "./GUIElements";
 import { touchDetection } from "../utils/touchDetection";
 import { GameMode } from "../types/GameSessionConfig";
@@ -23,7 +33,11 @@ export class GameHUD {
   private _isMobile: boolean;
   private _texts: HUDTexts;
 
-  constructor(private _texture: AdvancedDynamicTexture, language: Language = 'en', gameMode?: GameMode) {
+  constructor(
+    private _texture: AdvancedDynamicTexture,
+    language: Language = "en",
+    gameMode?: GameMode,
+  ) {
     this._isMobile = touchDetection();
     this._texts = UITexts[language].hud;
     this._player1Name = this._texts.player1Default;
@@ -36,10 +50,18 @@ export class GameHUD {
     );
     this._texture.addControl(this._player2Container);
 
-    const player2TextStyle = this._isMobile ? GUI_STYLES.TEXT.HUD_NAME_MOBILE : GUI_STYLES.TEXT.HUD_NAME;
-    const player2ScoreStyle = this._isMobile ? GUI_STYLES.TEXT.HUD_SCORE_MOBILE : GUI_STYLES.TEXT.HUD_SCORE;
+    const player2TextStyle = this._isMobile
+      ? GUI_STYLES.TEXT.HUD_NAME_MOBILE
+      : GUI_STYLES.TEXT.HUD_NAME;
+    const player2ScoreStyle = this._isMobile
+      ? GUI_STYLES.TEXT.HUD_SCORE_MOBILE
+      : GUI_STYLES.TEXT.HUD_SCORE;
 
-    this._player2Text = GUIElements.CreateText("player2Text", "", player2TextStyle);
+    this._player2Text = GUIElements.CreateText(
+      "player2Text",
+      "",
+      player2TextStyle,
+    );
     this._player2ScoreText = GUIElements.CreateText(
       "player2ScoreText",
       this._texts.scoreDefault,
@@ -55,7 +77,6 @@ export class GameHUD {
       true,
     );
 
-  
     if (this._isMobile) {
       this._player1Container.paddingBottom = "100px";
       this._player1Container.top = "0px";
@@ -63,28 +84,41 @@ export class GameHUD {
 
     this._texture.addControl(this._player1Container);
 
-    const player1TextStyle = this._isMobile ? GUI_STYLES.TEXT.HUD_NAME_MOBILE : GUI_STYLES.TEXT.HUD_NAME;
-    const player1ScoreStyle = this._isMobile ? GUI_STYLES.TEXT.HUD_SCORE_MOBILE : GUI_STYLES.TEXT.HUD_SCORE;
+    const player1TextStyle = this._isMobile
+      ? GUI_STYLES.TEXT.HUD_NAME_MOBILE
+      : GUI_STYLES.TEXT.HUD_NAME;
+    const player1ScoreStyle = this._isMobile
+      ? GUI_STYLES.TEXT.HUD_SCORE_MOBILE
+      : GUI_STYLES.TEXT.HUD_SCORE;
 
     this._player1ScoreText = GUIElements.CreateText(
       "player1ScoreText",
       this._texts.scoreDefault,
       player1ScoreStyle,
     );
-    this._player1Text = GUIElements.CreateText("player1Text", "", player1TextStyle);
+    this._player1Text = GUIElements.CreateText(
+      "player1Text",
+      "",
+      player1TextStyle,
+    );
 
     this._player1Container.addControl(this._player1ScoreText);
     this._player1Container.addControl(this._player1Text);
 
-    this._countdownText = GUIElements.CreateText("countdownText", "", GUI_STYLES.TEXT.COUNTDOWN);
+    this._countdownText = GUIElements.CreateText(
+      "countdownText",
+      "",
+      GUI_STYLES.TEXT.COUNTDOWN,
+    );
     this._texture.addControl(this._countdownText);
 
     // Create control hints for non-touch devices
     if (!this._isMobile && gameMode) {
       const controlHintTexts: ControlHintTexts = UITexts[language].controlHints;
-      const lines: string[] = gameMode === 'local-2p'
-        ? [controlHintTexts.paddleControlP1, controlHintTexts.paddleControlP2]
-        : [controlHintTexts.paddleControlSingle];
+      const lines: string[] =
+        gameMode === "local-2p"
+          ? [controlHintTexts.paddleControlP1, controlHintTexts.paddleControlP2]
+          : [controlHintTexts.paddleControlSingle];
 
       lines.forEach((line, i) => {
         const tb = new TextBlock(`controlHint${i}`, line);
@@ -109,20 +143,22 @@ export class GameHUD {
   }
 
   public showPauseButton(onClick: () => void): void {
-      const iconStyles = this._isMobile ? GUI_STYLES.ICON_BUTTON_MOBILE : GUI_STYLES.ICON_BUTTON;
-      const pauseBtn = GUIElements.CreateIconButton(
-          'pauseButton',
-          iconStyles.PAUSE,
-          onClick,
-          () => {}
-      );
-      pauseBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-      pauseBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-      pauseBtn.top = "20px";
-      pauseBtn.left = "-20px";
-      this._texture.addControl(pauseBtn);
+    const iconStyles = this._isMobile
+      ? GUI_STYLES.ICON_BUTTON_MOBILE
+      : GUI_STYLES.ICON_BUTTON;
+    const pauseBtn = GUIElements.CreateIconButton(
+      "pauseButton",
+      iconStyles.PAUSE,
+      onClick,
+      () => {},
+    );
+    pauseBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    pauseBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    pauseBtn.top = "20px";
+    pauseBtn.left = "-20px";
+    this._texture.addControl(pauseBtn);
   }
-  
+
   public show(player1Name: string, player2Name: string): void {
     this._player1Name = player1Name;
     this._player2Name = player2Name;
@@ -133,16 +169,16 @@ export class GameHUD {
     this._player1Container.isVisible = true;
     this._player2Container.isVisible = true;
     this._countdownText.isVisible = false;
-    
-    this._controlHintTexts.forEach(tb => tb.isVisible = true);
+
+    this._controlHintTexts.forEach((tb) => (tb.isVisible = true));
   }
 
   public hide(): void {
     this._player1Container.isVisible = false;
     this._player2Container.isVisible = false;
     this._countdownText.isVisible = false;
-    
-    this._controlHintTexts.forEach(tb => tb.isVisible = false);
+
+    this._controlHintTexts.forEach((tb) => (tb.isVisible = false));
   }
 
   public updateCountdown(text: string): void {
@@ -162,7 +198,11 @@ export class GameHUD {
     this._player2Text.color = player2Color;
   }
 
-  public updateScores(player1Score: number, player2Score: number, winningScore: string): void {
+  public updateScores(
+    player1Score: number,
+    player2Score: number,
+    winningScore: string,
+  ): void {
     if (typeof player1Score !== "number" || typeof player2Score !== "number") {
       console.warn(
         "[GameHUD] updateScores called with invalid values:",

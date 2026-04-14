@@ -33,9 +33,13 @@ export class TouchControls {
       GUI_STYLES.TOUCH_CONTAINER.horizontalAlignment;
     this.container.verticalAlignment =
       GUI_STYLES.TOUCH_CONTAINER.verticalAlignment;
-    this.container.height = this.isMobile ? "94px" : GUI_STYLES.TOUCH_CONTAINER.height;
+    this.container.height = this.isMobile
+      ? "94px"
+      : GUI_STYLES.TOUCH_CONTAINER.height;
 
-    const iconStyles = this.isMobile ? GUI_STYLES.ICON_BUTTON_MOBILE : GUI_STYLES.ICON_BUTTON;
+    const iconStyles = this.isMobile
+      ? GUI_STYLES.ICON_BUTTON_MOBILE
+      : GUI_STYLES.ICON_BUTTON;
 
     const leftButton = GUIElements.CreateIconButton(
       "btnLeft",

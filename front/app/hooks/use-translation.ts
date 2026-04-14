@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { getCurrentLocale } from '../lib/i18n/locale-manager';
-import es from '../lib/i18n/locales/es';
-import en from '../lib/i18n/locales/en';
-import it from '../lib/i18n/locales/it';
+import { useState, useEffect, useCallback } from "react";
+import { getCurrentLocale } from "../lib/i18n/locale-manager";
+import es from "../lib/i18n/locales/es";
+import en from "../lib/i18n/locales/en";
+import it from "../lib/i18n/locales/it";
 
 const dictionaries: Record<string, any> = { es, en, it };
 
 export const useTranslation = () => {
-  const [locale, setLocale] = useState('en');
+  const [locale, setLocale] = useState("en");
 
   const checkLocale = useCallback(() => {
     const currentLocale = getCurrentLocale();
@@ -27,7 +27,7 @@ export const useTranslation = () => {
     return () => clearInterval(interval);
   }, [checkLocale]);
 
-  const t = dictionaries[locale] || dictionaries['es'];
+  const t = dictionaries[locale] || dictionaries["es"];
 
   return { t, locale };
 };

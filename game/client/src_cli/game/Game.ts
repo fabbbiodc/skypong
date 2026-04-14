@@ -18,8 +18,9 @@ export class Game {
   private _input: InputController | null = null;
   private _room: any = null;
   private _config: GameSessionConfig | null = null;
-  private _onGameReady: ((onLaunch: () => void, isWaitingForOpponent?: boolean) => void) | null =
-    null;
+  private _onGameReady:
+    | ((onLaunch: () => void, isWaitingForOpponent?: boolean) => void)
+    | null = null;
   private _onBackToMenu: (() => void) | null = null;
   private _gui: any = null;
   private _isGameOver: boolean = false;
@@ -37,7 +38,10 @@ export class Game {
   startGame = (
     canvas: HTMLCanvasElement,
     config: GameSessionConfig,
-    onGameReady?: (onLaunch: () => void, isWaitingForOpponent?: boolean) => void,
+    onGameReady?: (
+      onLaunch: () => void,
+      isWaitingForOpponent?: boolean,
+    ) => void,
     onBackToMenu?: () => void,
     onLoadingManagerReady?: (loadingManager: LoadingManager) => void,
   ) => {
@@ -56,9 +60,15 @@ export class Game {
     const { gameMode } = config;
 
     const isPvPMode =
-      gameMode === "local-2p" || gameMode === "online-create" || gameMode === "online-join";
+      gameMode === "local-2p" ||
+      gameMode === "online-create" ||
+      gameMode === "online-join";
     const isAIMode = gameMode.startsWith("ai-");
-    const initialPlayer2Name = isPvPMode ? "Waiting..." : isAIMode ? "AI" : player2Name;
+    const initialPlayer2Name = isPvPMode
+      ? "Waiting..."
+      : isAIMode
+        ? "AI"
+        : player2Name;
 
     const isLocalMode = isAIMode || gameMode === "local-2p";
 
@@ -73,7 +83,7 @@ export class Game {
       // Dispose current game
       this._cleanup();
       gameInstanceLock = false;
-      
+
       // Reload page with same config
       const encodedConfig = encodeConfig(config);
       window.location.href = `/game-engine/canvas?config=${encodedConfig}`;
@@ -102,14 +112,26 @@ export class Game {
 
         try {
           const roomManager = new RoomManager(
-            this._createRoomManagerCallbacks(clientEngine, table, paddle, paddle2, ball, gui),
+            this._createRoomManagerCallbacks(
+              clientEngine,
+              table,
+              paddle,
+              paddle2,
+              ball,
+              gui,
+            ),
           );
 
           this._roomManager = roomManager;
-          const room = await roomManager.connect(gameMode, config, config.roomId);
+          const room = await roomManager.connect(
+            gameMode,
+            config,
+            config.roomId,
+          );
           this._room = room;
 
-          const isOnlineMode = gameMode === "online-create" || gameMode === "online-join";
+          const isOnlineMode =
+            gameMode === "online-create" || gameMode === "online-join";
 
           this._countdownManager = new CountdownManager({
             onCountdownUpdate: (count) => {
@@ -132,7 +154,9 @@ export class Game {
             isOnline: isOnlineMode,
             initialGameStarted: room.state?.gameStarted ?? false,
             camera: clientEngine.engineSetup.camera,
-            cameraView: config.cameraView || (gameMode === 'local-2p' ? 'top-down' : 'angled'),
+            cameraView:
+              config.cameraView ||
+              (gameMode === "local-2p" ? "top-down" : "angled"),
             onGameReady: this._onGameReady ?? undefined,
           });
 
@@ -151,7 +175,7 @@ export class Game {
 
           touchControls.setInputController(input);
 
-          const           gameLoop = new GameLoop({
+          const gameLoop = new GameLoop({
             engine,
             scene,
             inputController: input,
@@ -275,7 +299,11 @@ export class Game {
         if (isPlayer2 && !this._isCameraFlipped) {
           // First set up camera for player 1, then flip
           adjustCamera(cam, mesh, clientEngine.engineSetup.engine);
-          cam.position = new Vector3(cam.position.x, cam.position.y, -cam.position.z);
+          cam.position = new Vector3(
+            cam.position.x,
+            cam.position.y,
+            -cam.position.z,
+          );
           this._isCameraFlipped = true;
         } else if (!isPlayer2) {
           adjustCamera(cam, mesh, clientEngine.engineSetup.engine);
@@ -284,12 +312,16 @@ export class Game {
         cam.setTarget(center);
       },
       onPlayerColorUpdate: ({ p1Color, p2Color, isPlayer2 }) => {
-        gui.hud.updatePlayerColors(isPlayer2 ? p2Color : p1Color, isPlayer2 ? p1Color : p2Color);
+        gui.hud.updatePlayerColors(
+          isPlayer2 ? p2Color : p1Color,
+          isPlayer2 ? p1Color : p2Color,
+        );
         [paddle, paddle2].forEach((p, i) => {
           const color = i === 0 ? p1Color : p2Color;
           const mat = p.mesh.material as any;
           if (mat?.albedoColor) mat.albedoColor = Color3.FromHexString(color);
-          if (mat?.subSurface?.tintColor) mat.subSurface.tintColor = Color3.FromHexString(color);
+          if (mat?.subSurface?.tintColor)
+            mat.subSurface.tintColor = Color3.FromHexString(color);
         });
       },
       onBallUpdate: ({ x, y, z, vx, vy, vz }) => {
@@ -317,10 +349,20 @@ export class Game {
           bottomScore = player2Score;
           topScore = player1Score;
         }
-        gui.hud.updateScores(bottomScore, topScore, room.state.winningScore?.toString() || this._winningScore);
+        gui.hud.updateScores(
+          bottomScore,
+          topScore,
+          room.state.winningScore?.toString() || this._winningScore,
+        );
       },
 
-      onGameOver: ({ winner, player1Name, player2Name, player1Score, player2Score }) => {
+      onGameOver: ({
+        winner,
+        player1Name,
+        player2Name,
+        player1Score,
+        player2Score,
+      }) => {
         if (!this._isGameOver) {
           this._isGameOver = true;
           this._gameLoop?.setGameOver(true);
@@ -378,5 +420,11 @@ export const startGame = (
   onLoadingManagerReady?: (loadingManager: LoadingManager) => void,
 ) => {
   const game = new Game();
-  return game.startGame(canvas, config, onGameReady, onBackToMenu, onLoadingManagerReady);
+  return game.startGame(
+    canvas,
+    config,
+    onGameReady,
+    onBackToMenu,
+    onLoadingManagerReady,
+  );
 };

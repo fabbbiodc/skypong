@@ -1,28 +1,28 @@
 {
-    "name": "skypong-client",
-    "version": "1.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build"
-    },
-    "dependencies": {
-        "@babylonjs/core": "^8.48.0",
-        "@babylonjs/gui": "^8.48.0",
-        "@babylonjs/loaders": "^8.48.0",
-        "@colyseus/schema": "^2.0.0",
-        "@skypong/common": "*",
-        "colyseus.js": "^0.15.0",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-router-dom": "^7.13.0"
-    },
-    "devDependencies": {
-        "@types/react": "^18.3.3",
-        "@types/react-dom": "^18.3.0",
-        "typescript": "^5.0.0",
-        "@vitejs/plugin-react": "^4.3.1",
-        "vite": "^5.0.0",
-        "vite-tsconfig-paths": "^4.3.0"
-    }
+  "name": "skypong-client",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^8.48.0",
+    "@babylonjs/gui": "^8.48.0",
+    "@babylonjs/loaders": "^8.48.0",
+    "@colyseus/schema": "^2.0.0",
+    "@skypong/common": "*",
+    "colyseus.js": "^0.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.0.0",
+    "vite-tsconfig-paths": "^4.3.0"
+  }
 }

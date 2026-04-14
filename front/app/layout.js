@@ -9,7 +9,11 @@ import { getCurrentLocale } from "./lib/i18n/locale-manager";
 import GlobalChatUI from "./ui/global-chat-ui";
 import GrainientBackground from "./ui/GrainientBackground";
 
-const spaceGrotesk = Space_Grotesk({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-space-grotesk" });
+const spaceGrotesk = Space_Grotesk({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+});
 const funnelSans = Funnel_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
@@ -25,7 +29,9 @@ export const metadata = {
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   manifest: "/site.webmanifest",
 };
@@ -35,7 +41,9 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <LanguageProvider>
         <html lang={getCurrentLocale()}>
-          <body className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}>
+          <body
+            className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}
+          >
             <GrainientBackground />
             {children}
             <GlobalChatUI />
