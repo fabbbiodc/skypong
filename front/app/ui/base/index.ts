@@ -7,8 +7,20 @@ export { Card } from "./Card";
 export { Badge } from "./Badge";
 export { StatCard } from "./StatCard";
 export { ProgressBar } from "./ProgressBar";
-export { Tabs } from "./Tabs";
-export type { Tab } from "./Tabs";
+export { Tabs, type Tab } from "./Tabs";
 
-// Type exports
-export type { ColorVariant, ChipVariant, Size, FontFamily } from "./types";
+// Design tokens exports (single source of truth)
+export {
+  variants,
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+  transitions,
+} from "@/lib/design-tokens";
+export type {
+  ColorVariant,
+  SizeVariant,
+  ChipVariant,
+} from "@/lib/design-tokens";

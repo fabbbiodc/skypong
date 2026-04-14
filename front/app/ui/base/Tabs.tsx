@@ -11,9 +11,15 @@ const tabsContainerVariants = cva("flex gap-2 border-b border-gray-200", {
       pills: "border-none gap-1",
       boxed: "border rounded-lg p-1 bg-gray-50",
     },
+    size: {
+      sm: "text-sm",
+      md: "text-base",
+      lg: "text-lg",
+    },
   },
   defaultVariants: {
     variant: "underline",
+    size: "md",
   },
 });
 
@@ -30,9 +36,12 @@ const tabVariants = cva(
         true: "",
         false: "",
       },
+      state: {
+        default: "",
+        disabled: "opacity-50 cursor-not-allowed pointer-events-none",
+      },
     },
     compoundVariants: [
-      // Underline variant
       {
         variant: "underline",
         active: true,
@@ -44,7 +53,6 @@ const tabVariants = cva(
         className:
           "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300",
       },
-      // Pills variant
       {
         variant: "pills",
         active: true,
@@ -56,7 +64,6 @@ const tabVariants = cva(
         className:
           "bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900",
       },
-      // Boxed variant
       {
         variant: "boxed",
         active: true,
@@ -71,6 +78,7 @@ const tabVariants = cva(
     defaultVariants: {
       variant: "underline",
       active: false,
+      state: "default",
     },
   },
 );
@@ -83,10 +91,15 @@ export interface Tab {
   disabled?: boolean;
 }
 
-interface TabsProps extends VariantProps<typeof tabsContainerVariants> {
+type TabsVariant = VariantProps<typeof tabsContainerVariants>["variant"];
+type TabsSize = VariantProps<typeof tabsContainerVariants>["size"];
+
+interface TabsProps {
   tabs: Tab[];
   activeTab: string;
   onChange: (key: string) => void;
+  variant?: TabsVariant;
+  size?: TabsSize;
   className?: string;
 }
 
@@ -94,18 +107,23 @@ export function Tabs({
   tabs,
   activeTab,
   onChange,
-  variant,
+  variant = "underline",
+  size = "md",
   className,
 }: TabsProps) {
   return (
     <div
       className={cn(
-        tabsContainerVariants({ variant, className }),
+        tabsContainerVariants({ variant, size }),
+        className,
         "overflow-x-auto",
       )}
     >
       {tabs.map((tab) => {
         const isActive = activeTab === tab.key;
+        const state: "default" | "disabled" = tab.disabled
+          ? "disabled"
+          : "default";
 
         return (
           <button
@@ -113,9 +131,9 @@ export function Tabs({
             onClick={() => !tab.disabled && onChange(tab.key)}
             disabled={tab.disabled}
             className={cn(
-              tabVariants({ variant, active: isActive }),
+              tabVariants({ variant, active: isActive, state }),
+              "whitespace-nowrap",
               tab.disabled && "opacity-50 cursor-not-allowed",
-              "whitespace-nowrap text-sm md:text-base",
             )}
             role="tab"
             aria-selected={isActive}

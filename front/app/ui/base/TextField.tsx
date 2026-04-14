@@ -2,44 +2,33 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
-  "w-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+  "w-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
         filled:
-          "bg-input-filled hover:bg-input-filled-hover focus:bg-input-filled-focus border border-transparent focus:border-primary rounded-md",
+          "bg-[var(--color-input-filled)] hover:bg-[var(--color-input-filled-hover)] focus:bg-[var(--color-input-filled-focus)] border border-transparent focus:border-primary rounded-lg",
         outlined:
-          "bg-transparent border border-border hover:border-border-hover focus:border-primary rounded-md",
+          "bg-transparent border border-border hover:border-border-hover focus:border-primary rounded-lg",
         underlined:
           "bg-transparent border-0 border-b border-border hover:border-border-hover focus:border-primary rounded-none",
       },
       size: {
         sm: "px-3 py-1.5 text-sm",
-        md: "px-4 py-2 text-base md:text-lg",
-        lg: "px-5 py-3 text-lg md:text-xl",
+        md: "px-4 py-2 text-base",
+        lg: "px-5 py-3 text-lg",
       },
-      font: {
-        display: "font-display",
-        body: "font-sans",
-        mono: "font-mono",
-      },
-      error: {
-        true: "border-border-error focus:border-border-error focus:ring-red-500",
-        false: "",
+      state: {
+        default: "",
+        error: "border-red-500 focus:border-red-500 focus:ring-red-500",
+        disabled: "opacity-50 cursor-not-allowed",
       },
     },
-    compoundVariants: [
-      {
-        variant: "filled",
-        error: true,
-        class: "bg-red-50",
-      },
-    ],
+    compoundVariants: [],
     defaultVariants: {
       variant: "filled",
       size: "md",
-      font: "body",
-      error: false,
+      state: "default",
     },
   },
 );
@@ -57,26 +46,34 @@ const labelVariants = cva("block font-medium text-gray-700 mb-1", {
   },
 });
 
-interface TextFieldProps extends VariantProps<typeof inputVariants> {
+type InputVariant = VariantProps<typeof inputVariants>["variant"];
+type InputSize = VariantProps<typeof inputVariants>["size"];
+type InputState = VariantProps<typeof inputVariants>["state"];
+
+interface TextFieldProps {
+  variant?: InputVariant;
+  size?: InputSize;
+  state?: InputState;
   label?: string;
   placeholder?: string;
   error?: string;
   helperText?: string;
   value?: string;
   onChange?: (value: string) => void;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "tel" | "url";
   className?: string;
   disabled?: boolean;
-  // React Hook Form support
   name?: string;
   register?: any;
   autoComplete?: string;
+  required?: boolean;
+  id?: string;
 }
 
 export function TextField({
   variant = "filled",
-  size,
-  font,
+  size = "md",
+  state: propState,
   label,
   placeholder,
   error,
@@ -89,38 +86,46 @@ export function TextField({
   name,
   register,
   autoComplete,
+  required = false,
+  id,
 }: TextFieldProps) {
   const hasError = !!error;
+  const state: InputState = hasError ? "error" : (propState ?? "default");
 
-  // Determine if using React Hook Form or controlled mode
   const isRHFMode = !!register && !!name;
-  const registration = isRHFMode ? register(name) : {};
+  const registration = isRHFMode && name ? register(name) : {};
+  const inputId = id || name;
 
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={name} className={labelVariants({ size })}>
+        <label htmlFor={inputId} className={labelVariants({ size })}>
           {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       <input
-        id={name}
+        id={inputId}
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        required={required}
         className={cn(
           inputVariants({
             variant,
             size,
-            font,
-            error: hasError,
-            className,
+            state: hasError ? "error" : "default",
           }),
+          className,
         )}
         disabled={disabled}
         {...(isRHFMode
           ? registration
-          : { value, onChange: (e) => onChange?.(e.target.value) })}
+          : {
+              value,
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange?.(e.target.value),
+            })}
       />
       {(error || helperText) && (
         <p

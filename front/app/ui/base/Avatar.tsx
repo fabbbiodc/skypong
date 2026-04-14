@@ -2,64 +2,77 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const avatarVariants = cva(
-  // Base styles - circular avatar with consistent styling
-  "inline-flex items-center justify-center rounded-full overflow-hidden bg-primary text-white font-bold uppercase select-none",
+  "inline-flex items-center justify-center rounded-full overflow-hidden bg-primary text-white font-bold uppercase select-none transition-all duration-200",
   {
     variants: {
       size: {
-        sm: "w-8 h-8 text-sm", // 32px - small contexts
-        md: "w-12 h-12 text-lg", // 48px - navigation (default)
-        lg: "w-16 h-16 text-2xl", // 64px - profile pages
+        sm: "w-8 h-8 text-xs",
+        md: "w-10 h-10 text-sm",
+        lg: "w-14 h-14 text-lg",
+        xl: "w-16 h-16 text-2xl",
       },
-      clickable: {
-        true: "cursor-pointer hover:opacity-80 transition-opacity duration-200",
-        false: "",
+      variant: {
+        default: "bg-primary text-white",
+        secondary: "bg-secondary text-white",
+        danger: "bg-danger text-white",
+      },
+      state: {
+        default: "",
+        clickable: "cursor-pointer hover:opacity-80",
+        offline: "opacity-50",
       },
     },
     defaultVariants: {
       size: "md",
-      clickable: false,
+      variant: "default",
+      state: "default",
     },
   },
 );
 
-interface AvatarProps extends VariantProps<typeof avatarVariants> {
+type AvatarSize = VariantProps<typeof avatarVariants>["size"];
+type AvatarVariant = VariantProps<typeof avatarVariants>["variant"];
+type AvatarState = VariantProps<typeof avatarVariants>["state"];
+
+interface AvatarProps {
   /** URL to the user's avatar image */
   src?: string;
   /** Alt text for the avatar image */
   alt?: string;
-  /** User's nickname - used to generate initials fallback (first letter) */
+  /** User's nickname - used to generate initials fallback */
   fallbackText?: string;
   /** Additional CSS classes */
   className?: string;
   /** Click handler - makes avatar clickable */
   onClick?: () => void;
+  /** Avatar size */
+  size?: AvatarSize;
+  /** Color variant */
+  variant?: AvatarVariant;
+  /** State variant */
+  state?: AvatarState;
 }
 
 export function Avatar({
   src,
   alt = "User avatar",
   fallbackText,
-  size,
+  size = "md",
+  variant = "default",
+  state: propState,
   className,
   onClick,
 }: AvatarProps) {
-  const avatarClass = cn(
-    avatarVariants({
-      size,
-      clickable: !!onClick,
-      className,
-    }),
-  );
+  const state: AvatarState = onClick ? "clickable" : (propState ?? "default");
 
-  // Generate first letter of nickname for fallback
   const initial = fallbackText ? fallbackText.charAt(0).toUpperCase() : "?";
 
   return (
     <div
-      className={avatarClass}
+      className={cn(avatarVariants({ size, variant, state }), className)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
     >
       {src ? (
         <img
@@ -67,7 +80,6 @@ export function Avatar({
           alt={alt}
           className="w-full h-full object-cover"
           onError={(e) => {
-            // If image fails to load, hide it and show fallback
             e.currentTarget.style.display = "none";
           }}
         />

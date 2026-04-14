@@ -3,36 +3,52 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  // Base styles - using Tailwind v4 auto-generated utilities from CSS variables
-  "inline-flex items-center justify-center font-bold rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center font-bold rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2",
   {
     variants: {
       variant: {
-        primary: "bg-primary hover:bg-primary-hover text-white",
+        primary:
+          "bg-primary hover:bg-primary-hover text-white active:bg-primary-pressed",
         secondary: "bg-secondary hover:bg-secondary-hover text-white",
         danger: "bg-danger hover:bg-danger-hover text-white",
-        ghost: "bg-ghost hover:bg-ghost-hover text-gray-700",
+        ghost:
+          "bg-transparent hover:bg-ghost-hover text-gray-700 border border-transparent hover:border-gray-300",
       },
       size: {
-        sm: "btn-sm",
-        md: "btn-md",
-        lg: "btn-lg",
+        sm: "px-3 py-1.5 text-xs sm:text-sm",
+        md: "px-4 py-2 text-sm sm:text-base",
+        lg: "px-6 py-3 text-base sm:text-lg",
       },
-      font: {
-        display: "font-display",
-        body: "font-sans",
-        mono: "font-mono",
+      state: {
+        default: "",
+        hover: "hover:scale-105 active:scale-95",
+        active: "active:scale-95",
+        disabled: "opacity-50 cursor-not-allowed pointer-events-none",
       },
     },
+    compoundVariants: [
+      // Disabled state applies to all variants
+      {
+        state: "disabled",
+        className: "opacity-50 cursor-not-allowed pointer-events-none",
+      },
+    ],
     defaultVariants: {
       variant: "primary",
       size: "md",
-      font: "display",
+      state: "default",
     },
   },
 );
 
-interface ButtonProps extends VariantProps<typeof buttonVariants> {
+type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
+type ButtonSize = VariantProps<typeof buttonVariants>["size"];
+type ButtonState = VariantProps<typeof buttonVariants>["state"];
+
+interface ButtonProps {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  state?: ButtonState;
   href?: string;
   className?: string;
   children: React.ReactNode;
@@ -42,9 +58,9 @@ interface ButtonProps extends VariantProps<typeof buttonVariants> {
 }
 
 export function Button({
-  variant,
-  size,
-  font,
+  variant = "primary",
+  size = "md",
+  state = "default",
   href,
   className,
   children,
@@ -52,9 +68,13 @@ export function Button({
   disabled = false,
   onClick,
 }: ButtonProps) {
-  const buttonClass = cn(buttonVariants({ variant, size, font, className }));
+  const buttonClass = cn(
+    buttonVariants({ variant, size, state }),
+    disabled && "opacity-50 cursor-not-allowed pointer-events-none",
+    className,
+  );
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <Link href={href} className={buttonClass}>
         {children}

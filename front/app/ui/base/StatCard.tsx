@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
 const statCardVariants = cva(
-  // Base styles
   "flex flex-col items-center justify-center rounded-xl border-2 p-4 transition-all duration-200",
   {
     variants: {
@@ -14,24 +13,47 @@ const statCardVariants = cva(
         danger: "bg-red-50 border-red-500 hover:border-red-600",
         warning: "bg-amber-50 border-amber-500 hover:border-amber-600",
       },
+      size: {
+        sm: "p-3 text-2xl",
+        md: "p-4 text-3xl md:text-4xl",
+        lg: "p-6 text-4xl md:text-5xl",
+      },
+      state: {
+        default: "",
+        compact: "p-2",
+        featured: "border-4 shadow-lg",
+      },
     },
     defaultVariants: {
       variant: "default",
+      size: "md",
+      state: "default",
     },
   },
 );
 
-interface StatCardProps extends VariantProps<typeof statCardVariants> {
+type StatCardVariant = VariantProps<typeof statCardVariants>["variant"];
+type StatCardSize = VariantProps<typeof statCardVariants>["size"];
+type StatCardState = VariantProps<typeof statCardVariants>["state"];
+
+interface StatCardProps {
+  variant?: StatCardVariant;
+  size?: StatCardSize;
+  state?: StatCardState;
   className?: string;
   label: string;
   value: string | number;
   icon?: ReactNode;
+  /** Trend direction: up (green), down (red), neutral (gray) */
   trend?: "up" | "down" | "neutral";
+  /** Trend value display (e.g., "+5", "-10") */
   trendValue?: string;
 }
 
 export function StatCard({
-  variant,
+  variant = "default",
+  size = "md",
+  state = "default",
   className,
   label,
   value,
@@ -52,16 +74,45 @@ export function StatCard({
   }[trend || "neutral"];
 
   return (
-    <div className={cn(statCardVariants({ variant, className }))}>
-      {icon && <div className="text-3xl md:text-4xl mb-2">{icon}</div>}
-      <div className="text-3xl md:text-4xl font-bold font-display text-gray-900">
+    <div className={cn(statCardVariants({ variant, size, state }), className)}>
+      {icon && (
+        <div
+          className={cn(
+            "mb-2",
+            size === "sm"
+              ? "text-2xl"
+              : size === "lg"
+                ? "text-5xl"
+                : "text-3xl",
+          )}
+        >
+          {icon}
+        </div>
+      )}
+      <div
+        className={cn(
+          "font-bold font-display text-gray-900",
+          size === "sm" ? "text-2xl" : size === "lg" ? "text-4xl" : "text-3xl",
+        )}
+      >
         {value}
       </div>
-      <div className="text-sm md:text-base text-gray-600 mt-1 font-medium">
+      <div
+        className={cn(
+          "text-gray-600 mt-1 font-medium",
+          size === "sm" ? "text-xs" : size === "lg" ? "text-lg" : "text-sm",
+        )}
+      >
         {label}
       </div>
       {trend && trendValue && (
-        <div className={cn("text-xs md:text-sm font-medium mt-2", trendColor)}>
+        <div
+          className={cn(
+            "font-medium mt-2",
+            trendColor,
+            size === "sm" ? "text-xs" : "text-sm",
+          )}
+        >
           {trendIcon} {trendValue}
         </div>
       )}

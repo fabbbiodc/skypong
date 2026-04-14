@@ -3,8 +3,7 @@ import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
 const badgeVariants = cva(
-  // Base styles
-  "inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-200",
+  "inline-flex items-center justify-center font-semibold transition-all duration-200",
   {
     variants: {
       variant: {
@@ -27,29 +26,47 @@ const badgeVariants = cva(
         pill: "rounded-full",
         square: "rounded-none",
       },
+      state: {
+        default: "",
+        pulse: "animate-pulse",
+        subtle: "opacity-80",
+      },
     },
     defaultVariants: {
       variant: "primary",
       size: "md",
       shape: "rounded",
+      state: "default",
     },
   },
 );
 
-interface BadgeProps extends VariantProps<typeof badgeVariants> {
+type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
+type BadgeSize = VariantProps<typeof badgeVariants>["size"];
+type BadgeShape = VariantProps<typeof badgeVariants>["shape"];
+type BadgeState = VariantProps<typeof badgeVariants>["state"];
+
+interface BadgeProps {
+  variant?: BadgeVariant;
+  size?: BadgeSize;
+  shape?: BadgeShape;
+  state?: BadgeState;
   className?: string;
   children: ReactNode;
 }
 
 export function Badge({
-  variant,
-  size,
-  shape,
+  variant = "primary",
+  size = "md",
+  shape = "rounded",
+  state = "default",
   className,
   children,
 }: BadgeProps) {
   return (
-    <span className={cn(badgeVariants({ variant, size, shape, className }))}>
+    <span
+      className={cn(badgeVariants({ variant, size, shape, state }), className)}
+    >
       {children}
     </span>
   );

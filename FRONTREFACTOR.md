@@ -8,6 +8,18 @@ This document outlines the refactoring plan for the `front/` directory, focusing
 
 ---
 
+## Maintenance Note
+
+**IMPORTANT:** This document must be updated after EVERY change to the codebase. Before ending a coding session, ensure all changes are documented here.
+
+- New components created
+- Changes to existing components
+- New decisions made
+- Bugs found and workarounds
+- Anything deviating from the plan
+
+---
+
 ## Goals
 
 1. **Single Source of Truth** for design tokens/variables
@@ -435,13 +447,13 @@ front/app/ui/patterns/
 
 ## Implementation Progress
 
-| Phase                         | Status  | Notes                     |
-| ----------------------------- | ------- | ------------------------- |
-| Phase 1: Design Tokens        | Pending | Create design-tokens.ts   |
-| Phase 2: Base Components      | Pending | Migrate to full CVA       |
-| Phase 3: Simplify globals.css | Pending | Move component styles out |
-| Phase 4: Page Components      | Pending | Create patterns/          |
-| Phase 5: Documentation        | Pending | Update ui-test/           |
+| Phase                         | Status  | Notes                           |
+| ----------------------------- | ------- | ------------------------------- |
+| Phase 1: Design Tokens        | ✅ Done | Created design-tokens.ts        |
+| Phase 2: Base Components      | ✅ Done | All 9 components migrated       |
+| Phase 3: Simplify globals.css | ✅ Done | Reduced from 1300 to ~250 lines |
+| Phase 4: Page Components      | ✅ Done | Created patterns/               |
+| Phase 5: Documentation        | ✅ Done | Updated ui-test page            |
 
 ---
 
@@ -480,3 +492,58 @@ const myComponentVariants = cva("base classes", {
 - All CVA components use class-variance-authority
 - Keep globals.css @theme - it powers Tailwind utilities
 - Tokens file is documentation + types, NOT runtime
+
+---
+
+## Change Log
+
+### 2026-04-14
+
+**Phase 1: Design Tokens - Complete**
+
+- Created `front/app/lib/design-tokens.ts`
+- Exports: colors, typography, spacing, borderRadius, shadows, transitions, cssVar
+- Type exports: ColorToken, SpacingToken, BorderRadiusToken, FontSizeToken, FontWeightToken
+- Variant types: ColorVariant, SizeVariant, ChipVariant
+
+**Phase 2: Base Components - Complete**
+
+- Migrated all 9 components to full CVA pattern:
+  - Button: Added state variant, inlined sizes, enhanced TypeScript
+  - Card: Added state, proper types
+  - TextField: Refactored state, added props (type, required, id)
+  - Chip: Added size, state variants
+  - Avatar: Added variant, state, proper types
+  - Badge: Added state variant
+  - StatCard: Added size, state variants
+  - ProgressBar: Added size, state variants
+  - Tabs: Added size, state variants
+
+- All components now use consistent pattern:
+  - variant: colors (primary, secondary, danger, ghost)
+  - size: sm, md, lg
+  - state: default, hover, active, disabled
+- Updated `front/app/ui/base/index.ts` to re-export from design-tokens
+
+**Phase 3: Simplify globals.css - Complete**
+
+- Simplified globals.css from 1300 lines to ~250 lines
+- Kept only: @theme variables, fonts, animations, grainient background, error utilities
+- Moved component-specific styles to pattern components
+
+**Phase 4: Page Component Patterns - Complete**
+
+- Created `front/app/ui/patterns/` directory
+- Created reusable pattern components:
+  - Section.tsx: Reusable section container with variants
+  - ListRow.tsx: Reusable list row with hover/border states
+  - EmptyState.tsx: Empty state display
+  - LoadingState.tsx: Loading states (spinner, skeleton, dots)
+
+**Phase 5: Documentation - Complete**
+
+- Updated `front/app/ui-test/page.tsx` with:
+  - Added imports for pattern components
+  - Fixed Button usage (removed font prop)
+  - Added tests for Section, ListRow, EmptyState, LoadingState
+- All components now tested and documented

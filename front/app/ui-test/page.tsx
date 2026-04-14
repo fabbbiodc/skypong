@@ -11,6 +11,7 @@ import {
   ProgressBar,
   Tabs,
 } from "../ui/base";
+import { Section, ListRow, EmptyState, LoadingState } from "../ui/patterns";
 import { useTranslation } from "../context/language-context";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -69,29 +70,21 @@ export default function UITestPage() {
             Button variants (color styles)
           </p>
           <div className="flex flex-wrap gap-4 mb-6">
-            <Button variant="primary" font="display">
-              Primary
-            </Button>
-            <Button variant="secondary" font="display">
-              Secondary
-            </Button>
-            <Button variant="danger" font="display">
-              Danger
-            </Button>
-            <Button variant="ghost" font="display">
-              Ghost
-            </Button>
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="danger">Danger</Button>
+            <Button variant="ghost">Ghost</Button>
           </div>
 
           <p className="text-sm text-gray-600 mb-2">Button sizes</p>
           <div className="flex flex-wrap gap-4 mb-6">
-            <Button variant="primary" size="sm" font="display">
+            <Button variant="primary" size="sm">
               Small
             </Button>
-            <Button variant="primary" size="md" font="display">
+            <Button variant="primary" size="md">
               Medium
             </Button>
-            <Button variant="primary" size="lg" font="display">
+            <Button variant="primary" size="lg">
               Large
             </Button>
           </div>
@@ -100,10 +93,10 @@ export default function UITestPage() {
             Special states: disabled and link
           </p>
           <div className="flex flex-wrap gap-4 mb-6">
-            <Button variant="primary" disabled font="display">
+            <Button variant="primary" disabled>
               Disabled
             </Button>
-            <Button variant="primary" href="/" font="display">
+            <Button variant="primary" href="/">
               Link Button
             </Button>
           </div>
@@ -116,12 +109,8 @@ export default function UITestPage() {
               Shows how buttons work with i18n
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="primary" font="display">
-                {t.game.playButton}
-              </Button>
-              <Button variant="secondary" font="display">
-                {t.navigation.home}
-              </Button>
+              <Button variant="primary">{t.game.playButton}</Button>
+              <Button variant="secondary">{t.navigation.home}</Button>
             </div>
           </div>
         </section>
@@ -1202,6 +1191,100 @@ export default function UITestPage() {
             <p className="mt-4 text-sm md:text-base text-gray-600">
               Resize your browser to see the responsive breakpoints in action.
             </p>
+          </div>
+        </section>
+
+        {/* Section Pattern */}
+        <section className="mb-12">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            Section (Pattern Component)
+          </h2>
+          <div className="space-y-4">
+            <Section
+              variant="card"
+              title="Player Stats"
+              subtitle="Last 30 days"
+            >
+              <p className="text-sm text-gray-700">Card content here</p>
+            </Section>
+            <Section variant="elevated" title="Achievements" padding="lg">
+              <p className="text-sm text-gray-700">Elevated card content</p>
+            </Section>
+          </div>
+        </section>
+
+        {/* ListRow Pattern */}
+        <section className="mb-12">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            ListRow (Pattern Component)
+          </h2>
+          <div className="space-y-2">
+            <ListRow variant="default">
+              <Avatar size="sm" fallbackText="John" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Player Name</p>
+                <p className="text-xs text-gray-500">Online</p>
+              </div>
+            </ListRow>
+            <ListRow variant="highlighted">
+              <Avatar size="sm" fallbackText="You" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Current User</p>
+                <p className="text-xs text-gray-500">This is you</p>
+              </div>
+            </ListRow>
+            <ListRow onClick={() => alert("Clicked!")}>
+              <Avatar size="sm" fallbackText="Click" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Clickable Row</p>
+                <p className="text-xs text-gray-500">Hover to see effect</p>
+              </div>
+            </ListRow>
+          </div>
+        </section>
+
+        {/* EmptyState Pattern */}
+        <section className="mb-12">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            EmptyState (Pattern Component)
+          </h2>
+          <div className="space-y-4">
+            <EmptyState
+              title="No games yet"
+              description="Start playing to see your game history"
+              icon={<FontAwesomeIcon icon={faGamepad} />}
+            />
+            <EmptyState
+              title="No friends yet"
+              description="Add friends to play together"
+              icon={<FontAwesomeIcon icon={faUsers} />}
+            >
+              <Button variant="primary" size="sm">
+                Add Friend
+              </Button>
+            </EmptyState>
+          </div>
+        </section>
+
+        {/* LoadingState Pattern */}
+        <section className="mb-12">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            LoadingState (Pattern Component)
+          </h2>
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-4 items-center">
+              <LoadingState variant="spinner" size="sm" />
+              <LoadingState variant="spinner" size="md" />
+              <LoadingState variant="spinner" size="lg" />
+            </div>
+            <div className="flex flex-wrap gap-4 items-center">
+              <LoadingState variant="dots" size="sm" />
+              <LoadingState variant="dots" size="md" />
+              <LoadingState variant="dots" size="lg" text="Loading..." />
+            </div>
+            <div>
+              <LoadingState variant="skeleton" size="md" />
+            </div>
           </div>
         </section>
 
