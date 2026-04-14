@@ -1,66 +1,66 @@
 # ──────────────────────────────────────────────
-# STAGE 1: Build (Necesitamos TODO para compilar)
+# STAGE 1: Build (We need everything to compile)
 # ──────────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Herramientas para módulos nativos (SQLite, etc.)
+# Tools for native modules (SQLite, etc.)
 RUN apk add --no-cache python3 make g++ libc-dev
 
-# Copiamos package.json y package-lock.json
+# Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
-# Instalamos TODO (incluyendo devDependencies como typescript)
+# Install everything (including devDependencies like typescript)
 RUN npm install 
 
-# Copiamos el código fuente y archivos estáticos
+# Copy source code and static files
 COPY src ./src
 COPY static /app/static
 COPY tsconfig.json ./tsconfig.json
 
-# Compilamos TypeScript
+# Compile TypeScript
 RUN npx tsc
 
 # ──────────────────────────────────────────────
-# STAGE 2: Runner (Cambiamos Alpine por Slim)
+# STAGE 2: Runner (Switching from Alpine to Slim)
 # ──────────────────────────────────────────────
 FROM node:20-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Herramientas de compilación en Debian (mucho más estables)
+# Debian build tools (much more stable)
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Creamos un usuario no-root para correr la app
+# Create non-root user to run the app
 RUN groupadd -r app && useradd -r -g app app
 
-# Copiamos package.json y package-lock.json para instalar dependencias
+# Copy package.json and package-lock.json to install dependencies
 COPY package.json package-lock.json ./
 
-# Instalamos solo dependencias de producción
+# Install production dependencies only
 RUN npm ci --omit=dev
 
-# Copiamos el build compilado desde el stage anterior
+# Copy compiled build from previous stage
 COPY --from=builder /app/dist ./dist
 
 # ──────────────────────────────────────────────
-# Directorios para uploads y permisos
+# Uploads directories and permissions
 # ──────────────────────────────────────────────
-# Directorio de uploads (aquí se montará el volume desde host)
+# Uploads directory (volume will be mounted from host here)
 RUN mkdir -p /app/uploads/avatars && chown -R app:app /app
 
-# Copiamos el avatar por defecto desde static y asignamos propietario
+# Copy default avatar from static and assign ownership
 COPY --chown=app:app static/default-avatar.webp /app/static/
 
-# Cambiamos a usuario no-root
+# Switch to non-root user
 USER app
 
-# Exponemos puerto de la API
+# Expose API port
 EXPOSE 5000
 
-# Comando por defecto
+# Default command
 CMD ["node", "dist/index.js"]

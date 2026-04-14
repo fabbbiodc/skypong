@@ -2,220 +2,220 @@
 
 ## Screen: Landing Page
 
-**Ruta:** `/`  
-**Propósito:** Entrada principal. Permite iniciar una partida (eligiendo modo) o navegar a autenticación. 
-**Comportamiento:** Si el cliente ha estado autenticado e intenta acceder a esta url, se le va a redirigir a la ruta `/app`
+**Route:** `/`  
+**Purpose:** Main entry point. Allows starting a game (by choosing mode) or navigating to authentication.  
+**Behavior:** If the client has been authenticated and tries to access this url, they will be redirected to route `/app`
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGO DIO`
-- **Acciones (derecha):**
-  - Botón **Sign In** → navega a `/signin`
-  - Botón **Sign Up** → navega a `/signup`
+- **Title / Logo:** `PONGO DIO`
+- **Actions (right):**
+  - Button **Sign In** → navigates to `/signin`
+  - Button **Sign Up** → navigates to `/signup`
 
-**Hero (centro de la pantalla)**
-- Texto principal (H1): “Play Pong”
-- Botón primario **Play** (CTA) -> "Call to ACTION"
+**Hero (center of screen)**
+- Main text (H1): "Play Pong"
+- Primary button **Play** (CTA) -> "Call to ACTION"
 
 **Footer**
-- Links pequeños: Privacy / Terms -> Descrito en el subject (“The project must include accessible Privacy Policy and Terms of Service pages with relevant content.”)
+- Small links: Privacy / Terms -> Described in the subject ("The project must include accessible Privacy Policy and Terms of Service pages with relevant content.")
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Button: Play
 - **Label:** `Play`
-- **Tipo:** Primario (alta prominencia)
-- **Acción:** abre modal “Choose mode”
+- **Type:** Primary (high prominence)
+- **Action:** opens modal "Choose mode"
 
 #### 2) Button: Sign In
 - **Label:** `Sign In`
-- **Tipo:** Secundario
-- **Acción:** `navigate("/signin")`
+- **Type:** Secondary
+- **Action:** `navigate("/signin")`
 
 #### 3) Button: Sign Up
 - **Label:** `Sign Up`
-- **Tipo:** Secundario
-- **Acción:** `navigate("/signup")`
+- **Type:** Secondary
+- **Action:** `navigate("/signup")`
 
 ---
 
 ### Modal: Choose Game Mode
 
 **ID:** `choose-mode-modal`  
-**Se abre desde:** botón Play  
-**Se cierra por:**
-- Botón X
-- Click fuera del modal (backdrop)
-- Tecla `Esc`
+**Opened from:** Play button  
+**Closed by:**
+- X button
+- Click outside modal (backdrop)
+- `Esc` key
 
-**Contenido:**
-- **Título:** “Choose game mode”
-- **Opciones (cards o botones grandes):**
+**Content:**
+- **Title:** "Choose game mode"
+- **Options (cards or large buttons):**
   1) **1 vs 1 — Local**
-     - Descripción corta: “Two players, same keyboard.”
-     - **Acción:** `navigate("/game/local")`
+     - Short description: "Two players, same keyboard."
+     - **Action:** `navigate("/game/local")`
   2) **1 vs AI**
-     - Descripción corta: “Play against the computer.”
-     - **Acción:** `navigate("/game/ai")`
+     - Short description: "Play against the computer."
+     - **Action:** `navigate("/game/ai")`
 
-**Accesibilidad del modal:**
+**Modal accessibility:**
 - `role="dialog"` + `aria-modal="true"`
-- Focus trap dentro del modal
-- Al abrir: foco en la primera opción (o en el título)
-- Al cerrar: vuelve el foco al botón Play
+- Focus trap inside modal
+- On open: focus on first option (or title)
+- On close: focus returns to Play button
 
 ---
 
-### Estados de la pantalla
+### Screen States
 
-1) **Default (modal cerrado)**
-- Visible: Header, Hero, botones
-- Interacciones: Play / Sign In / Sign Up
+1) **Default (modal closed)**
+- Visible: Header, Hero, buttons
+- Interactions: Play / Sign In / Sign Up
 
-2) **Modal abierto**
+2) **Modal open**
 - Backdrop visible
-- Scroll del body bloqueado
-- Solo interactuable el modal (focus trap)
+- Body scroll blocked
+- Only modal interactable (focus trap)
 
 3) **Hover / Focus**
-- Botones con estados claros (hover/focus/active)
-- En móvil: estados de tap
+- Buttons with clear states (hover/focus/active)
+- On mobile: tap states
 
 ---
 
-### Comportamiento responsive
+### Responsive Behavior
 
 **Desktop**
-- Header en una fila
-- Hero centrado (máx ancho recomendado)
-- Botones en fila
+- Header in one row
+- Hero centered (max width recommended)
+- Buttons in row
 
 **Mobile**
-- Header: título a la izquierda, botones a la derecha (o menú compacto si no cabe)
-- Hero: todo en columna
-- Modal: ocupa casi todo el ancho con padding cómodo
+- Header: title on left, buttons on right (or compact menu if doesn't fit)
+- Hero: everything in column
+- Modal: takes almost full width with comfortable padding
 
 ---
 
-### Criterios de aceptación (QA)
+### Acceptance Criteria (QA)
 
-- [ ] Al entrar a `/` se ve el título + botones Sign In/Sign Up + botón Play.
-- [ ] Click en **Sign In** navega a `/signin`.
-- [ ] Click en **Sign Up** navega a `/signup`.
-- [ ] Click en **Play** abre el modal con 2 opciones: `1 vs 1 - Local` y `1 vs AI`.
-- [ ] Click en cada opción navega a su ruta correspondiente.
-- [ ] El modal se cierra con `Esc`, click fuera, o el botón X.
-- [ ] Al cerrar, el foco vuelve al botón Play (accesibilidad).
-- [ ] No hay errores en consola al abrir/cerrar el modal o navegar.
+- [ ] On entering `/` you see title + Sign In/Sign Up buttons + Play button.
+- [ ] Click on **Sign In** navigates to `/signin`.
+- [ ] Click on **Sign Up** navigates to `/signup`.
+- [ ] Click on **Play** opens modal with 2 options: `1 vs 1 - Local` and `1 vs AI`.
+- [ ] Click on each option navigates to its corresponding route.
+- [ ] Modal closes with `Esc`, click outside, or X button.
+- [ ] On close, focus returns to Play button (accessibility).
+- [ ] No console errors when opening/closing modal or navigating.
 
 ---
 
-### Notas para API / Backend
-- Esta landing no requiere API.
+### Notes for API / Backend
+- This landing doesn't require API.
 
 ----------------
 
 ## Screen: Sign In
 
-**Ruta:** `/signin`  
-**Propósito:** autenticar al usuario y redirigirlo a la landing autenticada.  
-**Usuarios:** no autenticados (si ya está autenticado → redirigir a `/app`).
+**Route:** `/signin`  
+**Purpose:** authenticate the user and redirect to authenticated landing.  
+**Users:** not authenticated (if already authenticated → redirect to `/app`).
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGO DIO`
+- **Title / Logo:** `PONGO DIO`
 
-**Main (centrado)**
+**Main (centered)**
 - Card: **Sign In**
-  - Título: “Sign In”
-  - Formulario
-  - CTA principal: “Sign In”
-  - Links secundarios: “Don’t have an account? Sign Up”
+  - Title: "Sign In"
+  - Form
+  - Primary CTA: "Sign In"
+  - Secondary links: "Don't have an account? Sign Up"
 
-**Footer (opcional)**
+**Footer (optional)**
 - Terms / Privacy
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Form: Sign In
 
-**Campos**
+**Fields**
 - **Username or Email**
   - type: `text`
-  - placeholder: “yourname / name@email.com”
+  - placeholder: "yourname / name@email.com"
   - required
 - **Password**
   - type: `password`
-  - placeholder: “••••••••”
+  - placeholder: "••••••••"
   - required
 
-**Validaciones**
-- Campos requeridos (no vacíos)
-- Mostrar error inline bajo el campo
-- Deshabilitar submit mientras loading
+**Validations**
+- Required fields (not empty)
+- Show inline error under field
+- Disable submit while loading
 
 #### 2) Button: Sign In (submit)
 - **Label:** `Sign In`
-- **Tipo:** Primario
-- **Acción:** llama a API de login
+- **Type:** Primary
+- **Action:** calls login API
 
 #### 3) Link: Sign Up
-- **Texto:** “Don’t have an account? Sign Up”
-- **Acción:** `navigate("/signup")`
+- **Text:** "Don't have an account? Sign Up"
+- **Action:** `navigate("/signup")`
 
 #### 4) Error Banner (global)
-- Visible cuando el backend devuelve error general:
-  - “Invalid credentials”
+- Visible when backend returns general error:
+  - "Invalid credentials"
 
 ---
 
-### Estados de la pantalla
+### Screen States
 
 1) **Default**
-- Campos vacíos, submit deshabilitado hasta que haya valores
+- Empty fields, submit disabled until values exist
 
 2) **Typing**
-- Validación inline (solo al blur o al submit)
+- Inline validation (only on blur or submit)
 
 3) **Submitting (loading)**
-- Botón con spinner
-- Inputs deshabilitados
+- Button with spinner
+- Inputs disabled
 
 4) **Success**
-- Guardar sesión/token
-- Redirigir a `/app`
+- Save session/token
+- Redirect to `/app`
 
 5) **Error**
-- Mostrar banner global + (opcional) error específico en campo password
+- Show global banner + (optional) specific error in password field
 
 ---
 
-### Criterios de aceptación (QA)
+### Acceptance Criteria (QA)
 
-- [ ] Navegar a `/signin` muestra el formulario.
-- [ ] Campos requeridos: si están vacíos, no envía y muestra errores.
-- [ ] Credenciales válidas → inicia sesión y redirige a `/app`.
-- [ ] Credenciales inválidas → muestra error sin recargar página.
-- [ ] Si usuario ya autenticado entra a `/signin`, se redirige a `/app`.
-- [ ] No hay errores en consola.
+- [ ] Navigating to `/signin` shows the form.
+- [ ] Required fields: if empty, don't send and show errors.
+- [ ] Valid credentials → start session and redirect to `/app`.
+- [ ] Invalid credentials → show error without reloading page.
+- [ ] If already authenticated user enters `/signin`, redirect to `/app`.
+- [ ] No console errors.
 
 ---
 
-### Notas para API
+### Notes for API
 
 - `POST /auth/login`
   - Body: `{ identifier: string, password: string }`  
-    *(identifier = username o email)*
+    *(identifier = username or email)*
   - Success: `{ token, user: { id, username, email? } }`
   - Error: `401` invalid credentials, `500`
 
@@ -223,38 +223,38 @@
 
 ## Screen: Sign Up
 
-**Ruta:** `/signup`  
-**Propósito:** registrar usuario y redirigirlo a `/app` autenticado o tal vez a `/signin` (INSIGHTS??)  
-**Usuarios:** no autenticados (si ya está autenticado → redirigir a `/app`).
+**Route:** `/signup`  
+**Purpose:** register user and redirect to `/app` authenticated or maybe to `/signin` (INSIGHTS??)  
+**Users:** not authenticated (if already authenticated → redirect to `/app`).
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGODIO` (clickable → `/`)
+- **Title / Logo:** `PONGODIO` (clickable → `/`)
 
-**Main (centrado)**
+**Main (centered)**
 - Card: **Create account**
-  - Título: “Sign Up”
-  - Formulario
-  - CTA principal: “Create account”
-  - Links secundarios: “Already have an account? Sign In”
+  - Title: "Sign Up"
+  - Form
+  - Primary CTA: "Create account"
+  - Secondary links: "Already have an account? Sign In"
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Form: Sign Up
 
-**Campos (mínimos)**
+**Fields (minimum)**
 - **Username**
   - type: `text`
-  - placeholder: “yourname”
+  - placeholder: "yourname"
   - required
 - **Email**
   - type: `email`
-  - placeholder: “name@email.com”
+  - placeholder: "name@email.com"
   - required
 - **Password**
   - type: `password`
@@ -263,362 +263,361 @@
   - type: `password`
   - required
 
-**Opcionales**
-- Checkbox: “I accept Terms”
-- Info: reglas de password (mínimo 8 chars, etc.)
+**Optionals**
+- Checkbox: "I accept Terms"
+- Info: password rules (minimum 8 chars, etc.)
 
-**Validaciones (frontend)**
+**Validations (frontend)**
 - Username:
-  - requerido
-  - formato válido (definir - INSIGHTS??)
+  - required
+  - valid format (define - INSIGHTS??)
 - Email:
-  - formato válido
+  - valid format
 - Password:
-  - requerido
-  - formato válido
+  - required
+  - valid format
 - Confirm password:
-  - debe coincidir con password
-- Mostrar errores inline debajo de cada campo
-- Deshabilitar submit mientras loading
+  - must match password
+- Show inline errors under each field
+- Disable submit while loading
 
 #### 2) Button: Create account (submit)
 - **Label:** `Create account`
-- **Tipo:** Primario
-- **Acción:** llama a API de registro
+- **Type:** Primary
+- **Action:** calls registration API
 
 #### 3) Link: Sign In
-- **Texto:** “Already have an account? Sign In”
-- **Acción:** `navigate("/signin")`
+- **Text:** "Already have an account? Sign In"
+- **Action:** `navigate("/signin")`
 
 #### 4) Error Banner (global)
-- Errores típicos:
-  - “Username already taken”
-  - “Email already in use”
-  - “Invalid input”
-  - “Server error, try again”
+- Typical errors:
+  - "Username already taken"
+  - "Email already in use"
+  - "Invalid input"
+  - "Server error, try again"
 
 ---
 
-### Estados de la pantalla
+### Screen States
 
 1) **Default**
-- Campos vacíos
+- Empty fields
 
 2) **Typing**
-- Validación al blur o submit
+- Validation on blur or submit
 
 3) **Submitting (loading)**
-- Spinner en botón
-- Inputs deshabilitados
+- Spinner in button
+- Inputs disabled
 
 4) **Success**
-- Opción A: auto-login → guardar token → redirect `/`
-- Opción B: redirect `/signin` con mensaje “Account created”
+- Option A: auto-login → save token → redirect `/`
+- Option B: redirect `/signin` with message "Account created"
 
-    (decidir)
+    (decide)
 
 5) **Error**
-- Banner global + errores por campo según respuesta backend
-
-
----
-
-### Criterios de aceptación (QA)
-
-- [ ] Navegar a `/signup` muestra el formulario.
-- [ ] Validaciones frontend funcionan (required + confirm password).
-- [ ] Registro válido crea cuenta y redirige según flujo definido.
-- [ ] Si username/email ya existen, muestra error claro.
-- [ ] Si usuario ya autenticado entra a `/signup`, se redirige a `/app`. (maybe)
-- [ ] No hay errores en consola.
+- Global banner + errors per field based on backend response
 
 ---
 
-### Notas para API (contrato mínimo)
+### Acceptance Criteria (QA)
+
+- [ ] Navigating to `/signup` shows the form.
+- [ ] Frontend validations work (required + confirm password).
+- [ ] Valid registration creates account and redirects according to defined flow.
+- [ ] If username/email already exist, shows clear error.
+- [ ] If already authenticated user enters `/signup`, redirect to `/app`. (maybe)
+- [ ] No console errors.
+
+---
+
+### Notes for API (minimum contract)
 
 - `POST /auth/signup`
   - Body: `{ username: string, email?: string, password: string }`
   - Success:
-    - si auto-login: `{ token, user: { id, username, email? } }`
-    - si no auto-login: `{ user: { id, username, email? } }`
-  - Error: `409` (username/email en uso), `400` (validación), `500`
+    - if auto-login: `{ token, user: { id, username, email? } }`
+    - if no auto-login: `{ user: { id, username, email? } }`
+  - Error: `409` (username/email in use), `400` (validation), `500`
 
 ---------------------------------
 
 ## Screen: Landing Page (Authenticated)
 
-**Ruta:** `/app`  
-**Requisitos previos:** usuario autenticado (sesión válida / token válido).  
-**Propósito:** entrada principal post-login: iniciar partida (local/IA/remota), ver salas disponibles, navegar a leaderboard y perfil, y cerrar sesión.
-**Comportamiento:** si el cliente no esta autenticado se le va a redirigir a la ruta `/`
+**Route:** `/app`  
+**Prerequisites:** authenticated user (valid session / token).  
+**Purpose:** main entry post-login: start game (local/AI/remote), see available rooms, navigate to leaderboard and profile, and logout.
+**Behavior:** if client is not authenticated they will be redirected to route `/`
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGODIO` (clickable → `/`)
-- **Acciones (derecha):**
-  - Botón **Play** → abre modal “Choose local mode”
-  - Botón **Remote** → abre modal “Remote Rooms”
-  - Botón **Leaderboard** → navega a `/leaderboard`
-  - Botón **Profile** → navega a `/profile`
-  - Botón **Log out** → cierra sesión y navega a `/` (modo guest)
-**Hero (centro)**
-- Texto principal (H1): “Play Pong”
-- CTA primario: **Play**
-- (Opcional) Estado sutil: “You are online” / “Connected” si hay realtime
+- **Title / Logo:** `PONGODIO` (clickable → `/`)
+- **Actions (right):**
+  - Button **Play** → opens modal "Choose local mode"
+  - Button **Remote** → opens modal "Remote Rooms"
+  - Button **Leaderboard** → navigates to `/leaderboard`
+  - Button **Profile** → navigates to `/profile`
+  - Button **Log out** → closes session and navigates to `/` (guest mode)
+**Hero (center)**
+- Main text (H1): "Play Pong"
+- Primary CTA: **Play**
+- (Optional) Subtle status: "You are online" / "Connected" if there's realtime
 
-**Footer (opcional)**
-- Links a Terms / Privacy -> obligatorio en el subject v19
+**Footer (optional)**
+- Links to Terms / Privacy -> required in subject v19
 ---
 
-### Componentes
+### Components
 
 #### 1) Button: Log out
 - **Label:** `Log out`
-- **Tipo:** Secundario
-- **Acción:** invalidar sesión y redirigir
+- **Type:** Secondary
+- **Action:** invalidate session and redirect
 
 #### 2) Button: Leaderboard
 - **Label:** `Leaderboard`
-- **Tipo:** Secundario
-- **Acción:** `navigate("/leaderboard")`
+- **Type:** Secondary
+- **Action:** `navigate("/leaderboard")`
 
 #### 3) Button: Profile
 - **Label:** `Profile`
-- **Tipo:** Secundario
-- **Acción:** `navigate("/profile")`
+- **Type:** Secondary
+- **Action:** `navigate("/profile")`
 
 #### 4) Button: Play
 - **Label:** `Play`
-- **Tipo:** Primario
-- **Acción:** abre modal “Choose game mode”
+- **Type:** Primary
+- **Action:** opens modal "Choose game mode"
 
 #### 5) Button: Remote
 - **Label:** `Remote`
-- **Tipo:** Secundario
-- **Acción:** abre modal "Remote Rooms"
-- **Estado dinámico (rooms disponibles):**
-  - Si hay 1+ salas “open”, el botón entra en modo “attention”
-- **Si no hay salas:** estilo normal, sin animación
+- **Type:** Secondary
+- **Action:** opens modal "Remote Rooms"
+- **Dynamic state (rooms available):**
+  - If 1+ rooms "open", button enters "attention" mode
+  - **If no rooms:** normal style, no animation
 
-### Lógica del botón Remote (intermitente)
+### Remote Button Logic (intermittent)
 
-  - **Condición para activar “attention mode”:**
+  - **Condition to activate "attention mode":**
     - `availableRoomsCount > 0`
-  - **Comportamiento sugerido:**
-    - Animación tipo “pulse” cada ~1–2s
+  - **Suggested behavior:**
+      - "pulse" animation every ~1–2s
 
 ---
 
 ### Modal: Choose Game Mode
 
 **ID:** `choose-mode-modal`  
-**Se abre desde:** botón Play  
-**Se cierra por:**
-- Botón X
-- Click fuera del modal (backdrop)
-- Tecla `Esc`
+**Opened from:** Play button  
+**Closed by:**
+- X button
+- Click outside modal (backdrop)
+- `Esc` key
 
-**Contenido:**
-- **Título:** “Choose game mode”
-- **Opciones (cards/botones grandes):**
+**Content:**
+- **Title:** "Choose game mode"
+- **Options (cards/large buttons):**
   1) **1 vs 1 — Local**
-     - Descripción corta: “Two players, same keyboard.”
-     - **Acción:** `navigate("/game/local")`
+     - Short description: "Two players, same keyboard."
+     - **Action:** `navigate("/game/local")`
   2) **1 vs AI**
-     - Descripción corta: “Play against the computer.”
-     - **Acción:** `navigate("/game/ai")`
+     - Short description: "Play against the computer."
+     - **Action:** `navigate("/game/ai")`
 
 
-**Accesibilidad del modal:**
+**Modal accessibility:**
 - `role="dialog"` + `aria-modal="true"`
-- Focus trap dentro del modal
-- Al abrir: foco en la primera opción
-- Al cerrar: vuelve el foco al botón Play
+- Focus trap inside modal
+- On open: focus on first option
+- On close: focus returns to Play button
 
 ---
 ### Modal: Remote Rooms
 
-**Header del modal**
-- Título: “Remote Match”
+**Modal header**
+- Title: "Remote Match"
 - Tabs / Segmented control:
   - **Join room**
   - **Create room**
 
 ---
 
-### Tab A: Join room (ver salas abiertas)
+### Tab A: Join room (see open rooms)
 
-**Estados:**
+**States:**
 
 1) **Loading**
 - Skeleton list / spinner
-- Texto: “Loading rooms…”
+- Text: "Loading rooms…"
 
 2) **Empty**
-- Texto: “No open rooms right now”
-- CTA: “Create one” (cambia al tab Create)
+- Text: "No open rooms right now"
+- CTA: "Create one" (changes to Create tab)
 
-3) **With rooms (lista scrollable)**
-Cada **Room item** muestra:
+3) **With rooms (scrollable list)**
+Each **Room item** shows:
 - Room name
 - Host username
 - Players: `1 / 2`
 - Status badge: `Open`
 - CTA **Join**
 
-**Acción Join**
+**Join Action**
 - `POST /rooms/:id/join`
-- Loading state en el botón del item
-- En éxito:
-  - Cierra modal
-  - Navega a `/rooms/:id` (lobby o juego)
-- En error:
-  - Mensaje inline:
-    - “Room is full”
-    - “Room no longer available”
-  - Refresca lista
+- Loading state on the item button
+- On success:
+  - Close modal
+  - Navigate to `/rooms/:id` (lobby or game)
+- On error:
+  - Inline message:
+    - "Room is full"
+    - "Room no longer available"
+  - Refresh list
 
 ---
 
 ### Tab B: Create room (Create Remote Match)
 
-**Objetivo:** crear una sala remota y llevar al usuario a la “lobby room”.
+**Goal:** create a remote room and take user to the "lobby room".
 
-**UI (en el modal):**
-- Campo: **Room name** (placeholder: “My room”)
-- Botón primario: **Create**
-- Botón secundario: **Cancel** (vuelve a opciones del modal)
+**UI (in modal):**
+- Field: **Room name** (placeholder: "My room")
+- Primary button: **Create**
+- Secondary button: **Cancel** (returns to modal options)
 
-**Acción Create:**
-- Llama a `POST /rooms`
-- En éxito:
-  - Cierra modal
-  - Navega a `/rooms/:roomId` (lobby)
-- En error:
-  - Muestra mensaje inline (p.ej. “Couldn’t create room. Try again.”)
+**Create Action:**
+- Calls `POST /rooms`
+- On success:
+  - Close modal
+  - Navigate to `/rooms/:roomId` (lobby)
+- On error:
+  - Shows inline message (e.g. "Couldn't create room. Try again.")
 
 ---
 
-### Estados de la pantalla
+### Screen States
 
-1) **Default (autenticado, sin modal, sin popup)**
-- Header con Leaderboard/Profile/Log out
-- Hero con Play
+1) **Default (authenticated, no modal, no popup)**
+- Header with Leaderboard/Profile/Log out
+- Hero with Play
 
-2) **Modal abierto**
-- Scroll body bloqueado
+2) **Modal open**
+- Body scroll blocked
 - Focus trap
-- Opciones: Local / AI / Create Remote Match
+- Options: Local / AI / Create Remote Match
 
-3) **Create Remote Match (subestado del modal)**
+3) **Create Remote Match (modal substate)**
 - Form visible
-- Validación de campos (si existe room name)
-- Loading state en botón Create
+- Field validation (if room name exists)
+- Loading state on Create button
 
-4) **Popup de salas visible**
-- Lista cargada
-- Botón Join habilitado solo si la sala está “Open”
+4) **Rooms popup visible**
+- List loaded
+- Join button enabled only if room is "Open"
 
-5) **Cargando rooms (si aplica)**
-- Skeleton loader o spinner en popup/panel
+5) **Loading rooms (if applicable)**
+- Skeleton loader or spinner in popup/panel
 
-6) **Errores**
-- Error creando sala
-- Error unirse a sala
-- Error cargando salas (muestra “Retry”)
+6) **Errors**
+- Error creating room
+- Error joining room
+- Error loading rooms (shows "Retry")
 
 ---
 
 
-### Responsive behavior
+### Responsive Behavior
 
 **Desktop**
-- Header con botones alineados
-- Modal centrado
-- Lista scrollable interna
+- Header with aligned buttons
+- Modal centered
+- Internal scrollable list
 
 **Mobile**
-- Header compacto (botones con iconos/labels)
-- Modal casi fullscreen
-- Join y Create con CTAs grandes
+- Compact header (buttons with icons/labels)
+- Modal almost fullscreen
+- Join and Create with large CTAs
 
 ---
 
-### Criterios de aceptación (QA)
+### Acceptance Criteria (QA)
 
-- [ ] Usuario autenticado ve: Play, Remote, Leaderboard, Profile, Log out.
-- [ ] Si hay rooms abiertas, Remote cambia de estado (animación + contador/dot).
-- [ ] Click en Remote abre el modal Remote Rooms.
-- [ ] En Join room se listan salas abiertas con CTA Join.
-- [ ] Join exitoso navega a `/rooms/:id` y cierra el modal.
-- [ ] En Create room se puede crear sala y navegar a `/rooms/:roomId`.
-- [ ] Modal se cierra con Esc, click fuera o X, y devuelve foco al botón Remote.
-- [ ] Si no hay rooms, Join room muestra estado Empty y ofrece ir a Create.
-- [ ] No hay errores en consola al actualizar rooms, animación, join o create.
+- [ ] Authenticated user sees: Play, Remote, Leaderboard, Profile, Log out.
+- [ ] If there are open rooms, Remote changes state (animation + counter/dot).
+- [ ] Click on Remote opens Remote Rooms modal.
+- [ ] In Join room, open rooms are listed with Join CTA.
+- [ ] Successful Join navigates to `/rooms/:id` and closes modal.
+- [ ] In Create room, you can create room and navigate to `/rooms/:roomId`.
+- [ ] Modal closes with Esc, click outside or X, and returns focus to Remote button.
+- [ ] If there are no rooms, Join room shows Empty state and offers to go to Create.
+- [ ] No console errors when updating rooms, animation, join or create.
 
 ---
 
-### Notas para API / Realtime
+### Notes for API / Realtime
 
-- Rooms disponibles:
+- Available rooms:
   - `GET /rooms?status=open`
-- Crear room:
+- Create room:
   - `POST /rooms`
 - Join room:
   - `POST /rooms/:id/join`
 
-**Para actualizar el “attention mode” del botón Remote:**
-- Opción A: polling (simple)
-  - Cada 5–10s `GET /rooms?status=open` (solo en `/`)
-- Opción B: WebSocket (mejor UX)
-  - Evento `rooms:update` con `{ openCount, rooms[] }`
+**To update "attention mode" of Remote button:**
+- Option A: polling (simple)
+  - Every 5–10s `GET /rooms?status=open` (only on `/`)
+- Option B: WebSocket (better UX)
+  - Event `rooms:update` with `{ openCount, rooms[] }`
 
 ---------------------------------
 
 ## Screen: Remote Room Lobby
 
-**Ruta:** `/rooms/:roomId`  
-**Requisitos previos:** usuario autenticado y ha creado o se ha unido a una sala remota.  
-**Propósito:** sala de espera antes de empezar el juego remoto: ver estado de jugadores, marcarse “ready”, iniciar partida cuando ambos estén listos, o salir/cancelar.
+**Route:** `/rooms/:roomId`  
+**Prerequisites:** authenticated user and has created or joined a remote room.  
+**Purpose:** waiting room before starting remote game: see player status, mark "ready", start game when both are ready, or leave/cancel.
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGO DIO`
-- Acciones (derecha):
-  - Botón **Leave room** (si eres guest) / **Cancel room** (si eres host)
+- **Title / Logo:** `PONGO DIO`
+- Actions (right):
+  - Button **Leave room** (if you're guest) / **Cancel room** (if you're host)
 
-**Main (centrado / card principal)**
+**Main (centered / main card)**
 - Card: **Room Info**
-  - Room name (si existe)
-  - Room ID (corto/slug) + botón “Copy” (opcional)
-  - Estado: `Waiting for opponent` / `Opponent joined` / `Starting...`
+  - Room name (if exists)
+  - Room ID (short/slug) + "Copy" button (optional)
+  - Status: `Waiting for opponent` / `Opponent joined` / `Starting...`
 
 - Card: **Players**
-  - Slot Host
-  - Slot Guest
-  - Estado Ready/Not ready por jugador
-  - Controles (keyboard arrows)
+  - Host slot
+  - Guest slot
+  - Ready/Not ready status per player
+  - Controls (keyboard arrows)
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Room Info Card
 - **Room name:** string
-- **Room code:** versión corta del `roomId`
+- **Room code:** short version of `roomId`
 - **Room status badge:**
   - `Open` (1/2)
   - `Full` (2/2)
   - `Starting`
 
 #### 2) Players Card
-Mostrar 2 slots:
+Show 2 slots:
 
 **Host slot**
 - Avatar (placeholder)
@@ -627,104 +626,104 @@ Mostrar 2 slots:
 - Ready state: `Ready` / `Not ready`
 
 **Guest slot**
-- Si vacío: “Waiting for opponent…”
-- Si ocupado: avatar + username + ready state
+- If empty: "Waiting for opponent…"
+- If occupied: avatar + username + ready state
 
 
 #### 3) Actions Card
 
 **Button: Ready / Unready**
 - **Label (toggle):**
-  - si no ready → `Ready`
-  - si ready → `Unready`
-- **Acción:**
+  - if not ready → `Ready`
+  - if ready → `Unready`
+- **Action:**
   - `POST /rooms/:id/ready` body `{ ready: true|false }`
-  - o evento WebSocket `room:ready`
-- **Estados:**
-  - Loading al enviar
-  - El sistema inicia al detectar ambos ready.
+  - or WebSocket event `room:ready`
+- **States:**
+  - Loading on send
+  - System starts when both are ready.
 
 **Button: Leave / Cancel**
-- Si usuario es **guest** → label `Leave room`
-  - Acción: `POST /rooms/:id/leave`
-- Si usuario es **host** → label `Cancel room`
-  - Acción: `POST /rooms/:id/cancel` (cierra sala para ambos)
-- En éxito: navegar a `/` (landing autenticada)
+- If user is **guest** → label `Leave room`
+  - Action: `POST /rooms/:id/leave`
+- If user is **host** → label `Cancel room`
+  - Action: `POST /rooms/:id/cancel` (closes room for both)
+- On success: navigate to `/` (authenticated landing)
 
 ---
 
-### Estados de la screen
+### Screen States
 
 1) **Loading lobby**
-- Cargando datos de la sala y estado de jugadores
-- Spinner/skeleton en cards
+- Loading room and player status data
+- Spinner/skeleton in cards
 
 2) **Host alone (room open)**
-- Host ocupado, Guest vacío
-- Estado: “Waiting for opponent…”
-- Ready disponible para host
+- Host occupied, Guest empty
+- Status: "Waiting for opponent…"
+- Ready available for host
 
 3) **Guest joined (room full)**
-- Ambos slots ocupados
-- Ready disponible para ambos
+- Both slots occupied
+- Ready available for both
 
 4) **Ready toggled**
-- Ready/Unready refleja instantáneamente
-- Se sincroniza con eventos realtime
+- Ready/Unready reflects instantly
+- Syncs with realtime events
 
 5) **Both ready**
 - Auto-start:
-  - Cambia estado a `Starting...`
-  - Inicia **countdown** (3…2…1) y navega a `/game/remote/:roomId`
+  - Changes status to `Starting...`
+  - Starts **countdown** (3…2…1) and navigates to `/game/remote/:roomId`
 
 6) **Countdown to start**
-- Overlay o bloque dentro de Room Info:
-  - “Match starting in 3…”
-- Deshabilitar botones Ready/Leave durante el countdown
+- Overlay or block inside Room Info:
+  - "Match starting in 3…"
+- Disable Ready/Leave buttons during countdown
 
 7) **Opponent left**
-- Mensaje: “Opponent left the room”
-- Sala vuelve a estado open (host esperando) o sale a `/` (si el host decide cerrar)
-- Guest: al salir el host, se redirige a `/`
+- Message: "Opponent left the room"
+- Room returns to open state (host waiting) or exits to `/` (if host decides to close)
+- Guest: if host leaves, redirects to `/`
 
 8) **Room canceled / closed**
-- Mensaje: “Room was canceled”
-- CTA: “Back to home” → `/`
+- Message: "Room was canceled"
+- CTA: "Back to home" → `/`
 
 9) **Error states**
-- “Failed to load room” + Retry
-- “Join failed (room full/closed)” → redirige a `/` con toast
-- “Connection lost” (si WS) → intenta reconectar / muestra banner
+- "Failed to load room" + Retry
+- "Join failed (room full/closed)" → redirects to `/` with toast
+- "Connection lost" (if WS) → attempts reconnect / shows banner
 
 ---
 
-### Navegación / rutas relacionadas
+### Navigation / related routes
 
-- Desde Remote modal:
+- From Remote modal:
   - Join/Create → `/rooms/:roomId`
-- Desde lobby a juego:
-  - `/game/remote/:roomId` (o la ruta que defináis)
+- From lobby to game:
+  - `/game/remote/:roomId` (or the route you define)
 
 ---
 
-### Criterios de aceptación (QA)
+### Acceptance Criteria (QA)
 
-- [ ] Entrar a `/rooms/:id` muestra Room Info + Players + Actions.
-- [ ] Si no hay guest, se ve “Waiting for opponent…”.
-- [ ] Cuando entra un guest, la UI se actualiza sin refrescar (WS o polling).
-- [ ] Ready/Unready funciona y se refleja en ambos clientes.
-- [ ] Cuando ambos están ready:
-  - auto-start: aparece countdown y navega al juego
-  - o host-start: Start se habilita para el host y al pulsarlo inicia countdown + navega
-- [ ] Leave (guest) saca al usuario a `/` y libera el slot.
-- [ ] Cancel (host) cierra la sala y expulsa al guest a `/`.
-- [ ] Si el oponente se va, se muestra mensaje y el estado se actualiza correctamente.
-- [ ] Modalidades de error (room closed/full) redirigen y muestran feedback.
-- [ ] Accesibilidad básica: foco visible, botones con labels claros, no depender solo del color.
+- [ ] Entering `/rooms/:id` shows Room Info + Players + Actions.
+- [ ] If there's no guest, you see "Waiting for opponent…".
+- [ ] When a guest joins, UI updates without refresh (WS or polling).
+- [ ] Ready/Unready works and reflects in both clients.
+- [ ] When both are ready:
+  - auto-start: countdown appears and navigates to game
+  - or host-start: Start enables for host and on click starts countdown + navigates
+- [ ] Leave (guest) takes user to `/` and frees the slot.
+- [ ] Cancel (host) closes room and expels guest to `/`.
+- [ ] If opponent leaves, message shows and status updates correctly.
+- [ ] Error modes (room closed/full) redirect and show feedback.
+- [ ] Basic accessibility: visible focus, buttons with clear labels, don't rely on color alone.
 
 ---
 
-### Notas para API (contrato mínimo)
+### Notes for API (minimum contract)
 
 **Get room state**
 - `GET /rooms/:id`
@@ -737,294 +736,294 @@ Mostrar 2 slots:
 - Guest: `POST /rooms/:id/leave`
 - Host: `POST /rooms/:id/cancel`
 
-**Transición a juego**
-- Devolver un `gameId` al iniciar:
-  - `{ gameId }` y navegar a `/game/remote/:gameId`
+**Transition to game**
+- Return a `gameId` on start:
+  - `{ gameId }` and navigate to `/game/remote/:gameId`
 
 
 --------------------------------
 
 ## Screen: Profile
 
-**Ruta:** `/profile`  
-**Requisitos previos:** usuario autenticado.  
-**Propósito:** ver y editar datos del usuario (nickname, bio, password, avatar, win phrase) y navegar a Home o hacer logout.
+**Route:** `/profile`  
+**Prerequisites:** authenticated user.  
+**Purpose:** view and edit user data (nickname, bio, password, avatar, win phrase) and navigate to Home or logout.
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGODIO`
-- Acciones (derecha):
-  - Botón **Home** → navega a `/app`
-  - Botón **Log out** → cierra sesión
+- **Title / Logo:** `PONGODIO`
+- Actions (right):
+  - Button **Home** → navigates to `/app`
+  - Button **Log out** → closes session
 
-**Main (centrado / ancho medio)**
-- Card principal: **Profile**
+**Main (centered / medium width)**
+- Main card: **Profile**
   - Avatar + nickname
-  - Datos del perfil
-  - Botón **Edit profile** (cuando está en modo “view”)
-  - En modo “edit”: formulario + botón **Accept changes** + botón **Cancel**
+  - Profile data
+  - Button **Edit profile** (when in "view" mode)
+  - In "edit" mode: form + **Accept changes** button + **Cancel** button
 
-**Sección secundaria**
+**Secondary section**
 - Card: **Stats summary**
   - Wins / Losses / Winrate
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Avatar
-**Modo view**
-- Imagen actual del avatar (o placeholder)
-- Texto: “Change avatar”
+**View mode**
+- Current avatar image (or placeholder)
+- Text: "Change avatar"
 
-**Modo edit**
-- Preview de avatar
+**Edit mode**
+- Avatar preview
 - Input: Upload avatar (`image/*`)
 
-**Validación**
-- Tipo permitido: PNG/JPG/WebP (definir)
-- Tamaño máximo (definir, p.ej. 2MB)
-- Mostrar error inline si falla
+**Validation**
+- Allowed type: PNG/JPG/WebP (define)
+- Maximum size (define, e.g. 2MB)
+- Show inline error if fails
 
 ---
 
-#### 2) Campos del perfil
+#### 2) Profile Fields
 
-**Campos editables**
+**Editable fields**
 - **Nickname**
-  - view: texto
+  - view: text
   - edit: input text
 - **Bio**
-  - view: texto multilínea (si vacío: “No bio yet”)
-  - edit: textarea (con contador opcional)
-- **Win phrase** *(frase que sale cuando gana)*
-  - view: texto
-  - edit: input text o textarea corta
+  - view: multiline text (if empty: "No bio yet")
+  - edit: textarea (with optional counter)
+- **Win phrase** *(phrase that appears when winning)*
+  - view: text
+  - edit: input text or short textarea
 - **Password**
-  - view: no mostrar el valor (solo “••••••••” o “Password set”)
-  - edit: bloque separado “Change password”
+  - view: don't show value (only "••••••••" or "Password set")
+  - edit: separate block "Change password"
 
-**Bloque: Change password (solo en modo edit)**
+**Change password block (only in edit mode)**
 - Current password (required)
 - New password (required)
 - Confirm new password (required)
 
-**Validaciones (frontend)**
-- Nickname: requerido, longitud mínima
-- Bio: límite de caracteres
-- Win phrase: límite de caracteres
+**Validations (frontend)**
+- Nickname: required, minimum length
+- Bio: character limit
+- Win phrase: character limit
 - Password:
   - new password != empty
-  - confirm coincide
-  - mostrar errores inline
+  - confirm matches
+  - show inline errors
 
 ---
 
-#### 3) Botones / acciones
+#### 3) Buttons / actions
 
-**Modo view**
+**View mode**
 - Button: **Edit profile**
-  - Acción: cambia a modo edit
+  - Action: changes to edit mode
 - Button: **Home**
-  - Acción: `navigate("/app")`
+  - Action: `navigate("/app")`
 - Button: **Log out**
-  - Acción: logout
+  - Action: logout
 
-**Modo edit**
-- Button primario: **Accept changes**
-  - Acción: guarda cambios (API)
-- Button secundario: **Cancel**
-  - Acción: descarta cambios locales y vuelve a modo view
+**Edit mode**
+- Primary button: **Accept changes**
+  - Action: saves changes (API)
+- Secondary button: **Cancel**
+  - Action: discards local changes and returns to view mode
 
 ---
 
-### Estados de la pantalla
+### Screen States
 
 1) **Loading**
-- Cargando perfil (`GET /me`)
-- Skeleton para avatar + campos
+- Loading profile (`GET /me`)
+- Skeleton for avatar + fields
 
 2) **View mode (default)**
-- Campos como texto
-- Botón “Edit profile” visible
-- No hay inputs editables
+- Fields as text
+- "Edit profile" button visible
+- No editable inputs
 
 3) **Edit mode**
-- Inputs habilitados
-- “Accept changes” y “Cancel” visibles
+- Inputs enabled
+- "Accept changes" and "Cancel" visible
 
 4) **Submitting changes**
-- Botón Accept con spinner
-- Inputs deshabilitados
-- Evitar doble submit
+- Accept button with spinner
+- Inputs disabled
+- Avoid double submit
 
 5) **Success**
-- Toast: “Profile updated”
-- Vuelve a view mode
+- Toast: "Profile updated"
+- Returns to view mode
 
 6) **Error**
-- Banner global: “Couldn’t update profile”
-- Errores por campo (p.ej. nickname en uso, current password incorrect)
+- Global banner: "Couldn't update profile"
+- Per-field errors (e.g. nickname in use, current password incorrect)
 
 ---
 
-### Comportamiento responsive
+### Responsive Behavior
 
-- Desktop: cards centradas
-- Mobile: una columna, avatar arriba, botones full-width si hace falta
-
----
-
-### Criterios de aceptación (QA)
-
-- [ ] Entrar a `/profile` carga y muestra el perfil del usuario.
-- [ ] En **view mode** no se pueden editar campos.
-- [ ] Pulsar **Edit profile** activa el **edit mode** con inputs.
-- [ ] Pulsar **Cancel** descarta cambios y vuelve a view mode.
-- [ ] Pulsar **Accept changes** guarda cambios y muestra confirmación.
-- [ ] Cambio de password exige current + new + confirm, y valida coincidencia.
-- [ ] Avatar se puede actualizar en edit mode y se refleja al guardar.
-- [ ] Botón **Home** lleva a `/`.
-- [ ] Botón **Log out** cierra sesión y redirige correctamente.
-- [ ] No hay errores en consola.
+- Desktop: centered cards
+- Mobile: one column, avatar on top, full-width buttons if needed
 
 ---
 
-### Notas para API (contrato mínimo)
+### Acceptance Criteria (QA)
 
-**Obtener perfil actual**
+- [ ] Entering `/profile` loads and shows user profile.
+- [ ] In **view mode** fields cannot be edited.
+- [ ] Clicking **Edit profile** activates **edit mode** with inputs.
+- [ ] Clicking **Cancel** discards changes and returns to view mode.
+- [ ] Clicking **Accept changes** saves changes and shows confirmation.
+- [ ] Password change requires current + new + confirm, and validates match.
+- [ ] Avatar can be updated in edit mode and reflects on save.
+- [ ] **Home** button takes to `/`.
+- [ ] **Log out** button closes session and redirects correctly.
+- [ ] No console errors.
+
+---
+
+### Notes for API (minimum contract)
+
+**Get current profile**
 - `GET /me`
   - Response: `{ id, nickname, bio, avatarUrl, winPhrase, ... }`
 
-**Actualizar datos (sin password)**
+**Update data (without password)**
 - `PATCH /me`
-  - Body (parcial): `{ nickname?, bio?, winPhrase?, avatarUrl? }`
+  - Body (partial): `{ nickname?, bio?, winPhrase?, avatarUrl? }`
   - Error:
-    - `409` nickname en uso
-    - `400` validación
+    - `409` nickname in use
+    - `400` validation
 
-**Actualizar avatar (si lo tratáis como upload)**
-- Opción A (simple): `POST /me/avatar` multipart/form-data → `{ avatarUrl }`
-- Opción B (si ya tenéis storage): frontend sube a storage y luego `PATCH /me` con `avatarUrl`
+**Update avatar (if treated as upload)**
+- Option A (simple): `POST /me/avatar` multipart/form-data → `{ avatarUrl }`
+- Option B (if you already have storage): frontend uploads to storage and then `PATCH /me` with `avatarUrl`
 
-**Cambiar password**
+**Change password**
 - `POST /me/password`
   - Body: `{ currentPassword, newPassword }`
-  - Error: `401/403` current password incorrect, `400` validación
+  - Error: `401/403` current password incorrect, `400` validation
 
 **Logout**
-- `POST /auth/logout` o invalidación local si JWT stateless
+- `POST /auth/logout` or local invalidation if JWT stateless
 
-**Formato de error recomendado**
+**Recommended error format**
 - `{ error: { code, message, field? } }`
-  - Ej: `{ error: { code: "NICKNAME_TAKEN", field: "nickname", message: "Nickname already in use" } }`
+  - Ex: `{ error: { code: "NICKNAME_TAKEN", field: "nickname", message: "Nickname already in use" } }`
 
 --------------------
 
 
 ## Screen: Leaderboard
 
-**Ruta:** `/leaderboard`  
-**Requisitos previos:** usuario autenticado.  
-**Propósito:** mostrar ranking/listado de usuarios registrados con estadísticas básicas y permitir acceder a perfiles públicos.
+**Route:** `/leaderboard`  
+**Prerequisites:** authenticated user.  
+**Purpose:** show ranking/list of registered users with basic statistics and allow accessing public profiles.
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGODIO`
-- Acciones (derecha):
-  - Botón **Home** → navega a `/app`
-  - Botón **Log out** → cierra sesión
+- **Title / Logo:** `PONGODIO`
+- Actions (right):
+  - Button **Home** → navigates to `/app`
+  - Button **Log out** → closes session
 
 **Main**
-- Card principal: **Leaderboard**
-  - Título: “Leaderboard”
-  - Tabla de usuarios
+- Main card: **Leaderboard**
+  - Title: "Leaderboard"
+  - Users table
 
 ---
 
-### Componentes
+### Components
 
-#### 1) Tabla: Leaderboard
+#### 1) Table: Leaderboard
 
-**Columnas**
+**Columns**
 1. **Nickname**
-   - Texto clickable (link)
-   - **Acción:** `navigate("/users/:userId")`
+   - Clickable text (link)
+   - **Action:** `navigate("/users/:userId")`
 2. **Status**
    - Badge:
-     - `Online` (verde)
-     - `Offline` (gris)
+     - `Online` (green)
+     - `Offline` (gray)
 3. **Played**
-   - Número total de partidas jugadas
+   - Total number of games played
 4. **Wins**
-   - Número de partidas ganadas
+   - Number of games won
 5. **Losses**
-   - Número de partidas perdidas
+   - Number of games lost
 6. **Winrate** (%)
-7. **Rank** (posición)
+7. **Rank** (position)
 8. **Add**
-    - Anadir como amigo
+   - Add as friend
 
-**Estados de la tabla**
+**Table states**
 - Loading (skeleton rows)
-- Empty (“No users found”)
-- Error (“Could not load leaderboard” + Retry)
+- Empty ("No users found")
+- Error ("Could not load leaderboard" + Retry)
 
 ---
 
-### Interacciones
+### Interactions
 
-- Click en **Nickname**:
-  - Navega al **Public Profile** del usuario
-- Paginación:
-  - Prev / Next o infinite scroll
+- Click on **Nickname**:
+  - Navigates to user's **Public Profile**
+- Pagination:
+  - Prev / Next or infinite scroll
 
 ---
 
-### Estados de la screen
+### Screen States
 
 1) **Loading**
-- Tabla con filas skeleton
+- Table with skeleton rows
 
 2) **Loaded**
-- Lista visible y scrollable
+- List visible and scrollable
 
 3) **Error**
-- Banner global + Retry
+- Global banner + Retry
 
 ---
 
-### Comportamiento responsive
+### Responsive Behavior
 
-- Desktop: tabla completa
+- Desktop: full table
 - Mobile:
-  - Tabla simplificada o cards por usuario:
+  - Simplified table or cards per user:
     - Nickname
     - Status
     - Played / Wins / Losses
 
 ---
 
-### Criterios de aceptación (QA)
+### Acceptance Criteria (QA)
 
-- [ ] Navegar a `/leaderboard` muestra la tabla de usuarios.
-- [ ] Cada fila muestra nickname, status, played, wins, losses.
-- [ ] Nickname es clickable y lleva a perfil público.
-- [ ] Botón Home redirige a `/app`.
-- [ ] Botón Log out cierra sesión y redirige correctamente.
-- [ ] No hay errores en consola.
+- [ ] Navigating to `/leaderboard` shows users table.
+- [ ] Each row shows nickname, status, played, wins, losses.
+- [ ] Nickname is clickable and leads to public profile.
+- [ ] Home button redirects to `/app`.
+- [ ] Log out button closes session and redirects correctly.
+- [ ] No console errors.
 
 ---
 
-### Notas para API
+### Notes for API
 
-**Obtener leaderboard**
+**Get leaderboard**
 - `GET /leaderboard`
   - Response:
     ```json
@@ -1044,23 +1043,23 @@ Mostrar 2 slots:
 
 ## Screen: Public Profile (Read-only)
 
-**Ruta:** `/users/:userId`  
-**Requisitos previos:** usuario autenticado.  
-**Propósito:** mostrar información pública de un usuario seleccionado desde la leaderboard.
+**Route:** `/users/:userId`  
+**Prerequisites:** authenticated user.  
+**Purpose:** show public information of a user selected from the leaderboard.
 
 ---
 
-### Layout (estructura)
+### Layout (structure)
 
 **Header / Top Nav**
-- **Título / Logo:** `PONGODIO`
-- Acciones (derecha):
-  - Botón **Home** → navega a `/app`
-  - Botón **Leaderboard** → navega a `/leaderboard`
-  - Botón **Log out** → cierra sesión
+- **Title / Logo:** `PONGODIO`
+- Actions (right):
+  - Button **Home** → navigates to `/app`
+  - Button **Leaderboard** → navigates to `/leaderboard`
+  - Button **Log out** → closes session
 
-**Main (centrado)**
-- Card principal: **Public Profile**
+**Main (centered)**
+- Main card: **Public Profile**
   - Avatar
   - Nickname
   - Status (online/offline)
@@ -1070,23 +1069,23 @@ Mostrar 2 slots:
 
 ---
 
-### Componentes
+### Components
 
 #### 1) Avatar
-- Imagen del usuario (o placeholder)
-- Solo visualización (no editable)
+- User image (or placeholder)
+- View only (not editable)
 
-#### 2) Datos públicos
+#### 2) Public Data
 
 - **Nickname**
-  - Texto grande (H2)
+  - Large text (H2)
 - **Status**
   - Badge Online / Offline
 - **Bio**
-  - Texto multilinea
-  - Si vacío: “No bio provided”
+  - Multiline text
+  - If empty: "No bio provided"
 - **Win phrase**
-  - Texto destacado (quote-style)
+  - Highlighted text (quote-style)
 
 ---
 
@@ -1100,53 +1099,53 @@ Mostrar 2 slots:
 
 ---
 
-### Estados de la screen
+### Screen States
 
 1) **Loading**
-- Skeleton avatar + textos
+- Skeleton avatar + texts
 
 2) **Loaded**
-- Datos visibles
+- Data visible
 
 3) **Error**
-- “User not found” / “Could not load profile”
+- "User not found" / "Could not load profile"
 - CTA: Back to leaderboard
 
 ---
 
-### Navegación / acciones
+### Navigation / actions
 
-- Botón **Leaderboard**
-  - Acción: `navigate("/leaderboard")`
-- Botón **Home**
-  - Acción: `navigate("/")`
-- Botón **Log out**
-  - Acción: logout
-
----
-
-### Comportamiento responsive
-
-- Desktop: avatar + info en dos columnas
-- Mobile: todo en una columna, avatar arriba
+- Button **Leaderboard**
+  - Action: `navigate("/leaderboard")`
+- Button **Home**
+  - Action: `navigate("/")`
+- Button **Log out**
+  - Action: logout
 
 ---
 
-### Criterios de aceptación (QA)
+### Responsive Behavior
 
-- [ ] Click en nickname en leaderboard navega a `/users/:id`.
-- [ ] Public profile muestra datos correctos y no editables.
-- [ ] Botón Leaderboard vuelve a `/leaderboard`.
-- [ ] Botón Home vuelve a `/app`.
-- [ ] Botón Log out cierra sesión correctamente.
-- [ ] Error de usuario inexistente muestra feedback claro.
-- [ ] No hay errores en consola.
+- Desktop: avatar + info in two columns
+- Mobile: everything in one column, avatar on top
 
 ---
 
-### Notas para API (contrato mínimo)
+### Acceptance Criteria (QA)
 
-**Obtener perfil público**
+- [ ] Click on nickname in leaderboard navigates to `/users/:id`.
+- [ ] Public profile shows correct data and is not editable.
+- [ ] Leaderboard button returns to `/leaderboard`.
+- [ ] Home button returns to `/app`.
+- [ ] Log out button closes session correctly.
+- [ ] Non-existent user shows clear feedback.
+- [ ] No console errors.
+
+---
+
+### Notes for API (minimum contract)
+
+**Get public profile**
 - `GET /users/:id`
   - Response:
     ```json
@@ -1163,4 +1162,4 @@ Mostrar 2 slots:
     ```
 
 **Status online/offline**
-  -Via websocket
+  - Via websocket

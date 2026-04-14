@@ -62,7 +62,7 @@ services:
   # ────────────────────────────────────────────
   # EDGE / API GATEWAY + STATIC FRONTEND
   # - Este contenedor debe incluir el build del React (multi-stage en Dockerfile)
-  # - Sirve / (frontend estático)
+  # - Serves / (static frontend)
   # - Proxy /api/auth/* -> auth-service
   # - Proxy /api/game/* y /ws/* -> game-service
   # - Expone stub_status en :8080 solo para exporter (NO al host)
@@ -72,7 +72,7 @@ services:
     build: ./nginx-gateway
     ports:
       - "8443:443"
-      # opcional: redirección HTTP->HTTPS
+      # optional: HTTP->HTTPS redirect
       # - "80:80"
     networks:
       - frontend
@@ -154,7 +154,7 @@ services:
       # Optional: point to mounted JWT keys
       # - JWT_PRIVATE_KEY_PATH=/run/secrets/jwt-private.pem
       # - JWT_PUBLIC_KEY_PATH=/run/secrets/jwt-public.pem
-      # añade aquí secretos vía .env (no hardcode)
+      # add secrets here via .env (no hardcode)
       # - JWT_SECRET=${JWT_SECRET}
       # - TWOFA_ENCRYPTION_KEY=${TWOFA_ENCRYPTION_KEY}
     healthcheck:

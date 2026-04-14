@@ -158,11 +158,11 @@ async function getChatUserFromUpgrade(req: any): Promise<{ userId: string; sende
   }
 }
 
-// Registrar el plugin de métricas
+// Register metrics plugin
 fastify.register(require('fastify-metrics'), { 
-  endpoint: '/metrics', // La ruta que ya sabemos que busca Prometheus
-  defaultMetrics: { enabled: true }, // Métricas del sistema (CPU, RAM, Event Loop)
-  routeMetrics: { enabled: true }    // Métricas de tus rutas (peticiones/segundo, latencia)
+  endpoint: '/metrics', // The route that Prometheus looks for
+  defaultMetrics: { enabled: true }, // System metrics (CPU, RAM, Event Loop)
+  routeMetrics: { enabled: true }    // Your route metrics (requests/second, latency)
 });
 
 const SERVICE_TOKEN = process.env.SERVICE_TOKEN!;
@@ -290,7 +290,7 @@ fastify.get<{ Params: { id: string } }>('/internal/profile/logout/:id', { preHan
 
 // --- PUBLIC PROFILE USER ---
 fastify.get('/profile/me', { preHandler: verifyToken }, async (req, reply) => {
-    console.info("!!!!! HANDLER REACHED !!!!!"); // ¿aparece esto en los logs?
+    console.info("!!!!! HANDLER REACHED !!!!!"); // does this appear in logs?
     console.info("----> req.user in handler:", req.user);
 	try {
         const userId = req.user?.sub;
@@ -377,7 +377,7 @@ fastify.patch('/profile/updateme', { preHandler: verifyToken }, async (req, repl
         // 1. Actualizamos
         await updatePlayerInfo(userId, data);
 
-        // 2. Buscamos el usuario actualizado (usa la función que ya tengas para GET profile)
+        // 2. We fetch the updated user (use the function you already have for GET profile)
         const updatedUser = await getPlayerById(userId); 
 
         // 3. Devolvemos el objeto completo
@@ -508,7 +508,7 @@ fastify.post('/internal/profile/delete', { preHandler: requireServiceAuth }, asy
 
         const path = require('path');
 		const AVATAR_DIR = AVATARS_DIR;
-//        const AVATAR_DIR = '/app/uploads/avatars/'; // O la ruta donde guardes físicamente los archivos
+//        const AVATAR_DIR = '/app/uploads/avatars/'; // Or the path where you physically store files
 
         const filePath = path.join(AVATAR_DIR, `${userId}.webp`);
         try {
@@ -602,7 +602,7 @@ fastify.post('/profile/avatar', { preHandler: verifyToken }, async (req, reply) 
             })
             .toBuffer();
 
-        // ✅ CORRECCIÓN: Guarda en el volumen persistente
+        // ✅ CORRECTION: Save to persistent volume
         console.log("Uploading Avatar to:", AVATARS_DIR);
         
 		const filePath = path.join(AVATARS_DIR, `${userId}.webp`);
@@ -610,7 +610,7 @@ fastify.post('/profile/avatar', { preHandler: verifyToken }, async (req, reply) 
         
         console.log("✅ Avatar saved at:", filePath);
 
-        // ✅ URL pública del avatar
+        // ✅ Public avatar URL
 		const avatarUrl = `/api/profile/avatars/${userId}.webp`;
 
         // Actualiza en la base de datos
@@ -675,7 +675,7 @@ fastify.get('/profile/avatars/:filename', async (req, reply) => {
 
 
   fastify.addHook('onRequest', async (request, reply) => {
-  console.log(`Recibida petición: ${request.method} ${request.url}`);
+  console.log(`Received request: ${request.method} ${request.url}`);
 });
 
 

@@ -7,6 +7,6 @@ route:
 
 receivers:
   - name: "default"
-    # Para demo, lo más simple: usar webhook a un servicio mock o solo log.
-    # Aquí lo dejamos sin integraciones externas.
-    # Puedes añadir email/slack/discord más adelante.
+    # For demo, the simplest: use webhook to a mock service or just log.
+    # Here we leave it without external integrations.
+    # You can add email/slack/discord later.

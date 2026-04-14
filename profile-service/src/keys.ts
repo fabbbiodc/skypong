@@ -29,7 +29,7 @@ function readPublicKeyOrExit(): string {
     let attempts = 0;
     while (!fs.existsSync(publicKeyPath) && attempts < 10) {
         console.log(`[profile] Attempt ${attempts} Waiting for public key at ${publicKeyPath}...`);
-        // Pausa sincrónica de 1 segundo (solo durante el arranque)
+        // Synchronous pause of 1 second (only during startup)
         const start = Date.now();
         while (Date.now() - start < 1000); 
         attempts++;
