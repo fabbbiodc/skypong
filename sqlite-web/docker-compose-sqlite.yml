@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  sqlite-web-demo:
+    container_name: sqlite-web-demo
+    build: .
+    ports:
+      - "8978:8080"
+    volumes:
+      - ../volumes:/data:ro
+    env_file:
+      - ../.env   # Path to your main project .env with SQLITE_WEB_USER and SQLITE_WEB_PASSWORD
+    restart: unless-stopped

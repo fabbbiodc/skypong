@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "jsx": "react-jsx",
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "moduleResolution": "bundler",
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@skypong/common/*": [
+                "../common/*"
+            ],
+            "@skypong/common": [
+                "../common/GameState.ts"
+            ]
+        },
+        "types": ["vite/client"]
+    },
+    "include": [
+        "src_cli/**/*.ts",
+        "src_cli/**/*.tsx"
+, "../common/adjustcameraexample.ts"    ]
+}

@@ -1,0 +1,380 @@
+# ──────────────────────────────────────────────
+# NETWORKS
+# ──────────────────────────────────────────────
+networks:
+  frontend:
+    driver: bridge
+    name: transcendence_frontend_v2
+  backend:   # Edge (NGINX) <-> Microservicios
+    driver: bridge
+  internal:  # Observabilidad (Prometheus/Grafana/exporters)
+    driver: bridge
+
+# ──────────────────────────────────────────────
+# VOLUMES
+# ──────────────────────────────────────────────
+volumes:
+  sqlite_auth_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: PLACEHOLDER_SQLITE_AUTH
+  front-dev_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: PLACEHOLDER_FRONT
+  statistics-service_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: PLACEHOLDER_STATISTICS
+  profile-service_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: PLACEHOLDER_PROFILE
+  uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./uploads
+  static:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./static
+
+  prometheus_data:
+  grafana_data:
+  certs:
+  keys:
+# ──────────────────────────────────────────────
+# SERVICES
+# ──────────────────────────────────────────────
+services:
+  # ────────────────────────────────────────────
+  # EDGE / API GATEWAY + STATIC FRONTEND
+  # - Este contenedor debe incluir el build del React (multi-stage en Dockerfile)
+  # - Sirve / (frontend estático)
+  # - Proxy /api/auth/* -> auth-service
+  # - Proxy /api/game/* y /ws/* -> game-service
+  # - Expone stub_status en :8080 solo para exporter (NO al host)
+  # ────────────────────────────────────────────
+  nginx-gateway:
+    container_name: nginx-gateway
+    build: ./nginx-gateway
+    ports:
+      - "8443:443"
+      # opcional: redirección HTTP->HTTPS
+      # - "80:80"
+    networks:
+      - frontend
+      - backend
+      - internal
+    volumes:
+      - ./nginx-gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+      - certs:/etc/nginx/certs
+      - uploads:/app/uploads:ro
+      - static:/app/static:ro
+      - ./profile-service/static:/app/static:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      game-frontend:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      game-service:
+        condition: service_started
+      profile-service:
+        condition: service_started
+      statistics-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/nginx_status >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # ────────────────────────────────────────────
+  # FRONT-END
+  # ────────────────────────────────────────────
+  frontend:
+    container_name: frontend
+    build: ./front
+    ports:
+      - "3000:3000"  # solo para desarrollo
+    networks:
+     - frontend
+    volumes:
+    - ./front:/app
+    - /app/node_modules
+    - /app/.next
+    environment:
+    - NODE_ENV=development
+    - WATCHPACK_POLLING=true
+    - NEXT_PUBLIC_USE_NGINX_WS_PROXY=true
+  # ────────────────────────────────────────────
+  # MICROSERVICIOS
+  # ────────────────────────────────────────────
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+    user: "0:0"
+      # args:
+      #   UID: ${UID}
+      #   GID: ${GID}
+    networks:
+      - backend
+      - internal
+    volumes:
+      - PLACEHOLDER_SQLITE_AUTH:/app/data
+      - keys:/app/keys
+    # user: "${UID}:${GID}" 
+      # Optional: mount JWT keys from host secrets
+      # - ./secrets/jwt-private.pem:/run/secrets/jwt-private.pem:ro
+      # - ./secrets/jwt-public.pem:/run/secrets/jwt-public.pem:ro
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+      - NODE_ENV=production
+      - SERVICE_NAME=auth-service
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - PROFILE_SERVICE_URL=${PROFILE_SERVICE_URL}
+      - STATS_SERVICE_URL=${STATS_SERVICE_URL}
+      # Optional: point to mounted JWT keys
+      # - JWT_PRIVATE_KEY_PATH=/run/secrets/jwt-private.pem
+      # - JWT_PUBLIC_KEY_PATH=/run/secrets/jwt-public.pem
+      # añade aquí secretos vía .env (no hardcode)
+      # - JWT_SECRET=${JWT_SECRET}
+      # - TWOFA_ENCRYPTION_KEY=${TWOFA_ENCRYPTION_KEY}
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8081/health', r=>process.exit(r.statusCode===200?0:1)).on('error', ()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  game-service:
+    container_name: game-service
+    build:
+      context: ./game
+      dockerfile: Dockerfile.server
+    ports:
+      - "2567:2567"
+    networks:
+      - backend
+      - internal
+    environment:
+      - NODE_ENV=production
+      - SERVICE_NAME=game-service
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - PROFILE_SERVICE_URL=${PROFILE_SERVICE_URL}
+      - STATS_SERVICE_URL=${STATS_SERVICE_URL}
+      - PORT=2567
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:2567/healthz', r=>process.exit(r.statusCode===200?0:1)).on('error', ()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  game-frontend:
+    container_name: game-frontend
+    build:
+      context: ./game
+      dockerfile: Dockerfile.client
+      args:
+        VITE_SERVER_HOST: localhost
+        VITE_SERVER_PORT: "8443"
+        VITE_WS_PROTOCOL: wss
+        VITE_SERVER_PATH: /ws
+        VITE_BASE_PATH: /game-engine/
+    ports:
+      - "8088:80"
+    networks:
+      - frontend
+    depends_on:
+      game-service:
+        condition: service_healthy
+
+  profile-service:
+    container_name: profile-service
+    build: ./profile-service
+    user: "0:0"
+    networks:
+      - backend
+      - internal
+    environment:
+      - NODE_ENV=production
+      - SERVICE_NAME=profile-service
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - PROFILE_SERVICE_URL=${PROFILE_SERVICE_URL}
+      - STATS_SERVICE_URL=${STATS_SERVICE_URL}
+      - PROFILE_DATA_DIR=/app/data
+      - JWT_PUBLIC_KEY_PATH=/app/keys/jwt-public.pem
+    volumes:
+      - PLACEHOLDER_PROFILE:/app/data
+      - keys:/app/keys:ro
+      - uploads:/app/uploads:rw
+      - static:/app/static:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:5000/healthz', r=>process.exit(r.statusCode===200?0:1)).on('error', ()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      auth-service:
+        condition: service_healthy
+
+  statistics-service:
+    container_name: statistics-service
+    build: ./statistics-service
+    user: "0:0"
+    networks:
+      - backend
+      - internal
+    environment:
+      - NODE_ENV=production
+      - SERVICE_NAME=statistics-service
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - PROFILE_SERVICE_URL=${PROFILE_SERVICE_URL}
+      - STATS_SERVICE_URL=${STATS_SERVICE_URL}
+      - STATS_DATA_DIR=/app/data
+    volumes:
+      - PLACEHOLDER_STATISTICS:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:6000/healthz', r=>process.exit(r.statusCode===200?0:1)).on('error', ()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+  
+  # ────────────────────────────────────────────
+  # DB SEED (one-shot)
+  # ────────────────────────────────────────────
+  db-seed:
+    container_name: db-seed
+    build: ./seed
+    networks:
+      - backend
+    volumes:
+    # auth-service sqlite
+      - PLACEHOLDER_SQLITE_AUTH:/auth-data
+
+    # profile-service sqlite
+      - PLACEHOLDER_PROFILE:/profile-data
+
+    # statistics-service sqlite
+      - PLACEHOLDER_STATISTICS:/stats-data
+    environment:
+      - NODE_ENV=development
+      - SEED_MODE=dev
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+      statistics-service:
+        condition: service_healthy
+    command: ["node", "/app/seed.js"]
+#    restart: "no"
+
+  # ────────────────────────────────────────────
+  # EXPORTERS / MONITORING
+  # ────────────────────────────────────────────
+  nginx-exporter:
+    container_name: nginx-exporter
+    image: nginx/nginx-prometheus-exporter:latest
+    command:
+      - -nginx.scrape-uri=http://nginx-gateway:8080/nginx_status
+    networks:
+      - internal
+    volumes:
+      - uploads:/var/www/uploads:ro
+    depends_on:
+      nginx-gateway:
+        condition: service_healthy
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    networks:
+      - internal
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/metrics >/dev/null 2>&1 || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager:latest
+    networks:
+      - internal
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    # puerto expuesto solo para desarrollo
+    ports:
+      - "9090:9090"
+    networks:
+      - internal
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    depends_on:
+      nginx-exporter:
+        condition: service_started
+      cadvisor:
+        condition: service_healthy
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    networks:
+      - internal
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./nginx-gateway/certs:/etc/grafana/certs:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:?set GRAFANA_ADMIN_USER in .env}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_CERT_FILE=/etc/grafana/certs/cert.pem
+      - GF_SERVER_CERT_KEY=/etc/grafana/certs/key.pem
+    ports:
+      - "3001:3000"
+    depends_on:
+      prometheus:
+        condition: service_started

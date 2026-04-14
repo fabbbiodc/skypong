@@ -1,0 +1,154 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "description": "High-level system overview (containers + services).",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": null,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+        "gridPos": { "h": 5, "w": 24, "x": 0, "y": 0 },
+        "id": 1,
+        "options": {
+          "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+          "orientation": "horizontal",
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.0.0",
+        "targets": [
+          { "refId": "A", "expr": "up", "legendFormat": "{{job}} ({{instance}})" }
+        ],
+        "title": "Targets UP (1 = OK)",
+        "type": "stat"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 0, "y": 5 },
+        "id": 2,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "100 * sum by (name) (rate(container_cpu_usage_seconds_total{image!=\"\"}[1m]))",
+            "legendFormat": "{{name}}"
+          }
+        ],
+        "title": "Container CPU (cAdvisor) – % (approx)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 12, "y": 5 },
+        "id": 3,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (name) (container_memory_working_set_bytes{image!=\"\"})",
+            "legendFormat": "{{name}}"
+          }
+        ],
+        "title": "Container Memory (cAdvisor)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 0, "y": 12 },
+        "id": 4,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (job) (rate(http_request_duration_seconds_count[1m]))",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "title": "HTTP RPS by service (Fastify metrics)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 12, "y": 12 },
+        "id": 5,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
+            "legendFormat": "p95 {{job}}"
+          },
+          {
+            "refId": "B",
+            "expr": "histogram_quantile(0.50, sum by (le, job) (rate(http_request_duration_seconds_bucket[5m])))",
+            "legendFormat": "p50 {{job}}"
+          }
+        ],
+        "title": "HTTP Latency p50 / p95 (Fastify histogram)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 0, "y": 19 },
+        "id": 6,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (job, status_code) (rate(http_request_duration_seconds_count{status_code=~\"4..|5..\"}[1m]))",
+            "legendFormat": "{{job}} {{status_code}}"
+          }
+        ],
+        "title": "HTTP errors (4xx/5xx) RPS",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+        "gridPos": { "h": 7, "w": 12, "x": 12, "y": 19 },
+        "id": 7,
+        "options": { "legend": { "showLegend": true }, "tooltip": { "mode": "single" } },
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "histogram_quantile(0.95, sum by (le, job, kind) (rate(nodejs_gc_duration_seconds_bucket[5m])))",
+            "legendFormat": "p95 {{job}} {{kind}}"
+          }
+        ],
+        "title": "Node.js GC duration p95",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 39,
+    "style": "dark",
+    "tags": [ "transcendence", "overview" ],
+    "templating": { "list": [] },
+    "time": { "from": "now-15m", "to": "now" },
+    "timepicker": {},
+    "timezone": "",
+    "title": "System Overview (Transcendence)",
+    "uid": "transcendence_system_overview",
+    "version": 1
+  }
+  

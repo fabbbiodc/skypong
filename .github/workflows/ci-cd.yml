@@ -1,0 +1,107 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - dev
+#       - staging
+#       - main
+#       - 'feature/*'
+#   pull_request:
+
+# jobs:
+
+#   # ──────────────────────────────────────────────
+#   # STAGE 1 — LINT & UNIT TESTS
+#   # ──────────────────────────────────────────────
+
+#   lint-and-test:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         service:
+#           - auth-service
+#           - profile-service
+#           - stats-service
+#           - tournament-service
+#           - chat-service
+#           - game-service
+#           - api-gateway
+#           - frontend
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Install dependencies
+#         working-directory: ${{ matrix.service }}
+#         run: |
+#           if [ -f package.json ]; then npm install; fi
+#           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+#       - name: Lint
+#         working-directory: ${{ matrix.service }}
+#         run: |
+#           if [ -f package.json ]; then npm run lint --if-present; fi
+
+#       - name: Run unit tests
+#         working-directory: ${{ matrix.service }}
+#         run: |
+#           if [ -f package.json ]; then npm test --if-present; fi
+
+#   # ──────────────────────────────────────────────
+#   # STAGE 2 — BUILD & PUSH IMAGES
+#   # ──────────────────────────────────────────────
+
+#   build-and-push:
+#     needs: lint-and-test
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         service:
+#           - auth-service
+#           - profile-service
+#           - stats-service
+#           - tournament-service
+#           - chat-service
+#           - game-service
+#           - api-gateway
+#           - frontend
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Log in to GHCR
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Build image
+#         run: |
+#           docker build -t ghcr.io/${{ github.repository }}/${{ matrix.service }}:${{ github.sha }} \
+#             ./${{ matrix.service }}
+
+#       - name: Push image
+#         run: |
+#           docker push ghcr.io/${{ github.repository }}/${{ matrix.service }}:${{ github.sha }}
+
+#   # ──────────────────────────────────────────────
+#   # STAGE 3 — DEPLOY TO DEV / STAGING / PROD
+#   # ──────────────────────────────────────────────
+
+#   deploy:
+#     needs: build-and-push
+#     runs-on: ubuntu-latest
+#     if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+#     steps:
+#       - name: Deploy to remote server
+#         uses: appleboy/ssh-action@v0.1.10
+#         with:
+#           host: ${{ secrets.SERVER_HOST }}
+#           username: ${{ secrets.SERVER_USER }}
+#           key: ${{ secrets.SERVER_SSH_KEY }}
+#           script: |
+#             cd /srv/transcendence/${{ github.ref_name }}
+#             docker compose pull
+#             docker compose up -d --remove-orphans
+#             docker system prune -f

@@ -1,0 +1,9 @@
+{
+  "name": "skypong-monorepo",
+  "private": true,
+  "workspaces": [
+    "common",
+    "server",
+    "client"
+  ]
+}

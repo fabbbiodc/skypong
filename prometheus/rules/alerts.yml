@@ -1,0 +1,29 @@
+groups:
+  - name: core-alerts
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target down: {{ $labels.job }} ({{ $labels.instance }})"
+          description: "Prometheus cannot scrape {{ $labels.job }} at {{ $labels.instance }}."
+
+      - alert: HighNginx5xxRate
+        expr: sum(rate(nginx_http_requests_total{status=~"5.."}[2m])) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Nginx is returning 5xx responses"
+          description: "Gateway has returned at least one 5xx response per second over the last minute."
+
+      - alert: HighContainerCPU
+        expr: sum by (name) (rate(container_cpu_usage_seconds_total{image!=""}[2m])) > 0.8
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on container {{ $labels.name }}"
+          description: "Container {{ $labels.name }} is above 0.8 CPU cores for 2 minutes."

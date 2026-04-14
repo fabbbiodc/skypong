@@ -1,0 +1,68 @@
+{
+    "annotations": { "list": [] },
+    "description": "Nginx gateway overview (requires nginx-prometheus-exporter + stub_status).",
+    "editable": true,
+    "graphTooltip": 1,
+    "id": null,
+    "panels": [
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+        "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+        "id": 1,
+        "targets": [
+          { "refId": "A", "expr": "up{job=~\"nginx.*|gateway.*\"}", "legendFormat": "{{job}} ({{instance}})" }
+        ],
+        "title": "Gateway exporter UP",
+        "type": "stat"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+        "id": 2,
+        "targets": [
+          { "refId": "A", "expr": "nginx_connections_active", "legendFormat": "active" },
+          { "refId": "B", "expr": "nginx_connections_reading", "legendFormat": "reading" },
+          { "refId": "C", "expr": "nginx_connections_writing", "legendFormat": "writing" },
+          { "refId": "D", "expr": "nginx_connections_waiting", "legendFormat": "waiting" }
+        ],
+        "title": "Nginx Connections",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+        "id": 3,
+        "targets": [
+          { "refId": "A", "expr": "rate(nginx_http_requests_total[1m])", "legendFormat": "req/s" }
+        ],
+        "title": "Nginx HTTP Requests (req/s)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 14 },
+        "id": 4,
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (job, route, status_code) (rate(http_request_duration_seconds_count[1m]))",
+            "legendFormat": "{{job}} {{route}} {{status_code}}"
+          }
+        ],
+        "title": "Backend requests seen by services (breakdown)",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 39,
+    "tags": [ "transcendence", "gateway", "nginx" ],
+    "time": { "from": "now-15m", "to": "now" },
+    "title": "Gateway (Nginx) Dashboard (Transcendence)",
+    "uid": "transcendence_gateway_dashboard",
+    "version": 1
+  }
+  

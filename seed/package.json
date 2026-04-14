@@ -1,0 +1,10 @@
+{
+  "name": "db-seed",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.0",
+    "argon2": "^0.30.0"
+  }
+}

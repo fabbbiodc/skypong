@@ -1,0 +1,12 @@
+route:
+  receiver: "default"
+  group_by: ["alertname", "job"]
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+
+receivers:
+  - name: "default"
+    # Para demo, lo más simple: usar webhook a un servicio mock o solo log.
+    # Aquí lo dejamos sin integraciones externas.
+    # Puedes añadir email/slack/discord más adelante.
