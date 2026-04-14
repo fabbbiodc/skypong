@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build and Output Folders
+dist/
+build/
+.next/
+out/
+volumes/
+
+# Images and Static Assets (No point formatting these)
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.webp
+**/*.svg
+**/*.ico
+**/*.exr
+public/assets/
+uploads/
+static/
+
+# Config & Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+Makefile
+certs/
+
+# Certificates and Keys
+**/*.pem
+**/*.key
+
+# Documentation
+# docs/
+
+# System and logs
+.DS_Store
+*.log
