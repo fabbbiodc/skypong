@@ -1,12 +1,12 @@
 SHELL := /bin/bash
 
-# Usa docker compose (plugin). Si tú usas docker-compose legacy, cambia a "docker-compose"
+# Use docker compose (plugin). If you use docker-compose legacy, change to "docker-compose"
 DC := docker compose
 COMPOSE_FILE := docker-compose.yml
 COMPOSE_TEMPLATE := docker-compose-template.yml
 CONFIG_PATH := config_docker_path.sh
 
-# Nombre del proyecto (para agrupar recursos). Opcional.
+# Project name (to group resources). Optional.
 PROJECT ?= transcendence
 
 # Common flags
@@ -19,27 +19,27 @@ DCFLAGS := -p $(PROJECT) -f $(COMPOSE_FILE)
 help:
 	@echo ""
 	@echo "Targets:"
-	@echo "  make up             -> Levanta stack (detached)"
-	@echo "  make down           -> Baja stack"
-	@echo "  make restart        -> Reinicia stack"
-	@echo "  make ps             -> Estado de contenedores"
-	@echo "  make logs           -> Logs follow de todo"
-	@echo "  make build          -> Build de imágenes"
-	@echo "  make rebuild        -> Build sin cache y up"
-	@echo "  make pull           -> Pull de imágenes (si aplica)"
+	@echo "  make up             -> Brings up stack (detached)"
+	@echo "  make down           -> Brings down stack"
+	@echo "  make restart        -> Restarts stack"
+	@echo "  make ps             -> Container status"
+	@echo "  make logs           -> Logs follow of everything"
+	@echo "  make build          -> Build images"
+	@echo "  make rebuild        -> Build without cache and up"
+	@echo "  make pull           -> Pull images (if applicable)"
 	@echo ""
-	@echo "Limpieza:"
-	@echo "  make clean          -> down + remove orphans (NO borra volúmenes)"
-	@echo "  make clean-hard     -> down -v + remove orphans (BORRA volúmenes: datos)"
-	@echo "  make prune-images   -> limpia imágenes dangling/unused"
-	@echo "  make prune-volumes  -> limpia volúmenes sin uso (peligroso)"
-	@echo "  make prune-all      -> system prune (peligroso)"
+	@echo "Cleanup:"
+	@echo "  make clean          -> down + remove orphans (DOES NOT delete volumes)"
+	@echo "  make clean-hard     -> down -v + remove orphans (DELETES volumes: data)"
+	@echo "  make prune-images   -> clean dangling/unused images"
+	@echo "  make prune-volumes  -> clean unused volumes (dangerous)"
+	@echo "  make prune-all      -> system prune (dangerous)"
 	@echo ""
 	@echo "Exec:"
-	@echo "  make exec-nginx     -> shell dentro de nginx-gateway"
-	@echo "  make exec-auth      -> shell dentro de auth-service"
-	@echo "  make exec-game      -> shell dentro de game-service"
-	@echo "  make exec-game-front -> shell dentro de game-frontend"
+	@echo "  make exec-nginx     -> shell inside nginx-gateway"
+	@echo "  make exec-auth      -> shell inside auth-service"
+	@echo "  make exec-game      -> shell inside game-service"
+	@echo "  make exec-game-front -> shell inside game-frontend"
 	@echo ""
 
 config: env
@@ -76,18 +76,18 @@ rebuild:
 pull:
 	$(DC) $(DCFLAGS) pull
 
-# Limpio "normal": no te borra datos persistidos
+# Normal cleanup: doesn't delete persisted data
 clean:
 	$(DC) $(DCFLAGS) down --remove-orphans
 	rm -v $(COMPOSE_FILE)
 	docker volume prune -f
 
-# Limpio "hard": borra volúmenes (pierdes SQLite, Prometheus, Grafana, etc.)
+# Hard cleanup: deletes volumes (you lose SQLite, Prometheus, Grafana, etc.)
 clean-hard:
 	$(DC) $(DCFLAGS) down -v --remove-orphans
 	rm -Rvf ./volumes/*
 
-# Prunes (ojo: globales, no solo tu proyecto)
+# Prunes (warning: global, not just your project)
 prune-images:
 	docker image prune -f
 

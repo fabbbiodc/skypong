@@ -27,17 +27,17 @@ export default function PlayerUI({ userURL }) {
   });
 
   useEffect(() => {
-    // 1. Si el AuthContext aún está verificando la cookie, esperamos.
+    // 1. If AuthContext is still verifying the cookie, we wait.
     if (authloading) return;
 
-    // 2. Si ya terminó de cargar y NO hay usuario, mandamos a home.
+    // 2. If it finished loading and there's NO user, redirect to home.
     if (!user) {
       router.push("/");
       return;
     }
 
     const fetchMyProfile = async () => {
-      // Iniciamos carga local para el perfil
+      // Start local loading for profile
       setIsLoading(true);
       setServerError("");
       if (player) return;
@@ -55,7 +55,7 @@ export default function PlayerUI({ userURL }) {
 
         const data = await response.json();
 
-        // Seteamos el player con los datos de la API
+        // Set the player with API data
         setPlayer(data.user);
         if (data.user) {
           setValue("nickname", data.user.nickname || "");
@@ -65,7 +65,7 @@ export default function PlayerUI({ userURL }) {
         console.error("Error en fetchMyProfile:", error);
         setServerError(t.serverError.conectionError);
       } finally {
-        // Solo dejamos de cargar cuando la petición termina (éxito o error)
+        // Only stop loading when the request finishes (success or error)
         setIsLoading(false);
       }
     };

@@ -67,18 +67,18 @@ export default function PlayerCredentialsUI({ userURL }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setServerError(errorData.error?.message || "Error al actualizar");
+        setServerError(errorData.error?.message || "Error updating password");
         return;
       }
     } catch (error) {
-      console.error("Error actualizando contraseña:", error);
+      console.error("Error updating password:", error);
       setServerError(t.serverError.conectionError);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Muestra loading
+  // Show loading
   if (authloading || isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-4">

@@ -188,4 +188,11 @@ This is game UI locale text, part of the i18n system.
 | 2026-04-14 | nginx-gateway/public/index.html                                                | Translated to English                                |
 | 2026-04-14 | nginx-gateway/nginx.conf                                                       | Translated to English                                |
 | 2026-04-14 | front/specs/screens.md                                                         | Translated to English (full document)                |
-| 2026-04-14 | ALL                                                                            | Translation complete - 9 files done                  |
+| 2026-04-14 | Makefile                                                                       | Translated to English                                |
+| 2026-04-14 | front/app/ui/player-private-profile/player-ui.js                               | Translated comments to English                       |
+| 2026-04-14 | front/app/ui/player-private-profile/player-delete-account-ui.js                | Translated comments to English                       |
+| 2026-04-14 | front/app/ui/player-private-profile/player-credentials-ui.js                   | Translated comments to English                       |
+| 2026-04-14 | front/app/updateme/page.js                                                     | Translated error message to English                  |
+| 2026-04-14 | front/app/ui/modal-mode-selector.js                                            | Translated comments to English                       |
+| 2026-04-14 | front/app/lib/players/check-player-status.ts                                   | Translated comments to English                       |
+| 2026-04-14 | ALL                                                                            | Translation complete - additional files done         |
