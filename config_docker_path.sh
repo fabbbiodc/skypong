@@ -13,7 +13,7 @@ if [ ! -f "$ENV_FILE" ]; then
   cp "$EXAMPLE_FILE" "$ENV_FILE"
 fi
 
-# 2. ADD VARIABLES WHICH IXIST IN .env.example AND DO NOT EXIST IN .env
+# 2. ADD VARIABLES WHICH EXIST IN .env.example AND DO NOT EXIST IN .env
 while IFS= read -r line; do
   [[ -z "$line" || "$line" =~ ^# ]] && continue
 
@@ -40,7 +40,7 @@ fi
 
 DOCKCOMPS="docker-compose.yml"
 
-# CAMBIAR BASE DEPENDIENDO DEL HOST (42 O TU CASA)
+# Change BASE depending on host (42 or your home)
 #BASE="/sgoinfre/students/${USER}/transcendence-dev/volumes/"
 BASE=$PWD/volumes/
 echo $BASE
@@ -53,7 +53,7 @@ STATIC="${PWD}/static"
 UPLOADS="${PWD}/uploads"
 AVATARS="${UPLOADS}/avatars"
 
-# Crear directorios host para todos los volúmenes y aplicar permisos
+# Create host directories for all volumes and apply permissions
 mkdir -p \
   "${BASE}${AUTH}" \
   "${BASE}${FRONT}" \
@@ -71,7 +71,7 @@ chmod 777 \
   "${UPLOADS}" 2>/dev/null || true
 
 
-# Intentar chown (puede fallar en 42/rootless o ciertos FS) sin romper el script
+# Attempt chown (may fail on 42/rootless or certain FS) without breaking script
 chown -R "$USER:$USER" \
   "${BASE}${AUTH}" \
   "${BASE}${FRONT}" \
@@ -80,7 +80,7 @@ chown -R "$USER:$USER" \
   "${STATIC}" \
   "${UPLOADS}" 2>/dev/null || true
 
-# Asegurar permisos mínimos para tu usuario
+# Ensure minimum permissions for your user
 chmod -R u+rwX \
   "${BASE}${AUTH}" \
   "${BASE}${FRONT}" \
@@ -89,11 +89,11 @@ chmod -R u+rwX \
   "${STATIC}" \
   "${UPLOADS}" 2>/dev/null || true
 
-echo "✅ Directorios OK:"
+echo "✅ Directories OK:"
 ls -ld "${BASE}${AUTH}" "${BASE}${FRONT}" "${BASE}${STATISTICS}" "${BASE}${PROFILE}" "${UPLOADS}" "${STATIC}" "${AVATARS}"
 
-# 3) SUSTITUIR PLACEHOLDERS EN docker-compose.yml
-echo "🧩 Sustituyendo placeholders de paths..."
+# 3) REPLACE PLACEHOLDERS IN docker-compose.yml
+echo "🧩 Replacing path placeholders..."
 
 # LINUX
 system=$(uname -s)
@@ -114,5 +114,5 @@ if [[ $system == "Darwin" ]]; then
     sed -i '' "s|PLACEHOLDER_FRONT|${BASE}${FRONT}|g" "$DOCKCOMPS"
 fi
 
-echo "✅ Placeholders sustituidos en '$DOCKCOMPS'."
-echo "👉 Ya puedes hacer: make up"
+echo "✅ Placeholders replaced in '$DOCKCOMPS'."
+echo "👉 You can now run: make up"
