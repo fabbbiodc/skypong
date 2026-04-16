@@ -10,7 +10,7 @@ This document tracks Spanish content that needs to be translated to English, exc
 
 | Status         | Files | Notes                      |
 | -------------- | ----- | -------------------------- |
-| ✅ Done        | 9     | All translations completed |
+| ✅ Done        | 10    | All translations completed |
 | 🔄 In Progress | -     | -                          |
 | ⏳ Pending     | -     | -                          |
 
@@ -116,6 +116,24 @@ This document tracks Spanish content that needs to be translated to English, exc
 
 ---
 
+### 10. config_docker_path.sh
+
+**Status:** ✅ Done  
+**Lines translated:** 16, 43, 56, 74, 83, 92, 95, 96, 117, 118
+
+- `# 2. ADD VARIABLES WHICH IXIST IN .env.example...` → `# 2. ADD VARIABLES WHICH EXIST IN .env.example...` (fixed typo)
+- `# CAMBIAR BASE DEPENDIENDO DEL HOST (42 O TU CASA)` → `# Change BASE depending on host (42 or your home)`
+- `# Crear directorios host para todos los volúmenes y aplicar permisos` → `# Create host directories for all volumes and apply permissions`
+- `# Intentar chown (puede fallar en 42/rootless o ciertos FS) sin romper el script` → `# Attempt chown (may fail on 42/rootless or certain FS) without breaking script`
+- `# Asegurar permisos mínimos para tu usuario` → `# Ensure minimum permissions for your user`
+- `echo "✅ Directorios OK:"` → `echo "✅ Directories OK:"`
+- `# 3) SUSTITUIR PLACEHOLDERS EN docker-compose.yml` → `# 3) REPLACE PLACEHOLDERS IN docker-compose.yml`
+- `echo "🧩 Sustituyendo placeholders de paths..."` → `echo "🧩 Replacing path placeholders..."`
+- `echo "✅ Placeholders sustituidos en '$DOCKCOMPS'."` → `echo "✅ Placeholders replaced in '$DOCKCOMPS'."`
+- `echo "👉 Ya puedes hacer: make up"` → `echo "👉 You can now run: make up"`
+
+---
+
 ## Excluded (i18n Locale Files)
 
 These files contain UI text translations and are part of the i18n system - they should NOT be translated (they ARE the locale/text used in the website):
@@ -196,3 +214,4 @@ This is game UI locale text, part of the i18n system.
 | 2026-04-14 | front/app/ui/modal-mode-selector.js                                            | Translated comments to English                       |
 | 2026-04-14 | front/app/lib/players/check-player-status.ts                                   | Translated comments to English                       |
 | 2026-04-14 | ALL                                                                            | Translation complete - additional files done         |
+| 2026-04-16 | config_docker_path.sh                                                          | Translated comments and echo messages to English     |
