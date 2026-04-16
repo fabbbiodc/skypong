@@ -211,8 +211,18 @@ export const backgrounds = {
   primary: "bg-primary",
 } as const;
 
+// SHADOW CLASSES (for CVA usage)
+export const shadowClasses = {
+  sm: "shadow-sm",
+  md: "shadow-md",
+  lg: "shadow-lg",
+  xl: "shadow-xl",
+  none: "shadow-none",
+} as const;
+
 export type ColorVariant = (typeof variants.color)[keyof typeof variants.color];
 export type SizeVariant = (typeof variants.size)[keyof typeof variants.size];
 export type ChipVariant =
   (typeof variants.chipState)[keyof typeof variants.chipState];
 export type BackgroundToken = keyof typeof backgrounds;
+export type ShadowClassToken = keyof typeof shadowClasses;

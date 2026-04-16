@@ -26,6 +26,7 @@ All paths and references in this document are relative to `front/`. The project 
 2. **Full Design System** with consistent CVA patterns
 3. **Consolidated Page Components** to reduce duplication
 4. **Background tokens** - Unified background system for containers
+5. **Shadow tokens** - Unified shadow system for containers
 
 ---
 
@@ -449,14 +450,15 @@ front/app/ui/patterns/
 
 ## Implementation Progress
 
-| Phase                         | Status  | Notes                           |
-| ----------------------------- | ------- | ------------------------------- |
-| Phase 1: Design Tokens        | ✅ Done | Created design-tokens.ts        |
-| Phase 2: Base Components      | ✅ Done | All 9 components migrated       |
-| Phase 3: Simplify globals.css | ✅ Done | Reduced from 1300 to ~250 lines |
-| Phase 4: Page Components      | ✅ Done | Created patterns/               |
-| Phase 5: Documentation        | ✅ Done | Updated ui-test page            |
-| Phase 6: Background Tokens    | ✅ Done | Added backgrounds, CVA use      |
+| Phase                         | Status     | Notes                                |
+| ----------------------------- | ---------- | ------------------------------------ |
+| Phase 1: Design Tokens        | ✅ Done    | Created design-tokens.ts             |
+| Phase 2: Base Components      | ✅ Done    | All 9 components migrated            |
+| Phase 3: Simplify globals.css | ✅ Done    | Reduced from 1300 to ~250 lines      |
+| Phase 4: Page Components      | ✅ Done    | Created patterns/                    |
+| Phase 5: Documentation        | ✅ Done    | Updated ui-test page                 |
+| Phase 6: Background Tokens    | ✅ Done    | Added backgrounds, CVA use           |
+| Phase 7: Shadow Tokens        | ⏳ Pending | Add shadow tokens, update components |
 
 ---
 
@@ -494,6 +496,60 @@ export type BackgroundToken = keyof typeof backgrounds;
 | Section   | Pending |
 | Footer    | Pending |
 | Hero      | Pending |
+
+---
+
+## Shadow Token System
+
+### Decision 5: Shadow Variants
+
+**Status:** ⏳ In Progress
+
+**Choice:** Unified shadow system using design-tokens
+
+- Components use `shadows` from design-tokens.ts (CVA-compatible classes)
+- Available variants: sm, md, lg, xl, none
+- Note: Separate from CSS variable shadows (for box-shadow property)
+
+**Implementation:**
+
+```typescript
+// design-tokens.ts - CVA shadow tokens
+export const shadowClasses = {
+  sm: "shadow-sm",
+  md: "shadow-md",
+  lg: "shadow-lg",
+  xl: "shadow-xl",
+  none: "shadow-none",
+} as const;
+
+export type ShadowClassToken = keyof typeof shadowClasses;
+```
+
+**Files using hardcoded shadows:**
+
+| File                 | Line | Current Value                          |
+| -------------------- | ---- | -------------------------------------- |
+| `Card.tsx`           | 9    | `shadow-md hover:shadow-lg` (elevated) |
+| `Navbar.tsx`         | 143  | `shadow-lg` (dropdown)                 |
+| `StatCard.tsx`       | 24   | `shadow-lg` (featured)                 |
+| `Tabs.tsx`           | 70   | `shadow-sm`                            |
+| `Section.tsx`        | 10   | `shadow-md` (elevated)                 |
+| `ListRow.tsx`        | 23   | `hover:shadow-md`                      |
+| `global-chat-ui.tsx` | 154  | `shadow-lg hover:shadow-xl`            |
+| `global-chat-ui.tsx` | 166  | `shadow-2xl`                           |
+
+**Components to update:**
+
+| Component         | Status  |
+| ----------------- | ------- |
+| Card              | Pending |
+| Navbar (dropdown) | Pending |
+| StatCard          | Pending |
+| Tabs              | Pending |
+| Section           | Pending |
+| ListRow           | Pending |
+| global-chat-ui    | Pending |
 
 ---
 
@@ -535,6 +591,17 @@ const myComponentVariants = cva("base classes", {
 - Homepage now uses new base components: Navbar, Footer, Hero, LanguageSelector
 - Navbar has built-in auth state handling and dropdown menu
 - Hero uses rainbowtext class for animated gradient title
+- Background tokens added: `backgrounds.main`, `backgrounds.transparent`, `backgrounds.primary`
+- Shadow tokens added: `shadowClasses.sm`, `shadowClasses.md`, `shadowClasses.lg`, `shadowClasses.xl`, `shadowClasses.none`
+
+### Next Session TODO
+
+1. **Shadow Tokens Phase**: Update components to use `shadowClasses` from design-tokens.ts
+   - Card.tsx, Section.tsx, StatCard.tsx, Tabs.tsx, ListRow.tsx, Navbar.tsx, global-chat-ui.tsx
+2. **Background Tokens Phase**: Update remaining components to use `backgrounds`
+   - Card, Section, Footer, Hero
+
+3. **Import path**: Use `@/lib/design-tokens` (not `@lib/design-tokens`)
 
 ---
 
@@ -560,6 +627,18 @@ const myComponentVariants = cva("base classes", {
 
 - Fixed Navbar props type (was `white | transparent`, should be `"main" | "transparent"`)
 - Fixed hardcoded `"white"` in CVA usage (now uses prop)
+
+**Phase 7: Shadow Tokens (In Progress)**
+
+- Added CVA-compatible shadow classes to design-tokens.ts:
+  - `sm`: "shadow-sm"
+  - `md`: "shadow-md"
+  - `lg`: "shadow-lg"
+  - `xl`: "shadow-xl"
+  - `none`: "shadow-none"
+  - Added `ShadowClassToken` type export
+
+- Components using hardcoded shadows identified (see Shadow Token System section)
 
 ### 2026-04-16
 
