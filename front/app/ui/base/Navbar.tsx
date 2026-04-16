@@ -8,6 +8,7 @@ import { useTranslation } from "@/hooks/use-translation";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "./Button";
 import { Avatar } from "./Avatar";
+import { backgrounds } from "@/lib/design-tokens";
 import SkypongLogo from "../skypong-logo";
 
 const navbarVariants = cva(
@@ -18,9 +19,14 @@ const navbarVariants = cva(
         visible: "translate-y-0",
         hidden: "-translate-y-full",
       },
+      background: {
+        main: backgrounds.main,
+        transparent: backgrounds.transparent,
+      },
     },
     defaultVariants: {
       visibility: "visible",
+      background: "main",
     },
   },
 );
@@ -29,9 +35,10 @@ type NavbarVisibility = VariantProps<typeof navbarVariants>["visibility"];
 
 interface NavbarProps {
   className?: string;
+  background?: "main" | "transparent";
 }
 
-export function Navbar({ className }: NavbarProps) {
+export function Navbar({ className, background = "main" }: NavbarProps) {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -101,7 +108,10 @@ export function Navbar({ className }: NavbarProps) {
 
   return (
     <nav
-      className={cn(navbarVariants({ visibility: navVisibility }), className)}
+      className={cn(
+        navbarVariants({ visibility: navVisibility, background }),
+        className,
+      )}
     >
       <SkypongLogo />
 

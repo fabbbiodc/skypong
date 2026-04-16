@@ -203,7 +203,16 @@ export const variants = {
   } as const,
 };
 
+// BACKGROUNDS
+
+export const backgrounds = {
+  main: "bg-white",
+  transparent: "bg-transparent",
+  primary: "bg-primary",
+} as const;
+
 export type ColorVariant = (typeof variants.color)[keyof typeof variants.color];
 export type SizeVariant = (typeof variants.size)[keyof typeof variants.size];
 export type ChipVariant =
   (typeof variants.chipState)[keyof typeof variants.chipState];
+export type BackgroundToken = keyof typeof backgrounds;

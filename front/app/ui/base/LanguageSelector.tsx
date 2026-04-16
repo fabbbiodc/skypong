@@ -2,7 +2,7 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/context/language-context";
+import { useTranslation } from "@/context/language-context";
 import { Button } from "./Button";
 
 const languageSelectorVariants = cva("flex gap-4", {
@@ -34,7 +34,7 @@ export function LanguageSelector({
   layout = "horizontal",
   className,
 }: LanguageSelectorProps) {
-  const { changeLanguage, locale } = useLanguage();
+  const { changeLanguage, locale } = useTranslation();
 
   return (
     <nav className={cn(languageSelectorVariants({ layout }), className)}>
