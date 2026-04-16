@@ -25,6 +25,7 @@ All paths and references in this document are relative to `front/`. The project 
 1. **Single Source of Truth** for design tokens/variables
 2. **Full Design System** with consistent CVA patterns
 3. **Consolidated Page Components** to reduce duplication
+4. **Background tokens** - Unified background system for containers
 
 ---
 
@@ -37,6 +38,7 @@ All paths and references in this document are relative to `front/`. The project 
 - **No TypeScript tokens** - Colors/spacing scattered in CSS only
 - **Duplication** - Similar patterns (hover, borders, shadows) repeated across components
 - **Page component duplication** - GameHistory, FriendsSection, AchievementsSection have repeated patterns
+- **Hardcoded backgrounds** - Container components use hardcoded bg-white instead of tokens
 
 ### Current Design System
 
@@ -454,6 +456,44 @@ front/app/ui/patterns/
 | Phase 3: Simplify globals.css | ✅ Done | Reduced from 1300 to ~250 lines |
 | Phase 4: Page Components      | ✅ Done | Created patterns/               |
 | Phase 5: Documentation        | ✅ Done | Updated ui-test page            |
+| Phase 6: Background Tokens    | ✅ Done | Added backgrounds, CVA use      |
+
+---
+
+## Background Token System
+
+### Decision 4: Background Variants
+
+**Status:** ✅ Decided
+
+**Choice:** Unified background system using design-tokens
+
+- All container components use `backgrounds` from `design-tokens.ts`
+- Available variants: `main` (white), `transparent`, `primary`
+- Components can be used with different backgrounds via prop
+
+**Implementation:**
+
+```typescript
+// design-tokens.ts
+export const backgrounds = {
+  main: "bg-white",
+  transparent: "bg-transparent",
+  primary: "bg-primary",
+} as const;
+
+export type BackgroundToken = keyof typeof backgrounds;
+```
+
+**Components updated:**
+
+| Component | Status  |
+| --------- | ------- |
+| Navbar    | ✅ Done |
+| Card      | Pending |
+| Section   | Pending |
+| Footer    | Pending |
+| Hero      | Pending |
 
 ---
 
@@ -499,6 +539,27 @@ const myComponentVariants = cva("base classes", {
 ---
 
 ## Change Log
+
+### 2026-04-16 (continued)
+
+**Phase 6: Background Token System**
+
+- Added `backgrounds` export to `design-tokens.ts`:
+  - `main`: "bg-white" (main container background)
+  - `transparent`: "bg-transparent"
+  - `primary`: "bg-primary"
+  - Added `BackgroundToken` type export
+
+- Updated Navbar.tsx to use design-tokens:
+  - Import `backgrounds` from `@lib/design-tokens`
+  - Add `background` variant to CVA
+  - Props accept `background?: "main" | "transparent"`
+  - Default to `"main"`
+
+**Bug fixes:**
+
+- Fixed Navbar props type (was `white | transparent`, should be `"main" | "transparent"`)
+- Fixed hardcoded `"white"` in CVA usage (now uses prop)
 
 ### 2026-04-16
 
