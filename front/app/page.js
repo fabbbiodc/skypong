@@ -1,32 +1,26 @@
 "use client";
 
-import { Button } from "./ui/base/Button";
 import { useTranslation } from "./hooks/use-translation";
-import FooterTermsPolicy from "./ui/footer-terms-policy";
-import HeroUI from "./ui/hero-ui";
-import NavigationAppUI from "./ui/navigation-app-ui";
-import NavigationLanguageUI from "./ui/navigation-language-ui";
+import { Navbar, Footer, Hero, LanguageSelector } from "./ui/base";
 
 export default function HomePage() {
   const { t } = useTranslation();
 
   return (
-    <main className={`h-dvh bg-page-bg text-slate-900 lg:px-10 flex flex-col`}>
-      <NavigationAppUI />
+    <main className="h-dvh bg-transparent text-slate-900 lg:px-10 flex flex-col">
+      <Navbar />
       <div className="flex flex-1 items-center justify-center">
-        <div className="page-content-container">
+        <div className="w-[90%] max-w-full bg-white rounded-[2.5rem] shadow-md p-8 sm:p-10 md:p-12 lg:w-[50%] lg:h-[70%] lg:flex-none lg:p-14">
           <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 py-4 md:gap-8 md:py-6 lg:gap-10 lg:py-10">
-            <div className="w-full max-w-4xl p-6 sm:p-8 md:p-10">
-              <HeroUI />
+            <div className="w-full max-w-4xl">
+              <Hero titleSize="lg" iconSize="lg" />
             </div>
-            <div>
-              <NavigationLanguageUI />
-            </div>
+            <LanguageSelector />
           </section>
         </div>
       </div>
       <div className="mt-auto pb-4">
-        <FooterTermsPolicy />
+        <Footer />
       </div>
     </main>
   );

@@ -8,6 +8,10 @@ export { Badge } from "./Badge";
 export { StatCard } from "./StatCard";
 export { ProgressBar } from "./ProgressBar";
 export { Tabs, type Tab } from "./Tabs";
+export { Navbar } from "./Navbar";
+export { Footer } from "./Footer";
+export { Hero } from "./Hero";
+export { LanguageSelector } from "./LanguageSelector";
 
 // Design tokens exports (single source of truth)
 export {

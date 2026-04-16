@@ -84,11 +84,20 @@
       transform-origin: right;
     }
   }
+  @keyframes rainbow-shift {
+    from {
+      background-position: 0% center;
+    }
+    to {
+      background-position: 200% center;
+    }
+  }
 
   --animate-fade-in: fade-in 0.5s ease-out forwards;
   --animate-scale-to-right-0: scale-to-right 0.3s ease-in forwards;
   --animate-scale-from-right-0: scale-from-right 0.3s ease-out forwards;
   --animate-disapear: disapear 0.5s ease-in forwards;
+  --animate-rainbow: rainbow-shift 4s linear infinite;
 }
 
 /* ============================================================================
@@ -124,6 +133,50 @@
 
 .closed {
   @apply animate-scale-to-right-0;
+}
+
+/* ============================================================================
+   RAINBOW TEXT - Animated gradient title
+   ============================================================================ */
+
+.rainbowtext {
+  background: linear-gradient(
+    90deg,
+    #a78bfa,
+    #818cf8,
+    #60a5fa,
+    #818cf8,
+    #c084fc,
+    #e879f9,
+    #f472b6,
+    #e879f9,
+    #c084fc,
+    #818cf8,
+    #a78bfa
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  @apply animate-rainbow;
+}
+
+/* ============================================================================
+   SKYPONG LOGO
+   ============================================================================ */
+
+.skypong-logo {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.skypong-logo:hover {
+  opacity: 0.8;
 }
 
 /* ============================================================================

@@ -1,10 +1,12 @@
 # Frontend Refactoring Plan
 
-## Overview
+## Scope
 
-This document outlines the refactoring plan for the `front/` directory, focusing on design simplification and consolidation. It serves as the master prompt for this refactoring session and future sessions.
+**This document applies ONLY to the `front/` directory.**
 
-**Last Updated:** 2026-04-14
+All paths and references in this document are relative to `front/`. The project root is `../` from the perspective of this document.
+
+**Last Updated:** 2026-04-16
 
 ---
 
@@ -17,8 +19,6 @@ This document outlines the refactoring plan for the `front/` directory, focusing
 - New decisions made
 - Bugs found and workarounds
 - Anything deviating from the plan
-
----
 
 ## Goals
 
@@ -492,10 +492,45 @@ const myComponentVariants = cva("base classes", {
 - All CVA components use class-variance-authority
 - Keep globals.css @theme - it powers Tailwind utilities
 - Tokens file is documentation + types, NOT runtime
+- Homepage now uses new base components: Navbar, Footer, Hero, LanguageSelector
+- Navbar has built-in auth state handling and dropdown menu
+- Hero uses rainbowtext class for animated gradient title
 
 ---
 
 ## Change Log
+
+### 2026-04-16
+
+**Phase 1b: Fix Broken CSS**
+
+- Added missing CSS classes to globals.css:
+  - `.rainbowtext` - Animated gradient title (migrated from main)
+  - `.skypong-logo` - Logo component styles (migrated from main)
+  - `@keyframes rainbow-shift` - Animation for rainbow text
+
+**Phase 2b: New Base Components - Complete**
+
+- Created 5 new CVA-based components in `front/app/ui/base/`:
+  - `Navbar.tsx`: Navigation with auth state, scroll behavior, dropdown menu
+  - `Footer.tsx`: Reusable footer with customizable links
+  - `Hero.tsx`: Hero section with title and play button
+  - `LanguageSelector.tsx`: Language switcher with active state
+
+- All new components follow CVA pattern with:
+  - variant/size props for flexibility
+  - TypeScript types for autocomplete
+  - Proper accessibility attributes
+
+**Phase 4b: Homepage Redesign - Complete**
+
+- Refactored `front/app/page.js`:
+  - Replaced old components with new CVA-based ones
+  - Simplified layout, uses new Navbar, Footer, Hero, LanguageSelector
+  - Added responsive styling inline
+
+- New imports in base/index.ts:
+  - Navbar, Footer, Hero, LanguageSelector
 
 ### 2026-04-14
 
