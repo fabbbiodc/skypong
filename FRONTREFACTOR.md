@@ -20,6 +20,8 @@ All paths and references in this document are relative to `front/`. The project 
 - Bugs found and workarounds
 - Anything deviating from the plan
 
+**Related:** See `CLEANUP.md` for cleanup tasks separate from the main refactoring plan.
+
 ## Goals
 
 1. **Single Source of Truth** for design tokens/variables
@@ -602,6 +604,14 @@ const myComponentVariants = cva("base classes", {
    - Card, Section, Footer, Hero
 
 3. **Import path**: Use `@/lib/design-tokens` (not `@lib/design-tokens`)
+
+4. **Frontend Cleanup**: See `CLEANUP.md` for detailed cleanup tasks:
+   - Remove unused files (use-styles.ts, unused achievement components, achivements.ts)
+   - Consolidate duplicate components (navigation-app-ui → Navbar)
+   - Fix broken code (placeholderUrl → logoURL, dead imports)
+   - Create PageContainer pattern components
+
+**See also:** `CLEANUP.md` for detailed cleanup instructions
 
 ---
 
