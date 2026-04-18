@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { encodeConfig } from "../lib/game/game-session-config";
 import { getAvailableRooms } from "../lib/game/room-service";
 import { useAuth } from "../context/auth-context";
 import { useTranslation } from "../hooks/use-translation";
-import { useStyles } from "../hooks/use-styles";
-import FooterTermsPolicy from "../ui/footer-terms-policy";
-import NavigationAppUI from "../ui/navigation-app-ui";
-import { Button, TextField } from "../ui/base";
+import { useMediaQuery } from "../hooks/use-media-query";
+import { Button, TextField, Navbar, Footer } from "../ui/base";
+import { PageContainer, ContentContainer } from "../ui/patterns";
 
 const STATES = {
   SELECT_MODE: "SELECT_MODE",
@@ -118,18 +117,22 @@ function PlayPanel({ title, subtitle, children }) {
 
 export default function PlayPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [state, setState] = useState(STATES.SELECT_MODE);
   const [config, setConfig] = useState(INITIAL_CONFIG);
   const [rooms, setRooms] = useState([]);
   const [loadingRooms, setLoadingRooms] = useState(false);
   const [roomError, setRoomError] = useState(null);
   const [gameUrl, setGameUrl] = useState("");
+  const [error, setError] = useState(null);
 
   const { user, hasCredentials } = useAuth();
   const { t, locale } = useTranslation();
-  const { styles: isDesktop } = useStyles(false, true);
-  const error = useMemo(() => searchParams.get("error"), [searchParams]);
+  const isDesktop = useMediaQuery("(min-width: 745px)");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setError(params.get("error"));
+  }, []);
 
   useEffect(() => {
     if (user?.nickname) {
@@ -226,13 +229,11 @@ export default function PlayPage() {
 
   return (
     <main className="h-dvh bg-page-bg text-slate-900 flex flex-col">
-      <NavigationAppUI
-        userURL={hasCredentials ? "/user-home" : "/login"}
-        compactGuestActions
-      />
+      <Navbar />
       <div className="flex flex-1 items-center justify-center">
-        <div className="page-content-container">
-          <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 py-4 md:gap-8 md:py-6 lg:gap-10 lg:py-10">
+        <PageContainer>
+          <ContentContainer size="xl">
+            <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 py-4 md:gap-8 md:py-6 lg:gap-10 lg:py-10">
             <div className="flex w-full flex-col items-center gap-4">
               {error && (
                 <p className="error-message text-sm">
@@ -423,8 +424,11 @@ export default function PlayPage() {
                     </p>
                   )}
                   {rooms.map((room) => (
-                    <div key={room.id} className="room-list-item">
-                      <span className="room-name">
+                    <div
+                      key={room.id}
+                      className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-3"
+                    >
+                      <span className="text-sm font-medium text-gray-800">
                         {room.creatorName
                           ? `${room.creatorName}${t.play.room}`
                           : room.name}
@@ -642,10 +646,11 @@ export default function PlayPage() {
               )}
             </div>
           </section>
-        </div>
+          </ContentContainer>
+        </PageContainer>
       </div>
       <div className="mt-auto pb-4">
-        <FooterTermsPolicy />
+        <Footer />
       </div>
     </main>
   );

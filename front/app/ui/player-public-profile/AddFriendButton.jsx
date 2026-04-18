@@ -29,7 +29,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import api from "../../api/api";
-import Toast from "../messaging/toast";
+import { Toast } from "../base";
 import { useTranslation } from "../../context/language-context";
 import { cn } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,7 +52,10 @@ function DropdownMenu({ items, onClose }) {
   }, [onClose]);
 
   return (
-    <div onClick={(e) => e.stopPropagation()} className="dropdown-menu-avatar">
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+    >
       {items.map((item) => (
         <button
           key={item.label}

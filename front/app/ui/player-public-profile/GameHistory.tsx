@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Avatar, Badge } from "../base";
 import { useTranslation } from "../../context/language-context";
-import Loader from "../loader/loader-ui";
+import { LoadingState } from "../patterns";
 import Link from "next/link";
 import { isMe, isAI } from "../../lib/players/whois";
 import { useAuth } from "../../context/auth-context";
@@ -61,10 +61,13 @@ function getPlayerLink(profileId: string, playerId: string, nickname: string) {
     (user && isMe(playerId, user.id)) ||
     isAI(playerId)
   )
-    return <span className="player-name">{nickname}</span>;
+    return <span className="text-sm font-medium text-gray-900">{nickname}</span>;
   else
     return (
-      <Link href={`/${playerId}`} className="player-name-link">
+      <Link
+        href={`/${playerId}`}
+        className="text-sm font-medium text-primary hover:text-primary-hover transition-colors duration-200"
+      >
         {nickname}
       </Link>
     );
@@ -115,8 +118,8 @@ function GameRow({
       </Badge>
 
       {/* Players */}
-      <div className="game-players">
-        <div className="game-player-info">
+      <div className="flex flex-wrap items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 min-w-0">
           <Avatar
             size="sm"
             src={me.avatar || "/avatar/default-avatar.webp"}
@@ -125,8 +128,8 @@ function GameRow({
           {getPlayerLink(profileId, me.id, me.nickname)}
           <span className="text-muted text-sm">{me.points}</span>
         </div>
-        <span className="game-vs-text text-muted text-sm">vs</span>
-        <div className="game-player-info">
+        <span className="text-muted text-sm">vs</span>
+        <div className="flex items-center gap-2 min-w-0">
           <Avatar
             size="sm"
             src={opponent.avatar || "/avatar/default-avatar.webp"}
@@ -173,7 +176,13 @@ export default function GameHistory({ userId }: GameHistoryProps) {
 
   return (
     <div className="space-y-3">
-      {loading && <Loader classes="" message={t.profile.gameHistory.loading} />}
+      {loading && (
+        <LoadingState
+          variant="spinner"
+          size="md"
+          text={t.profile.gameHistory.loading}
+        />
+      )}
       {error && (
         <p className="text-danger text-sm">
           {t.profile.gameHistory.error} {error}

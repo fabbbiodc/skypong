@@ -24,9 +24,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "../../context/language-context";
 import api from "../../api/api";
-import Toast from "../messaging/toast";
-import Loader from "../loader/loader-ui";
-import { Avatar, Badge, Button, Tabs } from "../base";
+import { Toast, Avatar, Badge, Button, Tabs } from "../base";
+import {
+  LoadingState,
+  ProfileSection,
+  ProfileTabContent,
+} from "../patterns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -122,31 +125,31 @@ function FriendRow({
   return (
     <div className="friend-row">
       <Avatar src={friend.avatarUrl} fallbackText={friend.nickname} size="md" />
-      <div className="friend-info">
+      <div className="flex-1 min-w-0">
         <div
-          className="friend-name-link text-sm truncate"
+          className="text-sm truncate font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(friend.user_id)}
         >
           {friend.nickname}
         </div>
         {!connected ? (
           <div className="text-xs text-muted mt-0.5">
-            <span className="friend-status-dot !bg-gray-400"></span>
+            <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-gray-400"></span>
             {t.player.inactive}
           </div>
         ) : absent ? (
           <div className="text-xs text-orange-500 mt-0.5">
-            <span className="friend-status-dot !bg-orange-500"></span>
+            <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-orange-500"></span>
             {t.player.absent}
           </div>
         ) : (
           <div className="text-xs text-green-600 mt-0.5">
-            <span className="friend-status-dot !bg-green-600"></span>
+            <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-green-600"></span>
             {t.player.active}
           </div>
         )}
       </div>
-      <div className="friend-actions">
+      <div className="flex items-center gap-2 shrink-0">
         <Button
           variant="ghost"
           size="sm"
@@ -209,19 +212,19 @@ function IncomingRow({
   return (
     <div className="friend-row friend-row-incoming">
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
-      <div className="friend-info">
+      <div className="flex-1 min-w-0">
         <div
-          className="friend-name-link text-sm"
+          className="text-sm font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(r.user_id)}
         >
           {r.nickname}
         </div>
         <div className="text-xs text-purple-600 mt-0.5">
-          <span className="friend-status-dot !bg-purple-600"></span>
+          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-purple-600"></span>
           {t.player.incomingRequest}
         </div>
       </div>
-      <div className="friend-actions">
+      <div className="flex items-center gap-2 shrink-0">
         <Button
           variant="primary"
           size="sm"
@@ -256,19 +259,19 @@ function OutgoingRow({ r, onCancel, onProfile, busy }: OutgoingRowProps) {
   return (
     <div className="friend-row friend-row-outgoing">
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
-      <div className="friend-info">
+      <div className="flex-1 min-w-0">
         <div
-          className="friend-name-link text-sm"
+          className="text-sm font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(r.user_id)}
         >
           {r.nickname}
         </div>
         <div className="text-xs text-amber-600 mt-0.5">
-          <span className="friend-status-dot !bg-amber-600"></span>
+          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-amber-600"></span>
           {t.player.pendingResponse}
         </div>
       </div>
-      <div className="friend-actions">
+      <div className="flex items-center gap-2 shrink-0">
         <Button
           variant="ghost"
           size="sm"
@@ -459,7 +462,7 @@ export default function FriendsSection({
   ];
 
   return (
-    <div className="profile-section">
+    <ProfileSection>
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-wide uppercase">
@@ -468,7 +471,7 @@ export default function FriendsSection({
         </h2>
         <Button variant="ghost" size="sm" onClick={fetchAll} disabled={loading}>
           <FontAwesomeIcon icon={faRotateRight} className="text-primary" />{" "}
-          {t.game.refresh}
+          {t.signInPage.refresh || "Refresh"}
         </Button>
       </div>
 
@@ -477,7 +480,7 @@ export default function FriendsSection({
 
       {/* Content */}
       {loading ? (
-        <Loader classes="" message={t.form.loading} />
+        <LoadingState variant="spinner" size="md" text={t.form.loading} />
       ) : fetchError ? (
         <div className="text-center py-8 text-sm text-red-600">
           <FontAwesomeIcon
@@ -487,7 +490,7 @@ export default function FriendsSection({
           {fetchError}
         </div>
       ) : (
-        <div className="profile-tab-content">
+        <ProfileTabContent>
           {/* Friends tab */}
           {activeTab === "friends" &&
             (friends.length === 0 ? (
@@ -607,12 +610,12 @@ export default function FriendsSection({
                 />
               ))
             ))}
-        </div>
+        </ProfileTabContent>
       )}
 
       {toast && (
         <Toast msg={toast.msg} type={toast.type} clear={() => setToast(null)} />
       )}
-    </div>
+    </ProfileSection>
   );
 }

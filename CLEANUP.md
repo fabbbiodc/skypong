@@ -1,168 +1,196 @@
 # Frontend Cleanup Plan
 
 **Scope:** `front/` directory only
-**Last Updated:** 2026-04-16
+**Last Updated:** 2026-04-18
 
 ---
 
 ## Overview
 
-This document outlines unused files, duplicate components, and broken code that should be cleaned up to improve maintainability and reduce confusion.
+This document tracks frontend cleanup work that is separate from token/CVA
+refactoring.
 
-**See also:** `FRONTREFACTOR.md` for the main refactoring plan.
+**See also:** `FRONTREFACTOR.md` for the main refactoring roadmap.
 
 ---
 
-## Phase 1: Remove Unused Files
+## Completed Cleanup (2026-04-17)
 
-### Files Confirmed Unused (Safe to Delete)
+### Phase A: Navigation Consolidation
 
-| File                                                                 | Reason                                                   |
-| -------------------------------------------------------------------- | -------------------------------------------------------- |
-| `front/app/hooks/use-styles.ts`                                      | Only imported by 2 components that are themselves unused |
-| `front/app/ui/player-public-profile/player-achievements-ui.js`       | Never imported anywhere in codebase                      |
-| `front/app/ui/player-public-profile/player-single-achievement-ui.js` | Never imported anywhere in codebase                      |
-| `front/app/lib/achivements/achivements.ts`                           | No imports found anywhere                                |
+- Migrated pages from legacy `NavigationAppUI` to `Navbar`:
+  - `front/app/privacy/page.js`
+  - `front/app/terms/page.js`
+  - `front/app/updateme/page.js`
+  - `front/app/[id]/page.js`
+  - `front/app/game-mode/page.js`
+  - `front/app/me/page.js`
+  - `front/app/play/page.js`
+- Removed legacy navigation component:
+  - `front/app/ui/navigation-app-ui.js`
+- Removed old logo wrapper component and inlined logo link in `Navbar`:
+  - Removed `front/app/ui/skypong-logo.js`
+  - Updated `front/app/ui/base/Navbar.tsx`
 
-### Verification
+### Phase B: Page Container Patterns
+
+- Added reusable page container patterns:
+  - `front/app/ui/patterns/PageContainer.tsx`
+  - `front/app/ui/patterns/PageContainerScrollable.tsx`
+- Exported both patterns from:
+  - `front/app/ui/patterns/index.ts`
+- Replaced direct page container wrappers in migrated pages with new patterns.
+
+### Phase C: Unused File Removal
+
+Removed files with no remaining imports/usages:
+
+- `front/app/ui/hero-ui.js`
+- `front/app/ui/modal-mode-selector.js`
+- `front/app/ui/player-achievements-public-ui.js`
+- `front/app/ui/player-public-profile/player-achievements-ui.js`
+- `front/app/ui/player-public-profile/player-single-achievement-ui.js`
+- `front/app/lib/achivements/achivements.ts`
+
+### Phase D: Legacy Duplicate Cleanup + Hook Cleanup
+
+- Consolidated friend section implementation to TypeScript source and removed
+  duplicate legacy files:
+  - Removed `front/app/ui/player-public-profile/FriendsSection.jsx`
+  - Removed `front/app/ui/player-public-profile/friend-list.ui.jsx`
+
+- Replaced `use-styles` usage in play flow with a typed media-query hook:
+  - Added `front/app/hooks/use-media-query.ts`
+  - Updated `front/app/play/page.js` to use `useMediaQuery`
+  - Removed `front/app/hooks/use-styles.ts`
+  - Removed now-unused `front/app/lib/mobiledetection/detectMobile.ts`
+
+### Phase E: Loader/Toast Migration
+
+- Added a base toast component:
+  - Added `front/app/ui/base/Toast.tsx`
+  - Exported from `front/app/ui/base/index.ts`
+- Migrated legacy toast entrypoint to re-export base toast:
+  - Updated `front/app/ui/messaging/toast.js`
+- Upgraded loader component to typed wrapper over `LoadingState`:
+  - Updated `front/app/ui/loader/loader-ui.tsx`
+- Fixed `LoadingState` skeleton color typing mismatch:
+  - Updated `front/app/ui/patterns/LoadingState.tsx`
+
+### Phase F: Build-Blocking TS Fixes
+
+- Fixed schema usage in launch config:
+  - Updated `front/app/lib/game/launch-config.ts`
+  - Replaced incorrect `gameConfigSchema.parse(...)` calls with a concrete schema
+    instance created via `createGameConfigSchema()`
+
+- Fixed `ui-test` type errors:
+  - Updated `front/app/ui-test/page.tsx`
+  - Added required `onChange` handlers to static `Tabs` examples
+  - Switched `EmptyState` children usage to `action` prop
+
+### Phase G: Maintainability Pass (Architecture + Patterns)
+
+- Fixed hook-rule violation in engine launch mapping:
+  - Updated `front/app/lib/game/engine-launch-config.ts`
+  - Removed hook usage from utility layer
+  - `toEngineLaunchConfig` now accepts optional labels from callers
+  - Updated caller in `front/app/ui/game-front/GameScreen.tsx`
+
+- Consolidated translation access and removed polling duplication:
+  - Updated `front/app/context/language-context.tsx` with typed locale and
+    dictionary handling
+  - Updated `front/app/hooks/use-translation.ts` to re-export context hook
+  - Removed per-hook interval polling behavior
+
+- Removed unused legacy UI files:
+  - `front/app/ui/navigation-language-ui.js`
+  - `front/app/ui/play-button-ui.js`
+  - `front/app/ui/player-profile-public-ui.js`
+  - `front/app/ui/player-stats-public-ui.js`
+
+- Completed wrapper deprecation for loader/toast:
+  - Updated remaining imports to base/pattern components directly
+  - Removed `front/app/ui/loader/loader-ui.tsx`
+  - Removed `front/app/ui/messaging/toast.js`
+
+- Added reusable layout/pattern components to replace ad-hoc class dependencies:
+  - Added `front/app/ui/patterns/ContentContainer.tsx`
+  - Added `front/app/ui/patterns/LegalContent.tsx`
+  - Added `front/app/ui/patterns/FormCard.tsx`
+  - Added `front/app/ui/patterns/ProfileLayout.tsx`
+  - Exported all from `front/app/ui/patterns/index.ts`
+
+- Migrated pages/components to new readable patterns and removed legacy class-name coupling:
+  - Updated `front/app/privacy/page.js`
+  - Updated `front/app/terms/page.js`
+  - Updated `front/app/game-mode/page.js`
+  - Updated `front/app/updateme/page.js`
+  - Updated `front/app/me/page.js`
+  - Updated `front/app/[id]/page.js`
+  - Updated `front/app/login/page.js`
+  - Updated `front/app/signup/page.js`
+  - Updated `front/app/play/page.js`
+  - Updated `front/app/ui/player-public-profile/player-info-ui.tsx`
+  - Updated `front/app/ui/player-public-profile/GameHistory.tsx`
+  - Updated `front/app/ui/player-public-profile/FriendsSection.tsx`
+  - Updated `front/app/ui/player-public-profile/AddFriendButton.jsx`
+  - Updated `front/app/ui/Leaderboard.tsx`
+
+- Consolidated footer usage to base component and removed legacy footer file:
+  - Updated pages to use `Footer` from `front/app/ui/base/Footer.tsx`
+  - Removed `front/app/ui/footer-terms-policy.js`
+
+- Removed unused alternative background implementation:
+  - Removed `front/app/ui/base/GrainientBackground.tsx`
+
+---
+
+## Remaining Cleanup Tasks
+
+1. **Optional TypeScript hardening**
+   - Replace remaining `any` usage in feature modules and i18n schema builders
+
+2. **Optional i18n parity hardening**
+   - Align locale dictionary shape (`en`, `es`, `it`) for strict typed translation keys
+
+3. **Optional page refactor**
+   - Convert remaining JS pages/components to TS for consistency in typed UI layer
+
+---
+
+## CSS Cleanup Notes
+
+Do **not** remove these classes yet; they are in active use:
+
+- `.game-row`
+- `.leaderboard-row`
+- `.friend-row`
+- `.btn-sm`, `.btn-md`, `.btn-lg`
+- `.page-content-container`
+
+`PageContainerScrollable` now composes existing container behavior with
+`overflow-y-auto` and does not require a separate
+`.page-content-container-scrollable` CSS class.
+
+---
+
+## Verification Commands
 
 ```bash
-# Verify use-styles is unused before deleting
-grep -r "use-styles" front/app --include="*.tsx" --include="*.js" | grep -v "node_modules"
+# Ensure deleted legacy components are no longer imported
+grep -R "navigation-app-ui\|hero-ui\|modal-mode-selector\|player-achievements-public-ui" front/app --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"
 
-# Verify player-achievements-ui is unused before deleting
-grep -r "player-achievements-ui\|player-single-achievement" front/app --include="*.tsx" --include="*.js" | grep -v "node_modules"
+# Ensure new pattern components are used
+grep -R "PageContainer\|PageContainerScrollable" front/app --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"
+
+# Build validation (frontend)
+cd front && npm exec next build -- --webpack
 ```
 
 ---
 
-## Phase 2: Consolidate Duplicate Components
+## Current Build Status
 
-### Old Components to Remove (Replace with new CVA versions)
-
-| Old File                  | New Replacement           | Pages to Update                                     |
-| ------------------------- | ------------------------- | --------------------------------------------------- |
-| `ui/navigation-app-ui.js` | `ui/base/Navbar.tsx`      | privacy, terms, updateme, [id], game-mode, me, play |
-| `ui/hero-ui.js`           | `ui/base/Hero.tsx`        | page.js                                             |
-| `ui/skypong-logo.js`      | Use Navbar with logo prop | (absorbed into Navbar)                              |
-
-### Pages Currently Using Old Components
-
-These pages import from `../ui/navigation-app-ui` and need updates:
-
-```javascript
-// Current import (to remove)
-import NavigationAppUI from "../ui/navigation-app-ui";
-
-// New import (to use)
-import { Navbar } from "../ui/base";
-```
-
-**Pages needing import updates:**
-
-- `front/app/privacy/page.js`
-- `front/app/terms/page.js`
-- `front/app/updateme/page.js`
-- `front/app/[id]/page.js`
-- `front/app/game-mode/page.js`
-- `front/app/me/page.js`
-- `front/app/play/page.js`
-
----
-
-## Phase 3: Fix Broken/Missing Code
-
-### Components with Issues
-
-| File                                  | Issue                                                                | Fix                                       |
-| ------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------- |
-| `ui/player-achievements-public-ui.js` | References `element.placeholderUrl` (undefined property)             | Change to `element.logoURL`               |
-| `ui/modal-mode-selector.js`           | Dead imports: `l` from `../lib/i18n/localizer`, `format` from "path" | Remove unused imports                     |
-| `ui/messaging/toast.js`               | Inline styles, no CVA                                                | Convert to CVA in `ui/base/`              |
-| `ui/loader/loader-ui.tsx`             | Very basic component                                                 | Replace with `LoadingState` from patterns |
-
-### Broken Property Reference
-
-In `player-achievements-public-ui.js` line 34:
-
-```javascript
-// Current (broken)
-src={element.placeholderUrl}
-
-// Fixed
-src={element.logoURL}
-```
-
----
-
-## Phase 4: CSS Cleanup
-
-### Unused CSS Classes
-
-These classes appear unused after checking with grep. Verify before deleting:
-
-| Class                           | Defined In          | Notes                         |
-| ------------------------------- | ------------------- | ----------------------------- |
-| `.game-row`                     | globals.css:298     | No imports found              |
-| `.leaderboard-row`              | globals.css:327     | No imports found              |
-| `.friend-row`                   | globals.css:358     | No imports found              |
-| `.btn-sm`, `.btn-md`, `.btn-lg` | globals.css:236-249 | Legacy - use Button component |
-
-### Verification
-
-```bash
-grep -r "\.game-row" front/app --include="*.tsx" --include="*.js"
-grep -r "\.leaderboard-row" front/app --include="*.tsx" --include="*.js"
-grep -r "\.friend-row" front/app --include="*.tsx" --include="*.js"
-```
-
----
-
-## Phase 5: Create Missing Pattern Components
-
-### Page Container Components Needed
-
-Create these to replace CSS utilities:
-
-| New File                                  | Purpose            | Replaces                             |
-| ----------------------------------------- | ------------------ | ------------------------------------ |
-| `ui/patterns/PageContainer.tsx`           | Main page wrapper  | `.page-content-container`            |
-| `ui/patterns/PageContainerScrollable.tsx` | Scrollable variant | `.page-content-container-scrollable` |
-
-**Usage:**
-
-```typescript
-import { PageContainer } from "../ui/patterns";
-
-// In pages...
-<PageContainer>
-  {/* page content */}
-</PageContainer>
-```
-
----
-
-## Implementation Order
-
-1. **Phase 1**: Delete unused files (verify first)
-2. **Phase 4**: Clean unused CSS classes
-3. **Phase 3**: Fix broken code in existing components
-4. **Phase 5**: Create missing pattern components
-5. **Phase 2**: Update imports in pages (last step)
-
----
-
-## Notes
-
-- `page-content-container` and `page-content-container-scrollable` are still in use - do NOT remove CSS
-- Check all grep results before deleting files
-- Run `npm run build` after changes to verify no build errors
-
----
-
-## Related Documents
-
-- `FRONTREFACTOR.md` - Main refactoring plan
-- `front/app/lib/design-tokens.ts` - Single source of truth
-- `front/app/ui/base/` - CVA components
-- `front/app/ui/patterns/` - Pattern components
+- `npm exec tsc -- --noEmit` passes.
+- `npm exec next build -- --webpack` passes.

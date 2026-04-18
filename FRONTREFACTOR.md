@@ -617,6 +617,103 @@ const myComponentVariants = cva("base classes", {
 
 ## Change Log
 
+### 2026-04-17
+
+**Cleanup integration + page container patterns**
+
+- Added new pattern components:
+  - `front/app/ui/patterns/PageContainer.tsx`
+  - `front/app/ui/patterns/PageContainerScrollable.tsx`
+- Updated `front/app/ui/patterns/index.ts` to export both new patterns.
+
+- Migrated pages to the base `Navbar` and removed `NavigationAppUI` usage:
+  - `front/app/privacy/page.js`
+  - `front/app/terms/page.js`
+  - `front/app/updateme/page.js`
+  - `front/app/[id]/page.js`
+  - `front/app/game-mode/page.js`
+  - `front/app/me/page.js`
+  - `front/app/play/page.js`
+
+- Updated `front/app/ui/base/Navbar.tsx` to render logo link directly and removed
+  dependency on `ui/skypong-logo.js`.
+
+- Removed legacy, unused frontend files:
+  - `front/app/ui/navigation-app-ui.js`
+  - `front/app/ui/skypong-logo.js`
+  - `front/app/ui/hero-ui.js`
+  - `front/app/ui/modal-mode-selector.js`
+  - `front/app/ui/player-achievements-public-ui.js`
+  - `front/app/ui/player-public-profile/player-achievements-ui.js`
+  - `front/app/ui/player-public-profile/player-single-achievement-ui.js`
+  - `front/app/lib/achivements/achivements.ts`
+
+**Validation notes (updated):**
+
+- `npm exec tsc -- --noEmit` now passes.
+- `npm exec next build -- --webpack` now passes.
+
+**Follow-up cleanup + typing fixes (same session):**
+
+- Removed duplicate/legacy public profile files and kept TS implementation:
+  - `front/app/ui/player-public-profile/FriendsSection.jsx`
+  - `front/app/ui/player-public-profile/friend-list.ui.jsx`
+
+- Replaced old style detection hook with typed media-query hook:
+  - Added `front/app/hooks/use-media-query.ts`
+  - Updated `front/app/play/page.js` to use `useMediaQuery`
+  - Removed `front/app/hooks/use-styles.ts`
+  - Removed `front/app/lib/mobiledetection/detectMobile.ts`
+
+- Migrated loader/toast toward base design system:
+  - Added `front/app/ui/base/Toast.tsx`
+  - Exported toast from `front/app/ui/base/index.ts`
+  - Updated `front/app/ui/messaging/toast.js` to re-export base `Toast`
+  - Updated `front/app/ui/loader/loader-ui.tsx` to wrap `LoadingState`
+
+- Fixed the previously reported TS blockers:
+  - `front/app/lib/game/launch-config.ts` (schema parse usage)
+  - `front/app/ui/patterns/LoadingState.tsx` (skeleton color type narrowing)
+  - `front/app/ui-test/page.tsx` (required `Tabs.onChange`, `EmptyState.action`)
+  - `front/app/canvas/page.tsx` and `front/app/play/page.js`
+    (`useSearchParams` pre-render build constraints)
+  - `front/app/ui/game-front/GameLauncher.tsx`
+    (`useSearchParams` pre-render build constraints)
+
+**Maintainability architecture pass (clear/readable foundation):**
+
+- Fixed utility-layer hook misuse:
+  - `front/app/lib/game/engine-launch-config.ts` no longer uses hooks
+  - `toEngineLaunchConfig` now accepts label overrides from UI layer
+  - `front/app/ui/game-front/GameScreen.tsx` passes translated labels
+
+- Consolidated translation access pattern:
+  - `front/app/context/language-context.tsx` now provides typed locale context
+  - `front/app/hooks/use-translation.ts` now re-exports context hook
+  - Removed duplicated polling behavior from hook implementation
+
+- Expanded reusable UI patterns for page composition:
+  - Added `ContentContainer`, `LegalContent`, `FormCard`, and `ProfileLayout`
+    patterns under `front/app/ui/patterns/`
+  - Updated `front/app/ui/patterns/index.ts` exports
+
+- Replaced legacy class-coupled page layouts with pattern components:
+  - Updated auth, profile, legal, and game-mode/play pages to use pattern primitives
+  - Updated profile feature components (`player-info`, `GameHistory`, `FriendsSection`,
+    `AddFriendButton`, `Leaderboard`) to use explicit utility/pattern structure
+
+- Removed additional dead/legacy files:
+  - `front/app/ui/navigation-language-ui.js`
+  - `front/app/ui/play-button-ui.js`
+  - `front/app/ui/player-profile-public-ui.js`
+  - `front/app/ui/player-stats-public-ui.js`
+  - `front/app/ui/footer-terms-policy.js`
+  - `front/app/ui/loader/loader-ui.tsx`
+  - `front/app/ui/messaging/toast.js`
+  - `front/app/ui/base/GrainientBackground.tsx`
+
+---
+
 ### 2026-04-16 (continued)
 
 **Phase 6: Background Token System**

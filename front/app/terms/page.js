@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useTranslation } from "../hooks/use-translation";
 import { useEffect, useState } from "react";
-import NavigationAppUI from "../ui/navigation-app-ui";
-import FooterTermsPolicy from "../ui/footer-terms-policy";
+import { Navbar, Footer } from "../ui/base";
+import { PageContainer, ContentContainer, LegalContent } from "../ui/patterns";
 
 export default function TermsPage() {
   const [backlink, setBacklink] = useState("");
@@ -17,27 +17,24 @@ export default function TermsPage() {
   return (
     <>
       <main className="h-dvh bg-page-bg flex flex-col">
-        <NavigationAppUI />
+        <Navbar />
         <div className="flex flex-1 items-center justify-center">
-          <div className="page-content-container">
-            <div className="content-container-lg">
+          <PageContainer>
+            <ContentContainer size="lg">
               <h1 className="text-3xl font-bold mb-4">
                 {t.legal.termsPage.title}
               </h1>
-              <div
-                className="scrollable-content bg-content-light legal-content"
-                dangerouslySetInnerHTML={{ __html: t.legal.termsPage.content }}
-              />
+              <LegalContent html={t.legal.termsPage.content} />
               <div className="mt-4">
-                <Link href={backlink || "/"} className="link-primary">
+                <Link href={backlink || "/"} className="text-primary hover:text-primary-hover transition-colors duration-200">
                   {t.navigation.goBack}
                 </Link>
               </div>
-            </div>
-          </div>
+            </ContentContainer>
+          </PageContainer>
         </div>
         <div className="mt-auto pb-4">
-          <FooterTermsPolicy />
+          <Footer />
         </div>
       </main>
     </>

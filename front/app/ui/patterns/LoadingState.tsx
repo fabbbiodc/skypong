@@ -47,6 +47,15 @@ interface LoadingStateProps {
   text?: string;
 }
 
+type SkeletonColor = "default" | "primary";
+
+function toSkeletonColor(color: LoadingStateProps["color"]): SkeletonColor {
+  if (color === "primary") {
+    return "primary";
+  }
+  return "default";
+}
+
 export function LoadingState({
   className,
   variant = "spinner",
@@ -64,11 +73,17 @@ export function LoadingState({
   }
 
   if (variant === "skeleton") {
+    const skeletonColor = toSkeletonColor(color);
+
     return (
       <div className={cn("flex flex-col gap-2", className)}>
-        <div className={cn(skeletonVariants({ size, color }))} />
+        <div className={cn(skeletonVariants({ size, color: skeletonColor }))} />
         {text && (
-          <div className={cn(skeletonVariants({ size: "sm", color }))} />
+          <div
+            className={cn(
+              skeletonVariants({ size: "sm", color: skeletonColor }),
+            )}
+          />
         )}
       </div>
     );

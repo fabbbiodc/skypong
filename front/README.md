@@ -49,14 +49,13 @@ This is a Next.js front-end application for the Transcendence project. The appli
 
 #### Hooks (Custom Hooks)
 
-- `/hooks/use-styles.ts` - Style utilities hook
+- `/hooks/use-media-query.ts` - Media query utility hook
 - `/hooks/use-translation.ts` - Translation hook
 
 #### Utilities & Libraries
 
 - `/lib`
   - `utils.ts` - General utilities
-  - `/achivements` - Achievement logic
   - `/form-validation` - Form validation rules (auth, player-data)
   - `/game` - Game configuration and services
     - `engine-launch-config.ts`
@@ -65,29 +64,17 @@ This is a Next.js front-end application for the Transcendence project. The appli
     - `room-service.ts`
     - `server-config.ts`
   - `/i18n` - Internationalization
-  - `/mobiledetection` - Mobile detection utilities
   - `/players` - Player-related utilities
 
 #### UI Components
 
 - `/ui` - Reusable UI components
-  - `footer-terms-policy.js` - Footer with links
   - `global-chat-ui.tsx` - Global chat interface
-  - `hero-ui.js` - Hero section component
   - `Leaderboard.tsx` - Leaderboard display
-  - `modal-mode-selector.js` - Game mode selector
-  - `navigation-app-ui.js` - Main navigation
-  - `navigation-language-ui.js` - Language selector
-  - `play-button-ui.js` - Play button component
-  - `player-achievements-public-ui.js` - Public achievements display
-  - `player-profile-public-ui.js` - Public profile display
-  - `player-stats-public-ui.js` - Public stats display
-  - `skypong-logo.js` - Logo component
   - `/base` - Base UI components
   - `/error` - Error UI components
   - `/game-front` - Game-specific UI
-  - `/loader` - Loading indicators
-  - `/messaging` - Messaging UI
+  - `/patterns` - Reusable layout/pattern primitives
   - `/player-private-profile` - Private profile components
   - `/player-public-profile` - Public profile components
 

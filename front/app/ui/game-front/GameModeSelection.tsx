@@ -27,7 +27,7 @@ export default function GameModeSelection({
           {/*{ console.log("User is logged: ", isLogged)}*/}
           {isLogged ? (
             <button type="button" onClick={onSelectMultiplayer}>
-              {t?.gameMode?.multiplayer || "Multiplayer"}
+              {t?.gameMode?.remote?.title || "Multiplayer"}
             </button>
           ) : (
             ""

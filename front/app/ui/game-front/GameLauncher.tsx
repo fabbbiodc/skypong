@@ -1,23 +1,24 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   decodeGameConfig,
   encodeGameConfig,
 } from "../../lib/game/launch-config";
-import Loader from "../loader/loader-ui";
+import { LoadingState } from "../patterns";
 /**
  * Verifies query config and redirects users to /canvas with trusted payload.
  */
 export default function GameLauncher() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [encodedConfig, setEncodedConfig] = useState("");
 
-  const encodedConfig = useMemo(
-    () => searchParams.get("config") ?? "",
-    [searchParams],
-  );
+  useEffect(() => {
+    const value =
+      new URLSearchParams(window.location.search).get("config") ?? "";
+    setEncodedConfig(value);
+  }, []);
 
   useEffect(() => {
     try {
@@ -32,7 +33,7 @@ export default function GameLauncher() {
   return (
     <>
       <section aria-live="polite">
-        <Loader classes="" message="Loading..." />
+        <LoadingState variant="spinner" size="md" text="Loading..." />
       </section>
     </>
   );

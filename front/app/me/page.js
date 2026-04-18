@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslation } from "../context/language-context";
-import NavigationAppUI from "../ui/navigation-app-ui";
+import { Navbar, Tabs, Footer } from "../ui/base";
 import { useAuth } from "../context/auth-context";
 import { useRouter } from "next/navigation";
 import PlayerInfo from "../ui/player-public-profile/player-info-ui";
@@ -10,8 +10,12 @@ import AchievementsSection from "../ui/player-public-profile/AchievementsSection
 import FriendsSection from "../ui/player-public-profile/FriendsSection";
 import GameHistory from "../ui/player-public-profile/GameHistory";
 import Leaderboard from "../ui/Leaderboard";
-import FooterTermsPolicy from "../ui/footer-terms-policy";
-import { Tabs } from "../ui/base";
+import {
+  PageContainerScrollable,
+  ContentContainer,
+  ProfileTabsContainer,
+  ProfileTabContent,
+} from "../ui/patterns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faScroll,
@@ -110,16 +114,16 @@ export default function ProfilePageMe() {
 
   return (
     <main className="min-h-dvh bg-page-bg flex flex-col">
-      <NavigationAppUI />
-      <div className="flex flex-1 items-start justify-center page-wrapper-with-nav">
-        <div className="page-content-container-scrollable">
-          <div className="content-container-xl">
+      <Navbar />
+      <div className="flex flex-1 items-start justify-center">
+        <PageContainerScrollable>
+          <ContentContainer size="xl">
             {/* Player Info - Always visible */}
             {profile && <PlayerInfo profile={profile} />}
 
             {/* Tabs */}
             {profile && (
-              <div className="profile-tabs-container">
+              <ProfileTabsContainer>
                 <Tabs
                   tabs={tabs}
                   activeTab={activeTab}
@@ -127,7 +131,7 @@ export default function ProfilePageMe() {
                 />
 
                 {/* Tab Content */}
-                <div className="profile-tab-content">
+                <ProfileTabContent>
                   {activeTab === "history" && (
                     <GameHistory userId={profile.id} />
                   )}
@@ -147,14 +151,14 @@ export default function ProfilePageMe() {
                   {activeTab === "leaderboard" && (
                     <Leaderboard userId={user?.id} />
                   )}
-                </div>
-              </div>
+                </ProfileTabContent>
+              </ProfileTabsContainer>
             )}
-          </div>
-        </div>
+          </ContentContainer>
+        </PageContainerScrollable>
       </div>
       <div className="pb-4">
-        <FooterTermsPolicy />
+        <Footer />
       </div>
     </main>
   );

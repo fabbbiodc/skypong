@@ -19,10 +19,13 @@ export default function GameScreen({ config, onExit }: Props) {
   const exitLabel = t?.game?.quit ?? "Quit";
 
   const launchUrl = useMemo(() => {
-    const engineConfig = toEngineLaunchConfig(config);
+    const engineConfig = toEngineLaunchConfig(config, {
+      player1: t?.game?.player(1) || "Player 1",
+      player2: t?.game?.player(2) || "Player 2",
+    });
     const encoded = encodeEngineLaunchConfig(engineConfig);
     return `/canvas?config=${encodeURIComponent(encoded)}`;
-  }, [config]);
+  }, [config, t]);
 
   return (
     <section className="game-screen">

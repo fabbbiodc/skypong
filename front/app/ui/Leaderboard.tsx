@@ -78,18 +78,18 @@ function WinLossBar({ wins, losses }: { wins: number; losses: number }) {
 
   return (
     <div
-      className="leaderboard-bars"
+      className="hidden md:flex items-end gap-1.5 h-10 w-16"
       aria-label={`${wins} wins, ${losses} losses`}
     >
       <div
-        className="leaderboard-bar leaderboard-bar-win"
+        className="w-2 rounded bg-green-500"
         style={{
           height: total === 0 ? "8px" : `${Math.max(8, winPct * 0.48)}px`,
         }}
         title={`Wins: ${wins}`}
       />
       <div
-        className="leaderboard-bar leaderboard-bar-loss"
+        className="w-2 rounded bg-red-500"
         style={{
           height:
             total === 0 ? "8px" : `${Math.max(8, (100 - winPct) * 0.48)}px`,
@@ -133,10 +133,10 @@ function LeaderboardRow({
         }
       }}
     >
-      <span className="leaderboard-rank">{rank}.</span>
+      <span className="w-8 text-sm font-semibold text-gray-700">{rank}.</span>
       <Avatar src={player.avatarUrl} fallbackText={player.nickname} size="sm" />
-      <div className="leaderboard-info">
-        <div className="leaderboard-name">
+      <div className="flex flex-1 min-w-0 flex-col gap-0.5">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="font-semibold text-sm md:text-base">
             {player.nickname}
           </span>

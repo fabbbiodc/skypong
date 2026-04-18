@@ -1,25 +1,37 @@
 "use client";
 
-import { useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import GameScreen from "../ui/game-front/GameScreen";
-import { decodeGameConfig } from "../lib/game/launch-config";
+import { decodeGameConfig, type GameConfig } from "../lib/game/launch-config";
 import { useTranslation } from "../hooks/use-translation";
 
 /** Final gameplay route that renders the game canvas with verified configuration. */
 export default function CanvasPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const [config, setConfig] = useState<GameConfig | null | undefined>(
+    undefined,
+  );
 
-  const config = useMemo(() => {
-    const encoded = searchParams.get("config") ?? "";
+  useEffect(() => {
+    const encoded =
+      new URLSearchParams(window.location.search).get("config") ?? "";
+
     try {
-      return decodeGameConfig(encoded);
+      setConfig(decodeGameConfig(encoded));
     } catch {
-      return null;
+      setConfig(null);
     }
-  }, [searchParams]);
+  }, []);
+
+  if (config === undefined) {
+    return (
+      <section>
+        <p>{t?.common?.loading || "Loading..."}</p>
+      </section>
+    );
+  }
 
   if (!config) {
     return (

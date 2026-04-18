@@ -4,6 +4,11 @@ import { Avatar, StatCard } from "../base";
 import { useTranslation } from "../../context/language-context";
 import AddFriendButton from "./AddFriendButton";
 import { useAuth } from "../../context/auth-context";
+import {
+  ProfileHeader,
+  ProfileIdentity,
+  ProfileStatsGrid,
+} from "../patterns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGamepad,
@@ -48,7 +53,7 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
   return (
     <>
       {/* Profile Header */}
-      <section className="profile-header">
+      <ProfileHeader>
         <div className="flex flex-col items-center gap-3">
           <Avatar
             size="lg"
@@ -63,7 +68,7 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
             />
           )}
         </div>
-        <div className="profile-identity">
+        <ProfileIdentity>
           <h2 className="text-2xl md:text-3xl font-bold font-display text-gray-900">
             {profile?.nickname || "Player"}
           </h2>
@@ -72,11 +77,11 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
               {profile.winPhrase}
             </p>
           )}
-        </div>
-      </section>
+        </ProfileIdentity>
+      </ProfileHeader>
 
       {/* Stats Grid */}
-      <div className="profile-stats-grid">
+      <ProfileStatsGrid>
         <StatCard
           label={t.profile.stats.totalGames}
           value={totalGames.toString()}
@@ -105,7 +110,7 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
           }
           variant="danger"
         />
-      </div>
+      </ProfileStatsGrid>
     </>
   );
 }

@@ -8,9 +8,13 @@ import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/auth-context";
 import Link from "next/link";
-import { TextField, Button } from "../ui/base";
-import FooterTermsPolicy from "../ui/footer-terms-policy";
-import Loader from "../ui/loader/loader-ui";
+import { TextField, Button, Footer } from "../ui/base";
+import {
+  LoadingState,
+  PageContainer,
+  ContentContainer,
+  FormCard,
+} from "../ui/patterns";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -78,19 +82,23 @@ export default function SignUpPage() {
   return (
     <>
       {isLoading ? (
-        <Loader classes="" message={t?.loading?.loading || "Loading..."} />
+        <LoadingState
+          variant="spinner"
+          size="md"
+          text={t?.loading?.loading || "Loading..."}
+        />
       ) : (
         <main className="h-dvh bg-page-bg flex flex-col">
-          <div className="back-button-position">
+          <div className="absolute top-6 left-6 z-10">
             <Link href="/" className="skypong-logo">
               SKYPONG
             </Link>
           </div>
 
           <div className="flex flex-1 items-center justify-center">
-            <div className="page-content-container">
-              <div className="content-container-sm">
-                <div className="form-wrapper">
+            <PageContainer>
+              <ContentContainer size="sm">
+                <FormCard className="form-wrapper">
                   <div className="text-center">
                     <span className="text-sm md:text-lg mb-2 block">
                       {t.signUpPage.title}
@@ -168,17 +176,20 @@ export default function SignUpPage() {
                   </form>
 
                   <div className="mt-4 text-center">
-                    <Link href="/login" className="link-primary">
+                    <Link
+                      href="/login"
+                      className="text-primary hover:text-primary-hover transition-colors duration-200"
+                    >
                       {t.signUpPage.hasAccount}
                     </Link>
                   </div>
-                </div>
-              </div>
-            </div>
+                </FormCard>
+              </ContentContainer>
+            </PageContainer>
           </div>
 
           <div className="mt-auto pb-4">
-            <FooterTermsPolicy />
+            <Footer />
           </div>
         </main>
       )}

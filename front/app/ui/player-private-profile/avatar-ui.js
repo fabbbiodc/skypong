@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { useAuth } from "../../context/auth-context";
 import { useTranslation } from "../../hooks/use-translation";
 import { Button } from "../base";
-import Loader from "../loader/loader-ui";
+import { LoadingState } from "../patterns";
 
 export default function AvatarUpload() {
   const { user, authLoading } = useAuth();
@@ -95,7 +95,7 @@ export default function AvatarUpload() {
   return (
     <>
       {authLoading ? (
-        <Loader />
+        <LoadingState variant="spinner" size="md" text="Loading..." />
       ) : (
         <div className="flex flex-col items-center gap-4 py-4">
           <div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-gray-300">

@@ -1,4 +1,3 @@
-import { useTranslation } from "@/hooks/use-translation";
 import { z } from "zod";
 
 /** Supported game modes for launch configuration. */
@@ -17,7 +16,7 @@ export interface GameConfig {
   readonly onlineRole?: "create" | "join";
 }
 
-const gameConfigSchema = (t: any) => {
+function createGameConfigSchema(t?: any) {
   const messages = {
     difficultyRequired:
       t?.game?.difficultyRequired || "AI mode requires a difficulty setting.",
@@ -58,7 +57,9 @@ const gameConfigSchema = (t: any) => {
         });
       }
     });
-};
+}
+
+const gameConfigSchema = createGameConfigSchema();
 
 function toBase64Url(value: string): string {
   return btoa(value)

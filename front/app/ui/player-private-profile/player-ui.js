@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { playerDataSchema } from "../../lib/form-validation/player-data";
 import { TextField, Button } from "../base";
-import Toast from "../messaging/toast";
 
 export default function PlayerUI({ userURL }) {
   const router = useRouter();

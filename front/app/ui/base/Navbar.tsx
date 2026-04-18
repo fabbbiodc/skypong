@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -9,7 +10,6 @@ import { useAuth } from "@/context/auth-context";
 import { Button } from "./Button";
 import { Avatar } from "./Avatar";
 import { backgrounds } from "@/lib/design-tokens";
-import SkypongLogo from "../skypong-logo";
 
 const navbarVariants = cva(
   "fixed top-0 right-0 z-50 flex items-center justify-between w-full px-4 py-3 transition-transform duration-300",
@@ -113,7 +113,9 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
         className,
       )}
     >
-      <SkypongLogo />
+      <Link href="/" className="skypong-logo">
+        SKYPONG
+      </Link>
 
       <div className="flex items-center gap-3">
         {showGuestActions ? (

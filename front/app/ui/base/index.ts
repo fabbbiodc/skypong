@@ -12,6 +12,7 @@ export { Navbar } from "./Navbar";
 export { Footer } from "./Footer";
 export { Hero } from "./Hero";
 export { LanguageSelector } from "./LanguageSelector";
+export { Toast } from "./Toast";
 
 // Design tokens exports (single source of truth)
 export {

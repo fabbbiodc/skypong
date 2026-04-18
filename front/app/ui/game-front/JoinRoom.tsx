@@ -49,7 +49,7 @@ export default function JoinRoom({
           <li key={room.id}>
             <span>{room.name}</span>
             <button type="button" onClick={() => onJoin(room.id)}>
-              {t?.play?.JoinRoomBtn || "Join Room"}
+              {t?.play?.joinRoomBtn || "Join Room"}
             </button>
           </li>
         ))}

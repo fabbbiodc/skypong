@@ -41,7 +41,7 @@ export function LanguageSelector({
       {languages.map((lang) => (
         <Button
           key={lang.code}
-          onClick={() => changeLanguage(lang.code)}
+          onClick={() => changeLanguage(lang.code as "en" | "es" | "it")}
           variant={locale === lang.code ? "primary" : "ghost"}
           size="sm"
         >

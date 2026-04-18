@@ -1,5 +1,5 @@
 import type { GameConfig } from "./launch-config";
-import { useTranslation } from "../../hooks/use-translation";
+
 /**
  * Configuration payload expected by the Babylon game engine launcher.
  */
@@ -18,15 +18,31 @@ export interface EngineLaunchConfig {
   readonly roomId?: string;
 }
 
+interface EngineLaunchLabels {
+  player1?: string;
+  player2?: string;
+}
+
+const DEFAULT_ENGINE_LABELS: Required<EngineLaunchLabels> = {
+  player1: "Player 1",
+  player2: "Player 2",
+};
+
 /**
  * Maps the front-end game setup configuration to the game engine launch contract.
  */
-export function toEngineLaunchConfig(config: GameConfig): EngineLaunchConfig {
-  const { t } = useTranslation();
+export function toEngineLaunchConfig(
+  config: GameConfig,
+  labels: EngineLaunchLabels = {},
+): EngineLaunchConfig {
+  const resolvedLabels = {
+    ...DEFAULT_ENGINE_LABELS,
+    ...labels,
+  };
 
   if (config.mode === "AI") {
     return {
-      playerName: `${t?.game?.player(1) || "Player 1"}`,
+      playerName: resolvedLabels.player1,
       playerColor: config.ballColor,
       gameMode:
         `ai-${config.difficulty.toLowerCase()}` as EngineLaunchConfig["gameMode"],
@@ -35,16 +51,16 @@ export function toEngineLaunchConfig(config: GameConfig): EngineLaunchConfig {
 
   if (config.mode === "LOCAL") {
     return {
-      playerName: `${t?.game.player(1) || "Player 1"}`,
+      playerName: resolvedLabels.player1,
       playerColor: "#00A6ED",
       gameMode: "local-2p",
-      player2Name: `${t?.game.player(2) || "Player 2"}`,
+      player2Name: resolvedLabels.player2,
       player2Color: "#F6511D",
     };
   }
 
   return {
-    playerName: `${t?.game?.player(1) || "Player 1"}`,
+    playerName: resolvedLabels.player1,
     playerColor: config.ballColor,
     gameMode: config.onlineRole === "join" ? "online-join" : "online-create",
     roomId: config.roomId,

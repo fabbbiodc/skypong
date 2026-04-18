@@ -229,6 +229,10 @@
   margin: 0;
 }
 
+.text-danger {
+  color: var(--color-danger);
+}
+
 /* ============================================================================
    BUTTON UTILITIES - Legacy support (use Button component instead)
    ============================================================================ */

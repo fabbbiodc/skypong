@@ -1,26 +1,24 @@
 "use client";
 
 import { useTranslation } from "../hooks/use-translation";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import NavigationAppUI from "../ui/navigation-app-ui";
-import FooterTermsPolicy from "../ui/footer-terms-policy";
+import { Navbar, Footer } from "../ui/base";
+import { PageContainer, ContentContainer } from "../ui/patterns";
 
 export default function PlayPage() {
   const { t } = useTranslation();
   return (
     <>
       <main className="h-dvh bg-page-bg flex flex-col">
-        <NavigationAppUI />
+        <Navbar />
         <div className="flex flex-1 items-center justify-center">
-          <div className="page-content-container">
-            <div className="content-container-md">
+          <PageContainer>
+            <ContentContainer size="md">
               <h1 className="text-lg md:text-xl">{t.gameMode.title}</h1>
-            </div>
-          </div>
+            </ContentContainer>
+          </PageContainer>
         </div>
         <div className="mt-auto pb-4">
-          <FooterTermsPolicy />
+          <Footer />
         </div>
       </main>
     </>
