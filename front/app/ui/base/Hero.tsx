@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "@/hooks/use-translation";
+import { BallCTA } from "./BallCTA";
 
 const heroVariants = cva(
-  "mb-8 flex flex-col items-center justify-center gap-8",
+  "mb-4 flex flex-col items-center justify-center gap-4",
   {
     variants: {
       alignment: {
@@ -33,56 +33,41 @@ const titleVariants = cva("font-display font-bold text-white opacity-50", {
   },
 });
 
-const iconVariants = cva(
-  "text-primary transition-all duration-300 hover:text-primary-hover hover:scale-110",
-  {
-    variants: {
-      size: {
-        sm: "text-5xl",
-        md: "text-6xl",
-        lg: "text-7xl",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  },
-);
-
 type HeroAlignment = VariantProps<typeof heroVariants>["alignment"];
 type TitleSize = VariantProps<typeof titleVariants>["size"];
-type IconSize = VariantProps<typeof iconVariants>["size"];
 
 interface HeroProps {
   alignment?: HeroAlignment;
   titleSize?: TitleSize;
-  iconSize?: IconSize;
+  ballSize?: "sm" | "md" | "lg";
   className?: string;
 }
 
 export function Hero({
   alignment = "center",
   titleSize = "md",
-  iconSize = "md",
+  ballSize = "md",
   className,
 }: HeroProps) {
-  const { t } = useTranslation();
+  const [ballKey, setBallKey] = useState(() => Date.now() % 10000);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBallKey((prev) => (prev + 1) % 10000);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className={cn(heroVariants({ alignment }), className)}>
       <div>
-        <h1 className={cn(titleVariants({ size: titleSize }), "mb-4")}>
+        <h1 className={cn(titleVariants({ size: titleSize }), "mb-2")}>
           SKYPONG
         </h1>
       </div>
-      <div>
-        <Link
-          href="/play"
-          aria-label="Play game"
-          className={iconVariants({ size: iconSize })}
-        >
-          ▶
-        </Link>
+      <div key={`ball-${ballKey}`}>
+        <BallCTA size={ballSize} />
       </div>
     </section>
   );

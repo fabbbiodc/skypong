@@ -57,10 +57,11 @@ const es = {
     apiRouteError: (route: string) =>
       `Error del servidor. La ruta ${route} no existe o está mal configurada.`,
   },
-  gameMode: {
-    title: "Modo de Juego",
-    cta: "¿Quieres jugar en remoto? Inicia sesión para acceder al modo multijugador en línea.",
+gameMode: {
+    title: "Game Mode",
+    cta: "¿Quiere jugar de forma remota? Inicie sesión para acceder al modo multijugador en línea.",
     chooseMode: "Elige tu modo de juego",
+    clickToPlay: "Haz clic para jugar",
     local: {
       title: "1 vs 1 Local",
       description: "Juega contra un amigo en el mismo dispositivo.",
@@ -93,6 +94,7 @@ const es = {
     resume: "Reanudar",
     quit: "Salir",
     playButton: "Jugar",
+    clickToPlay: "Haz clic para jugar",
     player: (num: number) => {
       return `Jugador ${num}`;
     },

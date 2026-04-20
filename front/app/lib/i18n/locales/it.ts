@@ -61,6 +61,7 @@ const it = {
     title: "Modalità di gioco",
     cta: "Vuoi giocare da remoto? Accedi per accedere alla modalità multigiocatore online.",
     chooseMode: "Scegli la modalità di gioco",
+    clickToPlay: "Clicca per giocare",
     local: {
       title: "1 vs 1 Locale",
       description: "Gioca contro un amico sullo stesso dispositivo.",
@@ -93,6 +94,7 @@ const it = {
     resume: "Riprendi",
     quit: "Esci",
     playButton: "Gioca",
+    clickToPlay: "Clicca per giocare",
     player: (num: number) => {
       return `Giocatore ${num}`;
     },

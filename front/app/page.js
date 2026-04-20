@@ -15,7 +15,7 @@ export default function HomePage() {
         <div className={cn(homepage.contentCard.width.mobile, homepage.contentCard.maxWidth, homepage.contentCard.background, homepage.contentCard.radius, homepage.contentCard.shadow, homepage.contentCard.padding.base, homepage.contentCard.height.mobile, homepage.contentCard.padding.large, homepage.contentCard.width.desktop, homepage.contentCard.height.desktop)}>
           <section className={cn(homepage.heroSection.layout, homepage.heroSection.spacing.mobile, homepage.heroSection.spacing.tablet, homepage.heroSection.spacing.desktop)}>
             <div className={homepage.contentCard.wrapper}>
-              <Hero titleSize="lg" iconSize="lg" />
+              <Hero titleSize="lg" ballSize="lg" />
             </div>
             <LanguageSelector className="mt-8" />
           </section>

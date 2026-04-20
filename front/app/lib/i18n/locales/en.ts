@@ -61,6 +61,7 @@ const en = {
     title: "Game Mode",
     cta: "Want to play remotely? Log in to access online multiplayer mode.",
     chooseMode: "Choose your game mode",
+    clickToPlay: "Click to play",
     local: {
       title: "1 vs 1 Local",
       description: "Play against a friend on the same device.",
@@ -93,6 +94,7 @@ const en = {
     resume: "Resume",
     quit: "Quit",
     playButton: "Play",
+    clickToPlay: "Click to play",
     player: (num: number) => {
       return `Player ${num}`;
     },
