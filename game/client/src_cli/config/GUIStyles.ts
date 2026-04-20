@@ -177,7 +177,7 @@ export const GUI_STYLES = {
       width: "280px",
       height: "60px",
       color: "#FFFFFF",
-      background: "#9333ea",
+      background: "#475569",
       fontSize: 24,
       cornerRadius: 30,
       horizontalAlignment: Control.HORIZONTAL_ALIGNMENT_CENTER,

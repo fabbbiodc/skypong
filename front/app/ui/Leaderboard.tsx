@@ -133,7 +133,7 @@ function LeaderboardRow({
         }
       }}
     >
-      <span className="w-8 text-sm font-semibold text-slate-400">{rank}.</span>
+      <span className="w-8 text-sm font-semibold text-slate-200">{rank}.</span>
       <Avatar src={player.avatarUrl} fallbackText={player.nickname} size="sm" />
       <div className="flex flex-1 min-w-0 flex-col gap-0.5">
         <div className="flex items-center gap-2 flex-wrap">

@@ -29,7 +29,6 @@ export interface AuthUser {
   nickname?: string;
   avatarUrl?: string;
   avatarURL?: string;
-  winPhrase?: string;
   stats?: UserStats;
   [key: string]: unknown;
 }

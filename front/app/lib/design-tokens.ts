@@ -52,21 +52,21 @@ export const colors = {
     content: "#1e293b",
   },
   border: {
-    DEFAULT: "#334155",
-    hover: "#475569",
-    focus: "#64748b",
+    DEFAULT: "#475569",
+    hover: "#64748b",
+    focus: "#cbd5e1",
     error: "#ef4444",
   },
   text: {
     primary: "#ffffff",
-    secondary: "#cbd5e1",
-    muted: "#94a3b8",
-    link: "#64748b",
+    secondary: "#f1f5f9",
+    muted: "#e2e8f0",
+    link: "#cbd5e1",
   },
 
   // Chip colors (updated for dark theme)
   chip: {
-    default: { bg: "#334155", text: "#e2e8f0" },
+    default: { bg: "#475569", text: "#f1f5f9" },
     success: { bg: "#10b981", text: "#f0fdf4" },
     warning: { bg: "#f59e0b", text: "#fffbeb" },
     error: { bg: "#ef4444", text: "#fef2f2" },
@@ -74,13 +74,13 @@ export const colors = {
 
   // Input backgrounds (dark theme)
   input: {
-    filled: "#334155",
-    filledHover: "#475569",
-    filledFocus: "#1e293b",
+    filled: "#475569",
+    filledHover: "#64748b",
+    filledFocus: "#334155",
   },
 
   // Focus ring (subtle for dark backgrounds)
-  focus: "#64748b",
+  focus: "#cbd5e1",
 } as const;
 
 // TYPOGRAPHY
@@ -231,12 +231,12 @@ export const variants = {
 // BACKGROUNDS
 
 export const backgrounds = {
-  main: "bg-slate-800",
-  mainFrosted: "bg-slate-800/10 backdrop-blur-md",
+  main: "bg-transparent",
+  mainFrosted: "bg-transparent",
   transparent: "bg-transparent",
   primary: "bg-primary",
-  surface: "bg-slate-900",
-  surfaceFrosted: "bg-slate-900/20 backdrop-blur-md",
+  surface: "bg-transparent",
+  surfaceFrosted: "bg-transparent",
 } as const;
 
 // SHADOW CLASSES (for CVA usage)
@@ -265,12 +265,12 @@ export const navbar = {
     desktop: "px-8 py-4",
     mobile: "px-6 py-3",
   },
-  background: backgrounds.mainFrosted,
-  shadow: shadowClasses.lg,
+  background: "bg-transparent",
+  shadow: "shadow-none",
   transitions: transitions.durations.DEFAULT,
   textColor: "text-white",
   dropdown: {
-    container: "absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1",
+    container: "absolute right-0 mt-2 w-48 bg-slate-800/20 rounded-lg shadow-none py-2 flex flex-col gap-1",
     buttonAlignment: "w-full justify-start",
     textColor: "text-white",
   },
@@ -301,9 +301,9 @@ export const homepage = {
       desktop: "lg:h-[70%] lg:flex-none",
     },
     maxWidth: "max-w-full",
-    background: backgrounds.mainFrosted,
+    background: "bg-transparent",
     radius: "rounded-[2.5rem]",
-    shadow: shadowClasses.md,
+    shadow: "shadow-none",
     padding: {
       base: "p-8 sm:p-10 md:p-12",
       large: "lg:p-14",
@@ -339,12 +339,12 @@ export const buttonMenu = {
 
 // ============ DROPDOWN CONTAINERS ============
 export const dropdownContainer = {
-  desktop: "absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1",
+  desktop: "absolute right-0 mt-2 w-48 bg-slate-800/20 rounded-lg shadow-none py-2 flex flex-col gap-1",
   mobile: {
     positioning: "absolute top-full left-0 right-0 mt-2",
-    background: backgrounds.mainFrosted,
+    background: "bg-slate-800/20",
     radius: "rounded-2xl",
-    shadow: shadowClasses.lg,
+    shadow: "shadow-none",
     padding: "px-4 py-4 flex flex-col gap-1",
     alignment: "items-center",
     textColor: "text-white",
@@ -436,7 +436,7 @@ export const mainContainers = {
   // For pages with scrollable content (profiles with tabs)
   scrollableLayout: {
     wrapper: "min-h-dvh bg-page-bg flex flex-col text-white",
-    contentArea: "flex flex-1 items-start justify-center pt-[70px]",
+    contentArea: "flex flex-col items-start justify-start pt-[120px] w-full",
     footer: "pb-4",
   },
 } as const;

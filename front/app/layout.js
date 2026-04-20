@@ -21,7 +21,7 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata = {
-  title: "Transcendence",
+  title: "SkyPong",
   description: "Una Experiencia Trascendental de Pong",
   icons: {
     icon: [

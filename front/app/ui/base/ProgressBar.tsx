@@ -97,7 +97,7 @@ export function ProgressBar({
         />
       </div>
       {showPercentage && !showLabel && (
-        <div className="text-sm text-slate-400 mt-1 text-right font-medium">
+        <div className="text-sm text-slate-200 mt-1 text-right font-medium">
           {value} / {max}
         </div>
       )}

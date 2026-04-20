@@ -11,7 +11,7 @@ export function PageContainerScrollable({
   className,
 }: PageContainerScrollableProps) {
   return (
-    <div className={cn("page-content-container overflow-y-auto", className)}>
+    <div className={cn("page-content-container", className)}>
       {children}
     </div>
   );

@@ -70,7 +70,7 @@ export default function PlayerDeleteUI() {
               {t.user.deleteAccountWarning}
             </p>
 
-            <p className="text-sm text-slate-400 font-medium mb-2">
+            <p className="text-sm text-slate-200 font-medium mb-2">
               {t.user.typeConfirm}{" "}
               <span className="font-bold text-red-500 underline">CONFIRM</span>{" "}
               {t.user.toContinue}:

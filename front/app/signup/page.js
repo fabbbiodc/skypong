@@ -8,7 +8,7 @@ import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/auth-context";
 import Link from "next/link";
-import { TextField, Button, Footer } from "../ui/base";
+import { TextField, Button, Footer, Navbar } from "../ui/base";
 import {
   LoadingState,
   PageContainer,
@@ -90,11 +90,7 @@ export default function SignUpPage() {
         />
       ) : (
         <main className={mainContainers.topLayout.wrapper}>
-          <div className={authPages.logo.position}>
-            <Link href="/" className={authPages.logo.className}>
-              SKYPONG
-            </Link>
-          </div>
+          <Navbar />
 
           <div className={mainContainers.topLayout.contentArea}>
             <PageContainer>

@@ -10,11 +10,6 @@ export const playerDataSchema = (t: TranslationDictionary) => {
     nicknameMinLength:
       t?.user?.errors?.nicknameMinLength(4) ||
       "Nickname must be at least 8 characters",
-    whinphraseRequired:
-      t?.user?.errors?.winphraseRequired || "Winphrase is required",
-    winphraseMinLength:
-      t?.user?.errors?.winphraseMinLength(4) ||
-      "Winphrase must be at least 8 characters",
   };
 
   return z.object({
@@ -22,7 +17,6 @@ export const playerDataSchema = (t: TranslationDictionary) => {
       .string()
       .min(1, { message: errors.nicknameRequired })
       .min(4, { message: errors.nicknameMinLength }),
-    winPhrase: z.string().min(1, { message: errors.whinphraseRequired }),
   });
 };
 

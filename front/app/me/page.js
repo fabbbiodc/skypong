@@ -91,25 +91,25 @@ export default function ProfilePageMe() {
     {
       key: "history",
       label: t.profile.tabs.history,
-      icon: <FontAwesomeIcon icon={faScroll} className="text-primary" />,
+      icon: <FontAwesomeIcon icon={faScroll} className="text-slate-200" />,
       badge: profile?.stats?.total_games || undefined,
     },
     {
       key: "friends",
       label: t.profile.tabs.friends,
-      icon: <FontAwesomeIcon icon={faUsers} className="text-primary" />,
+      icon: <FontAwesomeIcon icon={faUsers} className="text-slate-200" />,
       badge: friendsCount > 0 ? friendsCount : undefined,
     },
     {
       key: "achievements",
       label: t.profile.tabs.achievements,
-      icon: <FontAwesomeIcon icon={faTrophy} className="text-primary" />,
+      icon: <FontAwesomeIcon icon={faTrophy} className="text-slate-200" />,
       badge: achievementCount > 0 ? achievementCount : undefined,
     },
     {
       key: "leaderboard",
       label: t.profile.tabs.leaderboard,
-      icon: <FontAwesomeIcon icon={faChartBar} className="text-primary" />,
+      icon: <FontAwesomeIcon icon={faChartBar} className="text-slate-200" />,
     },
   ];
 

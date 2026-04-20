@@ -18,7 +18,7 @@ const sizeClasses = {
 
 const boxClasses = {
   none: "",
-  regular: "rounded-lg border border-red-500 bg-red-500/10 backdrop-blur-md p-3",
+  regular: "rounded-lg border border-red-500 bg-transparent p-3",
 };
 
 export default function ErrorBox({

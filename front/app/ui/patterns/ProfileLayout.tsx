@@ -66,5 +66,5 @@ export function ProfileTabsContainer({ children, className }: ProfileSectionProp
 }
 
 export function ProfileTabContent({ children, className }: ProfileSectionProps) {
-  return <div className={cn("space-y-4", className)}>{children}</div>;
+  return <div className={cn("space-y-8", className)}>{children}</div>;
 }

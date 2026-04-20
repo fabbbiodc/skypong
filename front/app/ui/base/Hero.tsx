@@ -20,7 +20,7 @@ const heroVariants = cva(
   },
 );
 
-const titleVariants = cva("font-display font-bold rainbowtext", {
+const titleVariants = cva("font-display font-bold text-white opacity-50", {
   variants: {
     size: {
       sm: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",

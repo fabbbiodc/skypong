@@ -66,7 +66,7 @@ function getPlayerLink(profileId: string, playerId: string, nickname: string) {
     return (
       <Link
         href={`/${playerId}`}
-        className="text-sm font-medium text-primary hover:text-primary-hover transition-colors duration-200"
+        className="text-sm font-medium text-slate-200 underline hover:text-slate-100 transition-colors duration-200"
       >
         {nickname}
       </Link>

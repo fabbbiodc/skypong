@@ -72,11 +72,6 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
           <h2 className="text-2xl md:text-3xl font-bold font-display text-white">
             {profile?.nickname || "Player"}
           </h2>
-          {profile?.winPhrase && (
-            <p className="text-sm md:text-base text-muted mt-1">
-              {profile.winPhrase}
-            </p>
-          )}
         </ProfileIdentity>
       </ProfileHeader>
 

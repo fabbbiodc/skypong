@@ -17,7 +17,7 @@ export default function HomePage() {
             <div className={homepage.contentCard.wrapper}>
               <Hero titleSize="lg" iconSize="lg" />
             </div>
-            <LanguageSelector />
+            <LanguageSelector className="mt-8" />
           </section>
         </div>
       </div>

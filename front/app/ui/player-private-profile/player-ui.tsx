@@ -9,7 +9,6 @@ import { Button, TextField } from "../base";
 
 interface PlayerProfile {
   nickname: string;
-  winPhrase: string;
 }
 
 interface PlayerDataResponse {
@@ -74,12 +73,10 @@ export default function PlayerUI() {
         const data = (await response.json()) as PlayerDataResponse;
         const profile: PlayerProfile = {
           nickname: data.user?.nickname || "",
-          winPhrase: data.user?.winPhrase || "",
         };
 
         setPlayer(profile);
         setValue("nickname", profile.nickname);
-        setValue("winPhrase", profile.winPhrase);
       } catch (error) {
         console.error("Error en fetchMyProfile:", error);
         setServerError(t.serverError.connectionError);
@@ -118,7 +115,6 @@ export default function PlayerUI() {
       const result = (await response.json()) as PlayerDataResponse;
       setPlayer({
         nickname: result.user?.nickname || data.nickname,
-        winPhrase: result.user?.winPhrase || data.winPhrase,
       });
     } catch (error) {
       console.error("Error actualizando perfil:", error);
@@ -165,17 +161,6 @@ export default function PlayerUI() {
         autoComplete="nickname"
         register={register}
         error={errors.nickname?.message}
-        disabled={isSubmitting}
-      />
-
-      <TextField
-        name="winPhrase"
-        type="text"
-        label={t.form.labels.winPhrase}
-        placeholder={t.form.placeholders.winPhrase}
-        autoComplete="winPhrase"
-        register={register}
-        error={errors.winPhrase?.message}
         disabled={isSubmitting}
       />
 

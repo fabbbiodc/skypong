@@ -12,7 +12,7 @@ import { Avatar } from "./Avatar";
 import { backgrounds } from "@/lib/design-tokens";
 
 const navbarVariants = cva(
-  "fixed top-4 left-4 right-4 z-50 flex items-center justify-between mx-auto px-8 py-4 rounded-full shadow-lg max-w-[1200px] transition-transform duration-300",
+  "fixed top-4 left-4 right-4 z-50 flex items-center justify-between mx-auto px-8 py-4 rounded-full shadow-none max-w-[1200px] transition-transform duration-300",
   {
     variants: {
       visibility: {
@@ -142,12 +142,12 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1 z-[60]">
+              <div className="absolute right-0 mt-3 w-52 bg-slate-800/20 rounded-lg shadow-none py-3 px-2 flex flex-col gap-2 z-[60]">
                 <Button
                   variant="primary"
                   size="sm"
                   onClick={() => handleNavigate("/play")}
-                  className="w-full justify-start"
+                  className="w-full justify-center"
                 >
                   {t.navigation.play}
                 </Button>
@@ -155,7 +155,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleNavigate("/me")}
-                  className="w-full justify-start"
+                  className="w-full justify-center"
                 >
                   {t.navigation.profile}
                 </Button>
@@ -163,7 +163,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleNavigate("/updateme")}
-                  className="w-full justify-start"
+                  className="w-full justify-center"
                 >
                   {t.navigation.settings}
                 </Button>
@@ -171,7 +171,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
                   variant="danger"
                   size="sm"
                   onClick={handleLogout}
-                  className="w-full justify-start"
+                  className="w-full justify-center"
                 >
                   {t?.navigation?.logout || "Logout"}
                 </Button>

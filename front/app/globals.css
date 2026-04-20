@@ -48,8 +48,8 @@
 
   /* Text colors - Light text for dark backgrounds */
   --color-text-primary: #ffffff;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
+  --color-text-secondary: #e2e8f0;
+  --color-text-muted: #cbd5e1;
 
   /* Animations */
   @keyframes fade-in {
@@ -295,19 +295,18 @@
 .page-content-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin: 0 auto;
-  overflow-y: auto;
+  overflow-y: visible;
   overflow-x: hidden;
   width: 90%;
   max-width: 100%;
-  background-color: rgba(30, 41, 59, 0.1);
-  backdrop-filter: blur(0.5px);
+  background-color: transparent;
   border-radius: 2.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
   padding: 2rem 1.5rem;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 @media (min-width: 640px) {
@@ -327,8 +326,8 @@
 @media (min-width: 1024px) {
   .page-content-container {
     width: 50%;
-    height: 70vh;
-    flex: none;
+    height: auto;
+    flex: 1;
     padding: 3.5rem 3rem;
   }
 }
@@ -344,16 +343,15 @@
   padding: 0.875rem 1rem;
   border: 1.5px solid transparent;
   border-radius: 0.75rem;
-  background-color: rgba(30, 41, 59, 0.1);
-  backdrop-filter: blur(0.5px);
+  background-color: rgba(71, 85, 105, 0.3);
   transition: all 0.2s ease;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 .game-row:hover {
   border-color: #475569;
-  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
-  background-color: rgba(30, 41, 59, 0.2);
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
+  background-color: rgba(71, 85, 105, 0.45);
 }
 
 @media (min-width: 768px) {
@@ -376,27 +374,26 @@
   padding: 0.875rem 1rem;
   border-radius: 0.75rem;
   border: 1.5px solid transparent;
-  background-color: rgba(30, 41, 59, 0.1);
-  backdrop-filter: blur(0.5px);
+  background-color: rgba(71, 85, 105, 0.3);
   transition: all 0.2s ease;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 .leaderboard-row:hover {
   border-color: #475569;
-  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
-  background-color: rgba(30, 41, 59, 0.2);
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
+  background-color: rgba(71, 85, 105, 0.45);
 }
 
 .leaderboard-row-highlighted {
-  background-color: rgba(71, 85, 105, 0.2);
-  border: 1.5px solid #475569;
-  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
+  background-color: rgba(71, 85, 105, 0.5);
+  border: 1.5px solid #64748b;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.4);
 }
 
 .leaderboard-row-highlighted:hover {
-  border-color: #64748b;
-  box-shadow: 0 4px 12px rgba(71, 85, 105, 0.4);
+  border-color: #94a3b8;
+  box-shadow: 0 4px 12px rgba(71, 85, 105, 0.5);
 }
 
 /* ============================================================================
@@ -410,28 +407,45 @@
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   border: 1.5px solid transparent;
-  background-color: rgba(30, 41, 59, 0.1);
-  backdrop-filter: blur(0.5px);
+  background-color: rgba(71, 85, 105, 0.3);
   transition: all 0.2s ease;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 .friend-row:hover {
   border-color: #475569;
-  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
-  background-color: rgba(30, 41, 59, 0.2);
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
+  background-color: rgba(71, 85, 105, 0.45);
 }
 
 .friend-row-incoming {
-  background-color: rgba(71, 85, 105, 0.15);
-  border: 1.5px solid rgba(71, 85, 105, 0.4);
+  background-color: rgba(71, 85, 105, 0.4);
+  border: 1.5px solid rgba(71, 85, 105, 0.6);
 }
 
 .friend-row-incoming:hover {
   border-color: #475569;
-  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.4);
 }
 
 .friend-row-outgoing {
-  opacity: 0.6;
+  opacity: 0.7;
+}
+
+/* ============================================================================
+   FORM STYLING
+   ============================================================================ */
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 0.5rem;
 }

@@ -7,11 +7,11 @@ const statCardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-slate-800/20 border-slate-700/50 hover:border-slate-600 backdrop-blur-md",
-        primary: "bg-slate-800/30 border-slate-700 hover:border-slate-600 backdrop-blur-md",
-        success: "bg-emerald-500/10 border-emerald-500/50 hover:border-emerald-500 backdrop-blur-md",
-        danger: "bg-red-500/10 border-red-500/50 hover:border-red-500 backdrop-blur-md",
-        warning: "bg-amber-500/10 border-amber-500/50 hover:border-amber-500 backdrop-blur-md",
+        default: "bg-transparent border-slate-700/50 hover:border-slate-600",
+        primary: "bg-transparent border-slate-700 hover:border-slate-600",
+        success: "bg-transparent border-emerald-500/50 hover:border-emerald-500",
+        danger: "bg-transparent border-red-500/50 hover:border-red-500",
+        warning: "bg-transparent border-amber-500/50 hover:border-amber-500",
       },
       size: {
         sm: "p-3 text-2xl",
@@ -64,7 +64,7 @@ export function StatCard({
   const trendColor = {
     up: "text-emerald-400",
     down: "text-red-400",
-    neutral: "text-slate-400",
+    neutral: "text-slate-200",
   }[trend || "neutral"];
 
   const trendIcon = {
@@ -99,7 +99,7 @@ export function StatCard({
       </div>
       <div
         className={cn(
-          "text-slate-400 mt-1 font-medium",
+          "text-slate-200 mt-1 font-medium",
           size === "sm" ? "text-xs" : size === "lg" ? "text-lg" : "text-sm",
         )}
       >

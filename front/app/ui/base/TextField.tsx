@@ -132,7 +132,7 @@ export function TextField<TFieldValues extends FieldValues = FieldValues>({
         <p
           className={cn(
             "mt-1 text-sm",
-            error ? "text-red-400" : "text-slate-400",
+            error ? "text-red-400" : "text-slate-200",
           )}
         >
           {error || helperText}

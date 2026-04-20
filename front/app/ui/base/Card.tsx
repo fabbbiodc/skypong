@@ -5,9 +5,9 @@ import { ReactNode } from "react";
 const cardVariants = cva("rounded-xl transition-all duration-200", {
   variants: {
     variant: {
-      default: "bg-slate-800/10 backdrop-blur-md border border-slate-700/30",
-      elevated: "bg-slate-800/20 backdrop-blur-md shadow-md hover:shadow-lg border border-slate-700/30",
-      bordered: "bg-slate-800/20 backdrop-blur-md border-2 border-slate-600",
+      default: "bg-transparent border border-transparent",
+      elevated: "bg-transparent border border-transparent hover:shadow-none",
+      bordered: "bg-transparent border-2 border-slate-600",
       ghost: "bg-transparent border border-transparent hover:border-slate-700/50",
     },
     padding: {
@@ -75,7 +75,7 @@ export function Card({
               </h3>
             )}
             {subtitle && (
-              <p className="text-sm md:text-base text-slate-400 mt-1">{subtitle}</p>
+              <p className="text-sm md:text-base text-slate-200 mt-1">{subtitle}</p>
             )}
           </div>
         </div>

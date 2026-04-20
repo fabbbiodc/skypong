@@ -210,7 +210,7 @@ function AchievementCard({ achievement }: { achievement: AchievementItem }) {
 
         {/* Lock indicator for locked achievements */}
         {!unlocked && !comingSoon && (
-          <div className="absolute top-3 right-3 text-slate-400 text-sm">
+          <div className="absolute top-3 right-3 text-slate-200 text-sm">
             <FontAwesomeIcon icon={faLock} className="text-primary" />
           </div>
         )}

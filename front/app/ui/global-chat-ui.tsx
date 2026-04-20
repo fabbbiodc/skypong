@@ -193,9 +193,9 @@ export default function GlobalChatUI() {
           </div>
 
           {/* Messages Container */}
-          <div className="h-[220px] overflow-y-auto rounded-lg bg-slate-800/10 backdrop-blur-md border border-slate-700 p-3 mb-3 scroll-smooth">
+          <div className="h-[220px] overflow-y-auto rounded-lg bg-transparent border border-slate-700 p-3 mb-3 scroll-smooth">
             {messages.length === 0 ? (
-              <p className="text-sm text-slate-400 text-center py-4">
+              <p className="text-sm text-slate-200 text-center py-4">
                 {t?.chat?.noMessages ||
                   "No messages yet. Start the conversation!"}
               </p>

@@ -9,7 +9,7 @@ const tabsContainerVariants = cva("flex gap-2 border-b border-slate-700", {
     variant: {
       underline: "border-b-2",
       pills: "border-none gap-1",
-      boxed: "border rounded-lg p-1 bg-slate-800/30",
+      boxed: "border rounded-lg p-1 bg-transparent",
     },
     size: {
       sm: "text-sm",
@@ -51,7 +51,7 @@ const tabVariants = cva(
         variant: "underline",
         active: false,
         className:
-          "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-600",
+          "border-transparent text-slate-200 hover:text-slate-200 hover:border-slate-600",
       },
       {
         variant: "pills",
@@ -62,7 +62,7 @@ const tabVariants = cva(
         variant: "pills",
         active: false,
         className:
-          "bg-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200",
+          "bg-transparent text-slate-200 hover:bg-slate-700/50 hover:text-slate-200",
       },
       {
         variant: "boxed",
@@ -72,7 +72,7 @@ const tabVariants = cva(
       {
         variant: "boxed",
         active: false,
-        className: "bg-transparent text-slate-400 hover:text-slate-200",
+        className: "bg-transparent text-slate-200 hover:text-slate-200",
       },
     ],
     defaultVariants: {
