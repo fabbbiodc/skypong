@@ -22,9 +22,9 @@ const heroVariants = cva(
 const titleVariants = cva("font-display font-bold text-white opacity-50", {
   variants: {
     size: {
-      sm: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",
-      md: "text-5xl sm:text-6xl md:text-7xl lg:text-8xl",
-      lg: "text-6xl sm:text-7xl md:text-8xl lg:text-9xl",
+      sm: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl",
+      md: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",
+      lg: "text-5xl sm:text-6xl md:text-7xl lg:text-8xl",
     },
   },
   defaultVariants: {
@@ -51,7 +51,7 @@ export function Hero({
   return (
     <section className={cn(heroVariants({ alignment }), className)}>
       <div>
-        <h1 className={cn(titleVariants({ size: titleSize }), "mb-2")}>
+        <h1 className={cn(titleVariants({ size: titleSize }), "mb-1")}>
           SKYPONG
         </h1>
       </div>

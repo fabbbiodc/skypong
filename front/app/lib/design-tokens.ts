@@ -314,9 +314,9 @@ export const homepage = {
   heroSection: {
     layout: "flex flex-col items-center justify-center",
     spacing: {
-      mobile: "gap-4 py-2",
-      tablet: "md:gap-6 md:py-4",
-      desktop: "lg:gap-6 lg:py-6",
+      mobile: "gap-2 py-1",
+      tablet: "md:gap-4 md:py-2",
+      desktop: "lg:gap-4 lg:py-4",
     },
     textColor: "text-white",
   },

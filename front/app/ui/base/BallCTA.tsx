@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { InteractiveMarbleBall } from "./InteractiveMarbleBall";
 import { useTranslation } from "@/hooks/use-translation";
 
-const ballCTAVariants = cva("flex flex-col items-center gap-2", {
+const ballCTAVariants = cva("flex flex-col items-center", {
   variants: {
     size: {
       sm: "gap-1",
-      md: "gap-2",
+      md: "gap-1",
       lg: "gap-2",
     },
   },
