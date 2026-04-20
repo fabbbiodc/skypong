@@ -4,6 +4,7 @@
     "check:locales": "node specs/check-locales-parity.mjs"
   },
   "dependencies": {
+    "@babylonjs/core": "^9.3.1",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.1",

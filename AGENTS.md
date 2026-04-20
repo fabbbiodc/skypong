@@ -196,3 +196,31 @@ Each service has a Dockerfile. For local development:
 - CSRF protection is implemented in auth-service (check routes in exclude list)
 - JWT uses RS256 algorithm with RSA keys
 - Game state synchronization uses Colyseus schema system
+
+### Frontend Design System
+
+**Single Source of Truth:** `front/app/lib/design-tokens.ts`
+
+All pages should use the design tokens for consistent styling:
+
+```typescript
+import { mainContainers } from "@/lib/design-tokens";
+
+// For most pages
+<main className={mainContainers.centeredLayout.wrapper}>
+  <Navbar />
+  <div className={mainContainers.centeredLayout.contentArea}>
+    {/* page content */}
+  </div>
+</main>
+```
+
+**Layout Types:**
+- `centeredLayout`: Vertically and horizontally centered (game-mode, terms, privacy)
+- `topLayout`: Centered in available space (login, signup)
+- `scrollableLayout`: Scrollable with items-start (profile pages)
+
+**Key Tokens:**
+- All include `pt-[70px]` to account for fixed navbar
+- Navbar uses pill design: `fixed top-4 left-4 right-4 z-50 rounded-full`
+- Dropdown has `z-[60]` to appear above navbar

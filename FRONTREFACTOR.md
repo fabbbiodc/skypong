@@ -598,24 +598,59 @@ const myComponentVariants = cva("base classes", {
 
 ### Next Session TODO
 
-1. **Shadow Tokens Phase**: Update components to use `shadowClasses` from design-tokens.ts
-   - Card.tsx, Section.tsx, StatCard.tsx, Tabs.tsx, ListRow.tsx, Navbar.tsx, global-chat-ui.tsx
-2. **Background Tokens Phase**: Update remaining components to use `backgrounds`
-   - Card, Section, Footer, Hero
+1. **Page Token Migration**: Completed. All pages now use `mainContainers` tokens with proper navbar offset.
+
+2. **Navbar**: Simplified to fix desktop dropdown. Keep as-is for now (working).
 
 3. **Import path**: Use `@/lib/design-tokens` (not `@lib/design-tokens`)
 
 4. **Frontend Cleanup**: See `CLEANUP.md` for detailed cleanup tasks:
-   - Remove unused files (use-styles.ts, unused achievement components, achivements.ts)
-   - Consolidate duplicate components (navigation-app-ui → Navbar)
-   - Fix broken code (placeholderUrl → logoURL, dead imports)
-   - Create PageContainer pattern components
+   - Convert remaining JS pages to TSX
+   - Fix any remaining TypeScript errors
 
 **See also:** `CLEANUP.md` for detailed cleanup instructions
 
 ---
 
 ## Change Log
+
+### 2026-04-20
+
+**Design Token System + Page Unification**
+
+- Added `mainContainers` token object to `design-tokens.ts` with navbar-aware layouts:
+  - `centeredLayout`: For pages with vertically centered content
+  - `topLayout`: For pages with centered content starting below navbar
+  - `scrollableLayout`: For pages with scrollable content (profiles, settings)
+  - All layouts include `pt-[70px]` padding to account for fixed navbar
+
+- Added new component tokens:
+  - `authPages`: Login/signup page styling tokens
+  - `profilePages`: Profile page styling tokens  
+  - `gameModePages`: Game mode page styling tokens
+  - `settingsPages`: Settings/update page styling tokens
+  - `legalPages`: Privacy/terms page styling tokens
+  - Type exports: `MainContainersToken`, `AuthPagesToken`, etc.
+
+- Migrated pages to unified token-based layout:
+  - `/login/page.js` - Uses `mainContainers.topLayout`
+  - `/signup/page.js` - Uses `mainContainers.topLayout`
+  - `/me/page.js` - Uses `mainContainers.scrollableLayout`
+  - `/[id]/page.js` - Uses `mainContainers.scrollableLayout`
+  - `/updateme/page.js` - Uses `mainContainers.scrollableLayout`
+  - `/game-mode/page.js` - Uses `mainContainers.centeredLayout`
+  - `/privacy/page.js` - Uses `mainContainers.centeredLayout`
+  - `/terms/page.js` - Uses `mainContainers.centeredLayout`
+
+- Navbar dropdown fix:
+  - Reverted to simplified design (mobile menu removed) to fix desktop dropdown button behavior
+  - Kept pill styling: `fixed top-4 left-4 right-4 rounded-full shadow-lg`
+  - Added `z-[60]` to dropdown for proper stacking above navbar
+
+- All pages now consistent:
+  - Content starts below navbar (no overlap)
+  - Uses unified token imports
+  - Single source of truth for layout/spacing
 
 ### 2026-04-17
 
@@ -964,7 +999,35 @@ const myComponentVariants = cva("base classes", {
 **Phase 5: Documentation - Complete**
 
 - Updated `front/app/ui-test/page.tsx` with:
-  - Added imports for pattern components
-  - Fixed Button usage (removed font prop)
-  - Added tests for Section, ListRow, EmptyState, LoadingState
+   - Added imports for pattern components
+   - Fixed Button usage (removed font prop)
+   - Added tests for Section, ListRow, EmptyState, LoadingState
 - All components now tested and documented
+
+### 2026-04-20 (continuation)
+
+**Game Scene Background Integration**
+
+- Replaced animated gradient background with rotating Babylon.js skybox:
+  - Created `front/app/ui/GameSceneBackground.tsx` - Main component with EXR cubemap rendering
+  - Created `front/app/ui/GameSceneBackgroundConfig.ts` - Configuration constants
+  - Symlinked `front/public/environment/dramatic-sky1.exr` → `game/client/public/environment/dramatic-sky1.exr`
+  - Updated `front/app/layout.js` to import and render `GameSceneBackground`
+  - Updated `front/app/globals.css` with new `.game-scene-bg-wrapper` and `.game-scene-bg-container` styling
+
+- Features implemented:
+  - Slowly rotating skybox (~1 full rotation per 100 seconds)
+  - Babylon.js NullEngine equivalent rendering (minimal setup)
+  - Async EXR texture loading with 3-second timeout
+  - Proper resource disposal on component unmount
+  - Fallback color (#191919) if texture fails
+  - Responsive to window resize via ResizeObserver
+  - Full TypeScript support with proper types
+
+- Dependencies added:
+  - `@babylonjs/core@^8.48.0` (already used in game client)
+
+- Validation:
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+  - No bundle size impact increase (Babylon.js already compiled)

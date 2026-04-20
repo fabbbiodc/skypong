@@ -1,7 +1,7 @@
 # Frontend Cleanup Plan
 
 **Scope:** `front/` directory only
-**Last Updated:** 2026-04-20
+**Last Updated:** 2026-04-20 (updated)
 
 ---
 
@@ -283,12 +283,63 @@ Removed files with no remaining imports/usages:
   - Updated `front/app/ui/player-private-profile/player-credentials-ui.tsx`
   - Updated `front/app/ui/player-private-profile/player-delete-account-ui.tsx`
 
+### Phase L: Design Token System + Page Unification (2026-04-20)
+
+- Added `mainContainers` token object with 3 layout variants:
+  - `centeredLayout`: Vertically centered content
+  - `topLayout`: Centered content in available space 
+  - `scrollableLayout`: Scrollable content with items-start
+  - All include `pt-[70px]` for navbar offset
+
+- Added page-specific tokens:
+  - `authPages`, `profilePages`, `gameModePages`, `settingsPages`, `legalPages`
+
+- Migrated all pages to use unified `mainContainers` tokens:
+  - `/login/page.js`
+  - `/signup/page.js` 
+  - `/me/page.js`
+  - `/[id]/page.js`
+  - `/updateme/page.js`
+  - `/game-mode/page.js`
+  - `/privacy/page.js`
+  - `/terms/page.js`
+
+- Fixed Navbar:
+  - Reverted to simplified design (desktop-only dropdown)
+  - Kept pill styling
+  - Added `z-[60]` to dropdown container
+  - Dropdown buttons now work consistently
+
+- Validation: TypeScript passes, all pages use `mainContainers` tokens
+
+---
+
+## Phase M: Game Scene Background Integration (2026-04-20)
+
+- Replaced animated gradient background with game scene skybox:
+  - Created `GameSceneBackground.tsx` component using Babylon.js
+  - Created `GameSceneBackgroundConfig.ts` with rotation settings
+  - Symlinked EXR cubemap from `game/client/public/` for asset sharing
+  - Updated `layout.js` to render new background component
+  - Added CSS styling for `.game-scene-bg-wrapper` and `.game-scene-bg-container`
+
+- Component features:
+  - Slowly rotating skybox (very subtle, ~100 seconds per rotation)
+  - Async EXR texture loading with fallback
+  - Proper Babylon.js resource cleanup on unmount
+  - Responsive canvas sizing with ResizeObserver
+  - Full TypeScript support
+
+- Validation:
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+
 ---
 
 ## Remaining Cleanup Tasks
 
 1. **Optional page refactor**
-   - Convert remaining JS pages/components to TS for consistency in typed UI layer
+    - Convert remaining JS pages/components to TS for consistency in typed UI layer
 
 ---
 

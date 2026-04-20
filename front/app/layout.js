@@ -7,7 +7,7 @@ import { LanguageProvider } from "./context/language-context";
 import { AuthProvider } from "./context/auth-context";
 import { getCurrentLocale } from "./lib/i18n/locale-manager";
 import GlobalChatUI from "./ui/global-chat-ui";
-import GrainientBackground from "./ui/GrainientBackground";
+import GameSceneBackground from "./ui/GameSceneBackground";
 
 const spaceGrotesk = Space_Grotesk({
   weight: ["400", "700"],
@@ -41,13 +41,13 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <LanguageProvider>
         <html lang={getCurrentLocale()}>
-          <body
-            className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}
-          >
-            <GrainientBackground />
-            {children}
-            <GlobalChatUI />
-          </body>
+           <body
+             className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}
+           >
+             <GameSceneBackground />
+             {children}
+             <GlobalChatUI />
+           </body>
         </html>
       </LanguageProvider>
     </AuthProvider>
