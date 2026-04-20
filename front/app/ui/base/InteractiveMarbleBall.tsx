@@ -59,23 +59,27 @@ export function InteractiveMarbleBall({
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const sceneRef = useRef<Scene | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const sphereRef = useRef<Mesh | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (!containerRef.current || typeof window === "undefined") return;
+    const container = containerRef.current;
+    if (!container || typeof window === "undefined") return;
 
     let mounted = true;
+    let animFrameId: number;
 
     const initializeScene = async () => {
       try {
+        // Clear any existing children
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+
         const canvas = document.createElement("canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.style.display = "block";
-        containerRef.current!.appendChild(canvas);
-        canvasRef.current = canvas;
+        container.appendChild(canvas);
 
         const engine = new Engine(canvas, true, {
           preserveDrawingBuffer: true,
@@ -103,7 +107,6 @@ export function InteractiveMarbleBall({
           { diameter: MARBLE_CONFIG.DIAMETER, segments: 64 },
           scene
         );
-        sphereRef.current = sphere;
 
         const marbleMat = new PBRMaterial("marbleMaterial", scene);
         marbleMat.albedoColor = new Color3(0.92, 0.92, 0.95);
@@ -190,8 +193,7 @@ export function InteractiveMarbleBall({
         let lastTime = performance.now();
 
         engine.runRenderLoop(function () {
-          if (!mounted || !scene || !sphereRef.current) {
-            engine.stopRenderLoop();
+          if (!mounted || !scene || !sphere) {
             return;
           }
 
@@ -199,14 +201,14 @@ export function InteractiveMarbleBall({
           const deltaTime = (currentTime - lastTime) / 1000;
           lastTime = currentTime;
 
-          sphereRef.current.rotation.z += MARBLE_CONFIG.ROTATION_SPEED * deltaTime;
-          sphereRef.current.rotation.x +=
+          sphere.rotation.z += MARBLE_CONFIG.ROTATION_SPEED * deltaTime;
+          sphere.rotation.x +=
             MARBLE_CONFIG.ROTATION_SPEED * 0.15 * deltaTime;
 
           scene.render();
         });
-      } catch {
-        console.error("InteractiveMarbleBall: Failed to initialize");
+      } catch (error) {
+        console.error("InteractiveMarbleBall: Failed to initialize", error);
       }
     };
 
@@ -214,24 +216,41 @@ export function InteractiveMarbleBall({
 
     return () => {
       mounted = false;
+
+      // Stop render loop first
       if (engineRef.current) {
-        engineRef.current.stopRenderLoop();
+        try {
+          engineRef.current.stopRenderLoop();
+        } catch {
+          // Already stopped
+        }
       }
+
+      // Dispose scene
       if (sceneRef.current) {
-        sceneRef.current.dispose();
+        try {
+          sceneRef.current.dispose();
+        } catch {
+          // Already disposed
+        }
         sceneRef.current = null;
       }
+
+      // Dispose engine
       if (engineRef.current) {
-        engineRef.current.dispose();
+        try {
+          engineRef.current.dispose();
+        } catch {
+          // Already disposed
+        }
         engineRef.current = null;
       }
-      if (canvasRef.current && containerRef.current) {
-        try {
-          containerRef.current.removeChild(canvasRef.current);
-        } catch {
-          // Already removed
+
+      // Clear container
+      if (container) {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
         }
-        canvasRef.current = null;
       }
     };
   }, [size]);

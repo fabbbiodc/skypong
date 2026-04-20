@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { BallCTA } from "./BallCTA";
@@ -49,16 +48,6 @@ export function Hero({
   ballSize = "md",
   className,
 }: HeroProps) {
-  const [ballKey, setBallKey] = useState(() => Date.now() % 10000);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBallKey((prev) => (prev + 1) % 10000);
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className={cn(heroVariants({ alignment }), className)}>
       <div>
@@ -66,7 +55,7 @@ export function Hero({
           SKYPONG
         </h1>
       </div>
-      <div key={`ball-${ballKey}`}>
+      <div>
         <BallCTA size={ballSize} />
       </div>
     </section>
