@@ -440,6 +440,7 @@ const es = {
     leaderboard: {
       title: "Clasificación",
       rank: "Rango",
+      player: "Jugador",
       totalGames: "Juegos totales:",
       noPlayers: "Aún no hay jugadores.",
       loading: "Cargando...",

@@ -30,7 +30,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "../../api/api";
 import { Toast } from "../base";
-import { useTranslation } from "../../context/language-context";
+import { useTranslation } from "../../hooks/use-translation";
 import { cn } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";

@@ -1,7 +1,7 @@
 # Frontend Cleanup Plan
 
 **Scope:** `front/` directory only
-**Last Updated:** 2026-04-18
+**Last Updated:** 2026-04-20
 
 ---
 
@@ -14,7 +14,7 @@ refactoring.
 
 ---
 
-## Completed Cleanup (2026-04-17)
+## Completed Cleanup
 
 ### Phase A: Navigation Consolidation
 
@@ -144,17 +144,150 @@ Removed files with no remaining imports/usages:
 - Removed unused alternative background implementation:
   - Removed `front/app/ui/base/GrainientBackground.tsx`
 
+### Phase H: Strict Typing Pass (2026-04-18)
+
+- Removed remaining `any` usage from TypeScript files in active frontend code paths.
+
+- Added shared translation type export:
+  - Added `front/app/lib/types/translation.ts`
+  - Updated context exports in `front/app/context/language-context.tsx`
+
+- Typed validation schema builders with `TranslationDictionary`:
+  - Updated `front/app/lib/form-validation/auth.ts`
+  - Updated `front/app/lib/form-validation/player-data.ts`
+  - Updated `front/app/lib/game/launch-config.ts`
+
+- Improved form component typing:
+  - Updated `front/app/ui/base/TextField.tsx`
+  - Replaced untyped `register` prop with generic `react-hook-form` types
+
+- Added explicit achievement and stats typing:
+  - Updated `front/app/ui/player-public-profile/AchievementsSection.tsx`
+
+- Removed `any` from friends service flow and added typed helper wrappers:
+  - Updated `front/app/ui/player-public-profile/FriendsSection.tsx`
+
+- Hardened player status helper against unknown input shape:
+  - Updated `front/app/lib/players/check-player-status.ts`
+
+- Updated UI test form typing:
+  - Updated `front/app/ui-test/page.tsx`
+
+### Phase I: i18n Parity + Locale Typing Hardening (2026-04-18)
+
+- Verified full key-shape parity across locale dictionaries:
+  - Audited `front/app/lib/i18n/locales/en.ts`
+  - Audited `front/app/lib/i18n/locales/es.ts`
+  - Audited `front/app/lib/i18n/locales/it.ts`
+  - Added missing key in Spanish dictionary:
+    - `front/app/lib/i18n/locales/es.ts` (`profile.leaderboard.player`)
+
+- Centralized locale typing to remove stringly-typed language plumbing:
+  - Added `front/app/lib/i18n/types.ts`
+    - `SUPPORTED_LOCALES`
+    - `Locale`
+    - `DEFAULT_LOCALE`
+    - `isLocale`
+
+- Hardened locale manager API to typed locale I/O:
+  - Updated `front/app/lib/i18n/locale-manager.ts`
+  - `getCurrentLocale()` now returns `Locale` with cookie validation fallback
+  - `setCurrentLocale()` now accepts `Locale`
+
+- Removed translation dictionary cast fallbacks from context:
+  - Updated `front/app/context/language-context.tsx`
+  - Dictionaries now use `satisfies Record<Locale, TranslationDictionary>`
+
+- Decoupled shared translation types from React context module:
+  - Updated `front/app/lib/types/translation.ts`
+  - `TranslationDictionary` now derives from `locales/en.ts`
+  - `Locale` now re-exported from `lib/i18n/types.ts`
+
+- Tightened direct translation key usage in JS pages/components:
+  - Updated `front/app/login/page.js`
+    - `t.form.userNotRegistered` -> `t.form.errors.userNotRegistered`
+    - `t?.loading?.loading` -> `t.common.loading`
+  - Updated `front/app/signup/page.js`
+    - `t?.loading?.loading` -> `t.common.loading`
+  - Updated `front/app/ui/player-private-profile/avatar-ui.js`
+    - `invalidFormat` -> `invalidImageFormat`
+    - removed optional-chain fallback access for known keys
+  - Updated `front/app/ui/player-private-profile/player-ui.js`
+    - `conectionError` -> `connectionError`
+    - removed optional-chain fallback access for known keys
+  - Updated `front/app/ui/player-private-profile/player-credentials-ui.js`
+    - `conectionError` -> `connectionError`
+    - removed optional-chain fallback access for known keys
+
+- Removed unnecessary locale cast in language selector:
+  - Updated `front/app/ui/base/LanguageSelector.tsx`
+  - Typed language list with `Locale` and removed inline union assertion
+
+### Phase J: Private Profile TS Migration + i18n Guardrails (2026-04-20)
+
+- Migrated remaining private profile JS modules to TSX:
+  - `front/app/ui/player-private-profile/avatar-ui.tsx`
+  - `front/app/ui/player-private-profile/player-ui.tsx`
+  - `front/app/ui/player-private-profile/player-credentials-ui.tsx`
+  - `front/app/ui/player-private-profile/player-delete-account-ui.tsx`
+
+- Removed legacy JS counterparts:
+  - `front/app/ui/player-private-profile/avatar-ui.js`
+  - `front/app/ui/player-private-profile/player-ui.js`
+  - `front/app/ui/player-private-profile/player-credentials-ui.js`
+  - `front/app/ui/player-private-profile/player-delete-account-ui.js`
+
+- Typed key private-profile flows:
+  - Added explicit form/request/response interfaces for profile update and
+    password update flows
+  - Normalized auth context usage in private profile flows
+  - Fixed avatar upload error mapping with status-based handling and improved
+    upload error fallback
+
+- Normalized translation hook import path usage:
+  - Replaced direct `context/language-context` imports with
+    `hooks/use-translation` in active UI/page modules
+  - Remaining direct context imports are intentional (`layout.js` provider +
+    `hooks/use-translation.ts` re-export)
+
+- Added automated locale parity verification command:
+  - Added `front/specs/check-locales-parity.mjs`
+  - Added npm script `check:locales` in `front/package.json`
+  - Verified script output:
+    - `[ok] Locale dictionaries are in parity (en, es, it)`
+
+### Phase K: Auth Context Typing Hardening (2026-04-20)
+
+- Refactored auth context to explicit typed API:
+  - Updated `front/app/context/auth-context.tsx`
+  - Added exported `AuthUser` and `AuthContextValue` interfaces
+  - Typed context as `AuthContextValue | undefined`
+  - `useAuth()` now throws if used outside `AuthProvider`
+
+- Hardened current-user extraction from profile API response:
+  - Added object/type guards and `extractAuthUser` to normalize
+    `/api/profile/me` responses
+  - Supports both direct user payload and nested `{ user: ... }` payload
+
+- Consolidated auth utility internals:
+  - Added shared `getCsrfToken()` helper in context
+  - Replaced route arrays with `SIGN_ROUTES` / `PRIVATE_ROUTES` sets
+
+- Updated logout behavior in provider:
+  - Clears auth state and refreshes router cache in context
+  - Route navigation after logout is now handled by calling components
+
+- Removed temporary auth-context casts from private profile TSX modules:
+  - Updated `front/app/ui/player-private-profile/avatar-ui.tsx`
+  - Updated `front/app/ui/player-private-profile/player-ui.tsx`
+  - Updated `front/app/ui/player-private-profile/player-credentials-ui.tsx`
+  - Updated `front/app/ui/player-private-profile/player-delete-account-ui.tsx`
+
 ---
 
 ## Remaining Cleanup Tasks
 
-1. **Optional TypeScript hardening**
-   - Replace remaining `any` usage in feature modules and i18n schema builders
-
-2. **Optional i18n parity hardening**
-   - Align locale dictionary shape (`en`, `es`, `it`) for strict typed translation keys
-
-3. **Optional page refactor**
+1. **Optional page refactor**
    - Convert remaining JS pages/components to TS for consistency in typed UI layer
 
 ---
@@ -186,6 +319,9 @@ grep -R "PageContainer\|PageContainerScrollable" front/app --include="*.js" --in
 
 # Build validation (frontend)
 cd front && npm exec next build -- --webpack
+
+# Locale dictionary parity
+cd front && npm run check:locales
 ```
 
 ---

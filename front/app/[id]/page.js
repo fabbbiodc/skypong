@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslation } from "../context/language-context";
+import { useTranslation } from "../hooks/use-translation";
 import { Navbar, Tabs, Footer } from "../ui/base";
 import { useAuth } from "../context/auth-context";
 import { useRouter } from "next/navigation";

@@ -6,35 +6,24 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import type { Locale } from "@/lib/i18n/types";
+import { DEFAULT_LOCALE } from "@/lib/i18n/types";
+import type { TranslationDictionary } from "@/lib/types/translation";
 import { getCurrentLocale, setCurrentLocale } from "../lib/i18n/locale-manager";
 import es from "../lib/i18n/locales/es";
 import en from "../lib/i18n/locales/en";
 import it from "../lib/i18n/locales/it";
 
-const SUPPORTED_LOCALES = ["en", "es", "it"] as const;
-
-type Locale = (typeof SUPPORTED_LOCALES)[number];
-type TranslationDictionary = typeof en;
-
-const dictionaries: Record<Locale, TranslationDictionary> = {
+const dictionaries = {
   en,
-  es: es as TranslationDictionary,
-  it: it as TranslationDictionary,
-};
+  es,
+  it,
+} satisfies Record<Locale, TranslationDictionary>;
 
 interface LanguageContextValue {
   t: TranslationDictionary;
   locale: Locale;
   changeLanguage: (newLocale: Locale) => void;
-}
-
-const DEFAULT_LOCALE: Locale = "en";
-
-function toLocale(value: string): Locale {
-  if (value === "es" || value === "it" || value === "en") {
-    return value;
-  }
-  return DEFAULT_LOCALE;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(
@@ -49,7 +38,7 @@ export const LanguageProvider = ({
   const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE);
 
   useEffect(() => {
-    setLocale(toLocale(getCurrentLocale()));
+    setLocale(getCurrentLocale());
   }, []);
 
   const changeLanguage = (newLocale: Locale) => {

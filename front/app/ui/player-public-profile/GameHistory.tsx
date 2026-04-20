@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Avatar, Badge } from "../base";
-import { useTranslation } from "../../context/language-context";
+import { useTranslation } from "../../hooks/use-translation";
 import { LoadingState } from "../patterns";
 import Link from "next/link";
 import { isMe, isAI } from "../../lib/players/whois";

@@ -1,7 +1,8 @@
 // /app/lib/form-validation/auth.ts
 import { z } from "zod";
+import type { TranslationDictionary } from "@/lib/types/translation";
 
-export const playerDataSchema = (t: any) => {
+export const playerDataSchema = (t: TranslationDictionary) => {
   // Define errores con valores por defecto
   const errors = {
     nicknameRequired:
@@ -25,7 +26,7 @@ export const playerDataSchema = (t: any) => {
   });
 };
 
-export const playerPasswordSchema = (t: any) => {
+export const playerPasswordSchema = (t: TranslationDictionary) => {
   const errors = {
     passwordRequired:
       t?.form?.errors?.passwordTooShort || "Password is too short",

@@ -12,7 +12,7 @@ import {
   Tabs,
 } from "../ui/base";
 import { Section, ListRow, EmptyState, LoadingState } from "../ui/patterns";
-import { useTranslation } from "../context/language-context";
+import { useTranslation } from "../hooks/use-translation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -51,7 +51,7 @@ export default function UITestPage() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Record<string, unknown>) => {
     alert("Form submitted: " + JSON.stringify(data, null, 2));
   };
 

@@ -10,6 +10,37 @@ export const PLAYER_STATUS = {
   blocked: "BLOCKED",
 };
 
+interface PlayerStatusInput {
+  access_expires_at?: string;
+  last_access_at?: string;
+  logged?: boolean | number;
+  blocked?: boolean;
+}
+
+function normalizePlayerStatusInput(player: unknown): PlayerStatusInput {
+  if (typeof player !== "object" || player === null) {
+    return {};
+  }
+
+  const candidate = player as Record<string, unknown>;
+
+  return {
+    access_expires_at:
+      typeof candidate.access_expires_at === "string"
+        ? candidate.access_expires_at
+        : undefined,
+    last_access_at:
+      typeof candidate.last_access_at === "string"
+        ? candidate.last_access_at
+        : undefined,
+    logged:
+      typeof candidate.logged === "boolean" || typeof candidate.logged === "number"
+        ? candidate.logged
+        : undefined,
+    blocked: typeof candidate.blocked === "boolean" ? candidate.blocked : undefined,
+  };
+}
+
 function parseDate(dateStr: string): Date {
   if (!dateStr) return new Date();
   // If it already has T and Z, it's valid ISO, don't modify
@@ -36,11 +67,16 @@ function isAbsent(lastLogin: string): boolean {
 }
 
 /*_____________________________ Exports ________________________________*/
-export function checkPlayerStatus(player: any): string {
-  const connected = isConnected(player.access_expires_at, player.logged);
-  const absent = isAbsent(player.last_access_at);
+export function checkPlayerStatus(player: unknown): string {
+  const normalizedPlayer = normalizePlayerStatusInput(player);
 
-  if (player.blocked) return PLAYER_STATUS.blocked;
+  const connected = isConnected(
+    normalizedPlayer.access_expires_at,
+    Boolean(normalizedPlayer.logged),
+  );
+  const absent = isAbsent(normalizedPlayer.last_access_at);
+
+  if (normalizedPlayer.blocked) return PLAYER_STATUS.blocked;
   else if (!connected) return PLAYER_STATUS.inactive;
   else if (connected && absent) return PLAYER_STATUS.absent;
   else return PLAYER_STATUS.active;

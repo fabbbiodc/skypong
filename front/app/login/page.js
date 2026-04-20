@@ -60,7 +60,7 @@ export default function SignInPage() {
 
       if (!response.ok) {
         if (response.status === 404) {
-          setServerError(t.form.userNotRegistered);
+          setServerError(t.form.errors.userNotRegistered);
         } else if (response.status === 401) {
           console.warn("401 Unauthorized: ", t.form.errors.invalidCredentials);
           setServerError(t.form.errors.invalidCredentials);
@@ -90,7 +90,7 @@ export default function SignInPage() {
         <LoadingState
           variant="spinner"
           size="md"
-          text={t?.loading?.loading || "Loading..."}
+          text={t.common.loading}
         />
       ) : (
         <main className="h-dvh bg-page-bg flex flex-col">

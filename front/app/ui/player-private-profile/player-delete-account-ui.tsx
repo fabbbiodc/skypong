@@ -1,8 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import { useAuth } from "../../context/auth-context";
 import { useRouter } from "next/navigation";
 import { TextField, Button } from "../base";
+
+const getCsrfToken = (): string | undefined => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrf_token="))
+    ?.split("=")[1];
+};
 
 export default function PlayerDeleteUI() {
   const router = useRouter();
@@ -11,14 +18,6 @@ export default function PlayerDeleteUI() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Helper para obtener el token
-  const getCsrfToken = () => {
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("csrf_token="))
-      ?.split("=")[1];
-  };
 
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
@@ -35,7 +34,7 @@ export default function PlayerDeleteUI() {
 
       if (response.ok) {
         // Redirect to home or goodbye page
-        logout();
+        await logout();
         router.push("/");
       } else {
         console.error("Error deleting account");
@@ -56,7 +55,7 @@ export default function PlayerDeleteUI() {
         onClick={() => setIsModalOpen(true)}
         className="w-full"
       >
-        {t?.user?.deleteBtn || "Delete Account"}
+        {t.user.deleteBtn}
       </Button>
 
       {/* Warning Modal */}
@@ -64,18 +63,17 @@ export default function PlayerDeleteUI() {
         <div className="modal-overlay">
           <div className="modal-content">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              {t?.user?.deleteAccountTitle || "Are you absolutely sure?"}
+              {t.user.deleteAccountTitle}
             </h2>
 
             <p className="text-gray-600 mb-4">
-              {t?.user?.deleteAccountWarning ||
-                "This action cannot be undone. Your stats, friends, and progress will be deleted."}
+              {t.user.deleteAccountWarning}
             </p>
 
             <p className="text-sm text-gray-500 font-medium mb-2">
-              {t?.user?.typeConfirm || "Type"}{" "}
+              {t.user.typeConfirm}{" "}
               <span className="font-bold text-red-600 underline">CONFIRM</span>{" "}
-              {t?.user?.toContinue || "to continue"}:
+              {t.user.toContinue}:
             </p>
 
             <TextField
@@ -85,7 +83,7 @@ export default function PlayerDeleteUI() {
               onChange={setConfirmationText}
               error={
                 confirmationText && confirmationText !== "CONFIRM"
-                  ? t?.user?.mustTypeConfirm || "Must type CONFIRM exactly"
+                  ? t.user.mustTypeConfirm
                   : undefined
               }
             />
@@ -101,7 +99,7 @@ export default function PlayerDeleteUI() {
                 disabled={isDeleting}
                 className="flex-1"
               >
-                {t?.common?.cancel || "Cancel"}
+                {t.common.cancel}
               </Button>
 
               <Button
@@ -111,9 +109,7 @@ export default function PlayerDeleteUI() {
                 disabled={confirmationText !== "CONFIRM" || isDeleting}
                 className="flex-1"
               >
-                {isDeleting
-                  ? "..."
-                  : t?.user?.confirmDelete || "Delete Account"}
+                {isDeleting ? "..." : t.user.confirmDelete}
               </Button>
             </div>
           </div>

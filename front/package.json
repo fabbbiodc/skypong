@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev",
+    "check:locales": "node specs/check-locales-parity.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

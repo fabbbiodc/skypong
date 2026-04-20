@@ -22,7 +22,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { useTranslation } from "../../context/language-context";
+import { useTranslation } from "../../hooks/use-translation";
 import api from "../../api/api";
 import { Toast, Avatar, Badge, Button, Tabs } from "../base";
 import {
@@ -65,8 +65,36 @@ interface ToastState {
   type: "ok" | "err";
 }
 
+interface ApiRequestOptions {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: unknown;
+}
+
+interface ApiError {
+  message?: string;
+}
+
 // ─── Config ───────────────────────────────────────────────────────────────────
 const ACTIVE_MINS = 1;
+
+function getErrorMessage(error: unknown, fallback = "Error"): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const message = (error as ApiError).message;
+    if (typeof message === "string" && message.trim().length > 0) {
+      return message;
+    }
+  }
+  return fallback;
+}
+
+async function apiRequest<T = unknown>(url: string, options: ApiRequestOptions = {}) {
+  const response = await api(url, options);
+  return response as T;
+}
 
 // ─── Utility functions ────────────────────────────────────────────────────────
 function isConnected(sessionexpiredat?: string, isLogged?: boolean): boolean {
@@ -335,21 +363,21 @@ export default function FriendsSection({
     setFetchError(null);
     try {
       const [f, inc, out] = await Promise.all([
-        api("/api/profile/friends", {
+        apiRequest<Friend[]>("/api/profile/friends", {
           headers: { "x-csrf-token": csrf },
-        } as any),
-        api("/api/profile/friends/requests/incoming", {
+        }),
+        apiRequest<Friend[]>("/api/profile/friends/requests/incoming", {
           headers: { "x-csrf-token": csrf },
-        } as any),
-        api("/api/profile/friends/requests/outgoing", {
+        }),
+        apiRequest<Friend[]>("/api/profile/friends/requests/outgoing", {
           headers: { "x-csrf-token": csrf },
-        } as any),
+        }),
       ]);
       setFriends(Array.isArray(f) ? f : []);
       setIncoming(Array.isArray(inc) ? inc : []);
       setOutgoing(Array.isArray(out) ? out : []);
-    } catch (e: any) {
-      setFetchError(e.message);
+    } catch (e: unknown) {
+      setFetchError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
@@ -359,14 +387,14 @@ export default function FriendsSection({
     if (currentUserId) fetchAll();
   }, [currentUserId, fetchAll]);
 
-  const act = async (fn: () => Promise<any>, ok: string) => {
+  const act = async (fn: () => Promise<unknown>, ok: string) => {
     setBusy(true);
     try {
       await fn();
       notify(ok);
       await fetchAll();
-    } catch (e: any) {
-      notify(e.message || "Error", "err");
+    } catch (e: unknown) {
+      notify(getErrorMessage(e), "err");
     } finally {
       setBusy(false);
     }
@@ -375,62 +403,62 @@ export default function FriendsSection({
   const handleAccept = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}/accept`, {
+        apiRequest(`/api/profile/friends/${id}/accept`, {
           method: "POST",
           headers: { "x-csrf-token": csrf },
-        } as any),
+        }),
       t.player.requestAccepted || "✓ Request accepted",
     );
 
   const handleReject = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}/reject`, {
+        apiRequest(`/api/profile/friends/${id}/reject`, {
           method: "POST",
           headers: { "x-csrf-token": csrf },
-        } as any),
+        }),
       t.player.requestRejected || "Request rejected",
     );
 
   const handleCancel = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}/cancel`, {
+        apiRequest(`/api/profile/friends/${id}/cancel`, {
           method: "POST",
           headers: { "x-csrf-token": csrf },
-        } as any),
+        }),
       t.player.requestCancelled || "Request cancelled",
     );
 
   const handleRemove = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}`, {
+        apiRequest(`/api/profile/friends/${id}`, {
           method: "DELETE",
           headers: { "x-csrf-token": csrf },
-        } as any),
+        }),
       t.player.friendRemoved || "Friend removed",
     );
 
   const handleBlock = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}/block`, {
+        apiRequest(`/api/profile/friends/${id}/block`, {
           method: "POST",
           headers: { "x-csrf-token": csrf },
           body: { userId: currentUserId },
-        } as any),
+        }),
       t.player.playerBloqued || "Player blocked",
     );
 
   const handleUnblock = (id: string) =>
     act(
       () =>
-        api(`/api/profile/friends/${id}/unblock`, {
+        apiRequest(`/api/profile/friends/${id}/unblock`, {
           method: "POST",
           headers: { "x-csrf-token": csrf },
           body: { userId: currentUserId },
-        } as any),
+        }),
       t.player.playerUnbloqued || "Player unblocked",
     );
 

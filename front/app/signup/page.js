@@ -85,7 +85,7 @@ export default function SignUpPage() {
         <LoadingState
           variant="spinner"
           size="md"
-          text={t?.loading?.loading || "Loading..."}
+          text={t.common.loading}
         />
       ) : (
         <main className="h-dvh bg-page-bg flex flex-col">

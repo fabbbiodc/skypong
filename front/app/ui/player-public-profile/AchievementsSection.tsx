@@ -11,7 +11,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useTranslation } from "../../context/language-context";
+import { useTranslation } from "../../hooks/use-translation";
 import { ProgressBar, Badge } from "../base";
 import { cn } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,9 +27,31 @@ import {
   faStar,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
+import type { TranslationDictionary } from "@/lib/types/translation";
+
+interface AchievementStats {
+  wins?: number;
+  losses?: number;
+  winrate?: number;
+}
+
+interface AchievementItem {
+  id: string;
+  category: "log" | "win" | "games";
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  unlocked: boolean;
+  comingSoon?: boolean;
+  progress?: number;
+  goal?: number;
+}
 
 // ─── Achievement unlock logic ────────────────────────────────────────────────
-function computeAchievements(stats: any, t: any) {
+function computeAchievements(
+  stats: AchievementStats | undefined,
+  t: TranslationDictionary,
+): AchievementItem[] {
   if (!t?.achievements?.logAchievements) return [];
 
   const wins = stats?.wins ?? 0;
@@ -139,7 +161,7 @@ function computeAchievements(stats: any, t: any) {
 }
 
 // ─── Single achievement card ──────────────────────────────────────────────────
-function AchievementCard({ achievement }: { achievement: any }) {
+function AchievementCard({ achievement }: { achievement: AchievementItem }) {
   const { icon, title, description, unlocked, comingSoon, progress, goal } =
     achievement;
   const hasProgress = progress !== undefined && goal !== undefined;
@@ -198,7 +220,11 @@ function AchievementCard({ achievement }: { achievement: any }) {
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function AchievementsSection({ stats }: { stats: any }) {
+export default function AchievementsSection({
+  stats,
+}: {
+  stats?: AchievementStats;
+}) {
   const { t } = useTranslation();
   const achievements = useMemo(() => computeAchievements(stats, t), [stats, t]);
 

@@ -1,39 +1,48 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "../../hooks/use-translation";
-import { useAuth } from "../../context/auth-context";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "../../hooks/use-translation";
+import { useAuth } from "../../context/auth-context";
 import { playerPasswordSchema } from "../../lib/form-validation/player-data";
-import { TextField, Button } from "../base";
+import { Button, TextField } from "../base";
 
-const getCookie = (name) => {
+interface PasswordFormData {
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+interface PasswordErrorResponse {
+  error?: {
+    message?: string;
+  };
+}
+
+const getCookie = (name: string): string | undefined => {
   return document.cookie
     .split("; ")
-    .find((row) => row.startsWith(name + "="))
+    .find((row) => row.startsWith(`${name}=`))
     ?.split("=")[1];
 };
 
-export default function PlayerCredentialsUI({ userURL }) {
+export default function PlayerCredentialsUI() {
   const router = useRouter();
-  const { user, authloading, logout } = useAuth();
+  const { authloading, logout } = useAuth();
   const { t } = useTranslation();
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [player, setPlayer] = useState("");
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<PasswordFormData>({
     resolver: zodResolver(playerPasswordSchema(t)),
     mode: "onBlur",
   });
 
-  // ✅ Handler para actualizar datos
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: PasswordFormData) => {
     try {
       setIsLoading(true);
       setServerError("");
@@ -45,7 +54,7 @@ export default function PlayerCredentialsUI({ userURL }) {
         return;
       }
 
-      const response = await fetch(`/api/auth/password`, {
+      const response = await fetch("/api/auth/password", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -59,40 +68,38 @@ export default function PlayerCredentialsUI({ userURL }) {
       });
 
       if (response.status === 204) {
-        alert(t?.form?.passwordUpdateLoginAgain);
-        logout();
+        alert(t.form.passwordUpdateLoginAgain);
+        await logout();
         router.push("/login");
         return;
       }
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData =
+          (await response.json().catch(() => ({}))) as PasswordErrorResponse;
         setServerError(errorData.error?.message || "Error updating password");
         return;
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      setServerError(t.serverError.conectionError);
+      setServerError(t.serverError.connectionError);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Show loading
   if (authloading || isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-4">
-        <p className="text-muted">{t.common?.loading || "Loading..."}</p>
+        <p className="text-muted">{t.common.loading}</p>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-wrapper">
-      <h2 className="form-title">
-        {t.user?.changePassword || "Change Password"}
-      </h2>
-      {/* Current Password */}
+      <h2 className="form-title">{t.user.changePassword}</h2>
+
       <TextField
         name="old_password"
         type="password"
@@ -103,7 +110,6 @@ export default function PlayerCredentialsUI({ userURL }) {
         error={errors.old_password?.message}
       />
 
-      {/* New Password */}
       <TextField
         name="new_password"
         type="password"
@@ -114,7 +120,6 @@ export default function PlayerCredentialsUI({ userURL }) {
         error={errors.new_password?.message}
       />
 
-      {/* Confirm New Password */}
       <TextField
         name="confirm_password"
         type="password"

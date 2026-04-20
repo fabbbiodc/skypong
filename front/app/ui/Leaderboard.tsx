@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { Avatar, Badge } from "./base";
-import { useTranslation } from "../context/language-context";
+import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/navigation";
 import {
   checkPlayerStatus,

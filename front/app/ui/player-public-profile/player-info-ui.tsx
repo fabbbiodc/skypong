@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, StatCard } from "../base";
-import { useTranslation } from "../../context/language-context";
+import { useTranslation } from "../../hooks/use-translation";
 import AddFriendButton from "./AddFriendButton";
 import { useAuth } from "../../context/auth-context";
 import {

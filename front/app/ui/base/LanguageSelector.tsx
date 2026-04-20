@@ -2,7 +2,8 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "@/context/language-context";
+import { useTranslation } from "@/hooks/use-translation";
+import type { Locale } from "@/lib/i18n/types";
 import { Button } from "./Button";
 
 const languageSelectorVariants = cva("flex gap-4", {
@@ -24,7 +25,7 @@ interface LanguageSelectorProps {
   className?: string;
 }
 
-const languages = [
+const languages: Array<{ code: Locale; label: string }> = [
   { code: "es", label: "ESP" },
   { code: "en", label: "ENG" },
   { code: "it", label: "ITA" },
@@ -41,7 +42,7 @@ export function LanguageSelector({
       {languages.map((lang) => (
         <Button
           key={lang.code}
-          onClick={() => changeLanguage(lang.code as "en" | "es" | "it")}
+          onClick={() => changeLanguage(lang.code)}
           variant={locale === lang.code ? "primary" : "ghost"}
           size="sm"
         >

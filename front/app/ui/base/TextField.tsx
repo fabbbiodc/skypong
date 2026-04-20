@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
 const inputVariants = cva(
   "w-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
@@ -50,7 +51,7 @@ type InputVariant = VariantProps<typeof inputVariants>["variant"];
 type InputSize = VariantProps<typeof inputVariants>["size"];
 type InputState = VariantProps<typeof inputVariants>["state"];
 
-interface TextFieldProps {
+interface TextFieldProps<TFieldValues extends FieldValues = FieldValues> {
   variant?: InputVariant;
   size?: InputSize;
   state?: InputState;
@@ -63,14 +64,14 @@ interface TextFieldProps {
   type?: "text" | "email" | "password" | "number" | "tel" | "url";
   className?: string;
   disabled?: boolean;
-  name?: string;
-  register?: any;
+  name?: Path<TFieldValues>;
+  register?: UseFormRegister<TFieldValues>;
   autoComplete?: string;
   required?: boolean;
   id?: string;
 }
 
-export function TextField({
+export function TextField<TFieldValues extends FieldValues = FieldValues>({
   variant = "filled",
   size = "md",
   state: propState,
@@ -88,7 +89,7 @@ export function TextField({
   autoComplete,
   required = false,
   id,
-}: TextFieldProps) {
+}: TextFieldProps<TFieldValues>) {
   const hasError = !!error;
   const state: InputState = hasError ? "error" : (propState ?? "default");
 

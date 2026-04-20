@@ -5,31 +5,79 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
   useCallback,
   useRef,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
-const AuthContext = createContext({
-  user: null,
-  authloading: true,
-  hasCredentials: false,
-  logout: async () => {},
-  checkAuth: async () => {
-    return false;
-  }, // Útil para re-validar tras login
-});
+const SIGN_ROUTES = new Set(["/login", "/signup"]);
+const PRIVATE_ROUTES = new Set(["/updateme", "/me"]);
+
+interface UserStats {
+  wins?: number;
+  losses?: number;
+  total_games?: number;
+  played?: number;
+  winrate?: number;
+  [key: string]: unknown;
+}
+
+export interface AuthUser {
+  id: string;
+  nickname?: string;
+  avatarUrl?: string;
+  avatarURL?: string;
+  winPhrase?: string;
+  stats?: UserStats;
+  [key: string]: unknown;
+}
+
+export interface AuthContextValue {
+  user: AuthUser | null;
+  authloading: boolean;
+  hasCredentials: boolean;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<boolean>;
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+const getCsrfToken = (): string | undefined => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrf_token="))
+    ?.split("=")[1];
+};
+
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null;
+};
+
+const isAuthUser = (value: unknown): value is AuthUser => {
+  return isObject(value) && typeof value.id === "string";
+};
+
+const extractAuthUser = (value: unknown): AuthUser | null => {
+  if (isAuthUser(value)) {
+    return value;
+  }
+
+  if (isObject(value) && isAuthUser(value.user)) {
+    return value.user;
+  }
+
+  return null;
+};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [authloading, setAuthloading] = useState(true);
   const [hasCredentials, setHasCredentials] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
-  const signRoutes = ["/login", "/signup"];
-  const privateRoutes = ["/updateme", "/me"];
+  const pathname = usePathname() || "/";
 
   // Mutex: if checkAuth is already in-flight, reuse the same promise
   const inflightRef = useRef<Promise<boolean> | null>(null);
@@ -43,16 +91,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuthloading(true);
 
       try {
-        const getCSRF = () =>
-          document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("csrf_token="))
-            ?.split("=")[1];
-
-        let csrfToken = getCSRF();
+        let csrfToken = getCsrfToken();
 
         if (!csrfToken) {
           setUser(null);
+          setHasCredentials(false);
           return false;
         }
 
@@ -63,9 +106,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
         if (!refresh.ok) {
           setUser(null);
+          setHasCredentials(false);
           return false;
         }
-        csrfToken = getCSRF();
+        csrfToken = getCsrfToken();
 
         const res = await fetch("/api/profile/me", {
           credentials: "include",
@@ -74,11 +118,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (res.status === 401 || !res.ok) {
           setUser(null);
+          setHasCredentials(false);
           return false;
         }
 
         const userData = await res.json();
-        setUser(userData);
+        const nextUser = extractAuthUser(userData);
+
+        if (!nextUser) {
+          setUser(null);
+          setHasCredentials(false);
+          return false;
+        }
+
+        setUser(nextUser);
         setHasCredentials(true);
         return true;
       } catch {
@@ -102,8 +155,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       const loggedIn = await checkAuth();
 
-      const isSignRoute = signRoutes.includes(pathname);
-      const isPrivateRoute = privateRoutes.includes(pathname);
+      const isSignRoute = SIGN_ROUTES.has(pathname);
+      const isPrivateRoute = PRIVATE_ROUTES.has(pathname);
 
       if (loggedIn && isSignRoute) {
         router.replace("/me");
@@ -113,48 +166,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, [pathname, router, checkAuth]);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
-      /*		const csrfToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrf_token='))
-        ?.split('=')[1];*/
-
-      const getCSRF = () =>
-        document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("csrf_token="))
-          ?.split("=")[1];
-
-      let csrfToken = getCSRF();
-
-      // 1. Obtener el CSRF token de las cookies (document.cookie)
-      // Tu backend Fastify lo guarda en una cookie no httpOnly llamada 'csrf_token'
+      const csrfToken = getCsrfToken();
 
       await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include",
-        // body: JSON.stringify({ user: { id: user.id }}),
+        headers: { "x-csrf-token": csrfToken || "" },
       });
     } catch (err) {
       console.error("Error durante el logout:", err);
-      return;
     } finally {
-      // 2. Limpiar el estado local e ir a home pase lo que pase
       setUser(null);
       setHasCredentials(false);
-      router.push("/login");
+      setAuthloading(false);
       router.refresh(); // Limpia la caché de Next.js
     }
-  };
+  }, [router]);
+
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, authloading, hasCredentials, logout, checkAuth }),
+    [user, authloading, hasCredentials, logout, checkAuth],
+  );
 
   return (
-    <AuthContext.Provider
-      value={{ user, authloading, hasCredentials, logout, checkAuth }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextValue => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
+};

@@ -712,6 +712,145 @@ const myComponentVariants = cva("base classes", {
   - `front/app/ui/messaging/toast.js`
   - `front/app/ui/base/GrainientBackground.tsx`
 
+**Strict typing hardening pass:**
+
+- Added shared translation type export module:
+  - `front/app/lib/types/translation.ts`
+
+- Typed translation context exports and consumers:
+  - `front/app/context/language-context.tsx`
+
+- Updated schema utilities to typed translation input:
+  - `front/app/lib/form-validation/auth.ts`
+  - `front/app/lib/form-validation/player-data.ts`
+  - `front/app/lib/game/launch-config.ts`
+
+- Reworked `TextField` register typing to generic `react-hook-form` types:
+  - `front/app/ui/base/TextField.tsx`
+
+- Added explicit domain typing in profile feature modules:
+  - `front/app/ui/player-public-profile/AchievementsSection.tsx`
+  - `front/app/ui/player-public-profile/FriendsSection.tsx`
+  - `front/app/lib/players/check-player-status.ts`
+
+- Updated demo/test page typing:
+  - `front/app/ui-test/page.tsx`
+
+- Validation: `npm exec tsc -- --noEmit` and
+  `npm exec next build -- --webpack` both pass after strict typing updates.
+
+**i18n parity + locale typing hardening (continuation):**
+
+- Verified locale dictionary key parity across:
+  - `front/app/lib/i18n/locales/en.ts`
+  - `front/app/lib/i18n/locales/es.ts`
+  - `front/app/lib/i18n/locales/it.ts`
+
+- Fixed missing locale key mismatch discovered by strict dictionary check:
+  - Added `profile.leaderboard.player` to `front/app/lib/i18n/locales/es.ts`
+
+- Centralized locale definitions in new module:
+  - Added `front/app/lib/i18n/types.ts`
+  - Exports `SUPPORTED_LOCALES`, `Locale`, `DEFAULT_LOCALE`, `isLocale`
+
+- Hardened locale manager typing and validation:
+  - Updated `front/app/lib/i18n/locale-manager.ts`
+  - `getCurrentLocale()` returns validated `Locale`
+  - `setCurrentLocale()` accepts `Locale`
+
+- Removed dictionary cast fallbacks from context by using structural validation:
+  - Updated `front/app/context/language-context.tsx`
+  - Dictionaries now use `satisfies Record<Locale, TranslationDictionary>`
+
+- Decoupled translation type exports from context module:
+  - Updated `front/app/lib/types/translation.ts`
+  - `TranslationDictionary` now derives from `locales/en.ts`
+  - `Locale` re-exported from `lib/i18n/types.ts`
+
+- Cleaned known invalid/legacy translation key usage patterns:
+  - `front/app/login/page.js`
+    - `t.form.userNotRegistered` -> `t.form.errors.userNotRegistered`
+    - `t?.loading?.loading` -> `t.common.loading`
+  - `front/app/signup/page.js`
+    - `t?.loading?.loading` -> `t.common.loading`
+  - `front/app/ui/player-private-profile/avatar-ui.js`
+    - `invalidFormat` -> `invalidImageFormat`
+  - `front/app/ui/player-private-profile/player-ui.js`
+    - `conectionError` -> `connectionError`
+  - `front/app/ui/player-private-profile/player-credentials-ui.js`
+    - `conectionError` -> `connectionError`
+
+- Removed locale cast in language selector with typed language options:
+  - Updated `front/app/ui/base/LanguageSelector.tsx`
+
+- Validation rerun:
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+
+**Private profile TS migration + import consistency (continuation):**
+
+- Migrated remaining private-profile UI modules from JS to TSX:
+  - `front/app/ui/player-private-profile/avatar-ui.tsx`
+  - `front/app/ui/player-private-profile/player-ui.tsx`
+  - `front/app/ui/player-private-profile/player-credentials-ui.tsx`
+  - `front/app/ui/player-private-profile/player-delete-account-ui.tsx`
+
+- Removed replaced JS modules:
+  - `front/app/ui/player-private-profile/avatar-ui.js`
+  - `front/app/ui/player-private-profile/player-ui.js`
+  - `front/app/ui/player-private-profile/player-credentials-ui.js`
+  - `front/app/ui/player-private-profile/player-delete-account-ui.js`
+
+- Added typed interfaces for private profile data flow:
+  - profile fetch/update payload typing in `player-ui.tsx`
+  - password form + error payload typing in `player-credentials-ui.tsx`
+  - migrated components now consume typed `useAuth()` without local casts
+
+- Normalized translation hook import paths across UI/pages:
+  - switched remaining direct `context/language-context` consumers to
+    `hooks/use-translation` (except intentional provider/re-export modules)
+
+- Added locale parity guardrail script:
+  - Added `front/specs/check-locales-parity.mjs`
+  - Added npm script in `front/package.json`:
+    - `check:locales`
+  - Script verifies key-path existence and type-kind parity across
+    `en/es/it` dictionaries and exits non-zero on mismatch
+
+- Validation rerun after migration:
+  - `npm run check:locales` passes
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+
+**Auth context typing hardening (continuation):**
+
+- Refactored `front/app/context/auth-context.tsx` to explicit context typing:
+  - Added `AuthUser` and `AuthContextValue` exports
+  - Typed `AuthContext` as `AuthContextValue | undefined`
+  - `useAuth()` now throws outside provider scope
+
+- Added response-shape guards for profile identity extraction:
+  - Added `isObject`, `isAuthUser`, and `extractAuthUser`
+  - Handles `/api/profile/me` payloads robustly (direct user or nested `user`)
+
+- Cleaned auth context internals:
+  - Centralized CSRF token read with `getCsrfToken()` helper
+  - Replaced route arrays with `SIGN_ROUTES` / `PRIVATE_ROUTES` sets
+
+- Updated logout behavior contract:
+  - Provider clears auth state and refreshes router cache
+  - Navigation after logout is handled by caller components
+
+- Removed temporary `useAuth` casting from private-profile TSX modules:
+  - `front/app/ui/player-private-profile/avatar-ui.tsx`
+  - `front/app/ui/player-private-profile/player-ui.tsx`
+  - `front/app/ui/player-private-profile/player-credentials-ui.tsx`
+  - `front/app/ui/player-private-profile/player-delete-account-ui.tsx`
+
+- Validation rerun after auth-context hardening:
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+
 ---
 
 ### 2026-04-16 (continued)

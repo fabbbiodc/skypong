@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { TranslationDictionary } from "@/lib/types/translation";
 
 /** Supported game modes for launch configuration. */
 export const GAME_MODES = ["AI", "ONLINE", "LOCAL"] as const;
@@ -16,14 +17,16 @@ export interface GameConfig {
   readonly onlineRole?: "create" | "join";
 }
 
-function createGameConfigSchema(t?: any) {
+function createGameConfigSchema(t?: TranslationDictionary) {
+  const gameErrors = t?.game?.errors;
+
   const messages = {
     difficultyRequired:
-      t?.game?.difficultyRequired || "AI mode requires a difficulty setting.",
+      gameErrors?.difficultyRequired || "AI mode requires a difficulty setting.",
     diffultyOnlyAIMode:
-      t?.game?.diffultyOnlyAIMode || "Only AI mode can include difficulty.",
+      gameErrors?.difficultyOnlyAIMode || "Only AI mode can include difficulty.",
     onlineRoleOnlyForOlineMode:
-      t?.game.onlineRoleOnlyForOlineMode ||
+      gameErrors?.onlineRoleOnlyForOnlineMode ||
       "Only ONLINE mode can include onlineRole.",
   };
   return z

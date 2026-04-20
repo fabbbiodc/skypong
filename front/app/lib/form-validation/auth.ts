@@ -1,7 +1,8 @@
 // /app/lib/form-validation/auth.ts
 import { z } from "zod";
+import type { TranslationDictionary } from "@/lib/types/translation";
 
-export const loginSchema = (t: any) => {
+export const loginSchema = (t: TranslationDictionary) => {
   // Define errores con valores por defecto
   const errors = {
     emailRequired: t?.form?.errors?.emailRequired || "Email is required",
@@ -34,7 +35,7 @@ export const loginSchema = (t: any) => {
   });
 };
 
-export const signUpSchema = (t: any) => {
+export const signUpSchema = (t: TranslationDictionary) => {
   const errors = {
     emailRequired: t?.form?.errors?.emailRequired || "Email is required",
     emailMinLength:
