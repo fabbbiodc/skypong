@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
-const tabsContainerVariants = cva("flex gap-2 border-b border-gray-200", {
+const tabsContainerVariants = cva("flex gap-2 border-b border-slate-700", {
   variants: {
     variant: {
       underline: "border-b-2",
       pills: "border-none gap-1",
-      boxed: "border rounded-lg p-1 bg-gray-50",
+      boxed: "border rounded-lg p-1 bg-slate-800/30",
     },
     size: {
       sm: "text-sm",
@@ -24,7 +24,7 @@ const tabsContainerVariants = cva("flex gap-2 border-b border-gray-200", {
 });
 
 const tabVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2",
+  "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 text-slate-300",
   {
     variants: {
       variant: {
@@ -45,13 +45,13 @@ const tabVariants = cva(
       {
         variant: "underline",
         active: true,
-        className: "border-primary text-primary font-semibold",
+        className: "border-primary text-white font-semibold",
       },
       {
         variant: "underline",
         active: false,
         className:
-          "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300",
+          "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-600",
       },
       {
         variant: "pills",
@@ -62,17 +62,17 @@ const tabVariants = cva(
         variant: "pills",
         active: false,
         className:
-          "bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+          "bg-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200",
       },
       {
         variant: "boxed",
         active: true,
-        className: "bg-white shadow-sm text-primary font-semibold",
+        className: "bg-slate-800/50 shadow-sm text-white font-semibold",
       },
       {
         variant: "boxed",
         active: false,
-        className: "bg-transparent text-gray-600 hover:text-gray-900",
+        className: "bg-transparent text-slate-400 hover:text-slate-200",
       },
     ],
     defaultVariants: {
@@ -146,8 +146,8 @@ export function Tabs({
                 className={cn(
                   "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold rounded-full",
                   isActive
-                    ? "bg-white text-primary"
-                    : "bg-gray-200 text-gray-700",
+                    ? "bg-primary text-white"
+                    : "bg-slate-700 text-slate-300",
                 )}
               >
                 {tab.badge}

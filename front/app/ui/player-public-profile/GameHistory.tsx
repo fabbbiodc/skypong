@@ -61,7 +61,7 @@ function getPlayerLink(profileId: string, playerId: string, nickname: string) {
     (user && isMe(playerId, user.id)) ||
     isAI(playerId)
   )
-    return <span className="text-sm font-medium text-gray-900">{nickname}</span>;
+    return <span className="text-sm font-medium text-white">{nickname}</span>;
   else
     return (
       <Link

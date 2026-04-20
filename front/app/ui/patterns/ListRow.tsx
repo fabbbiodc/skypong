@@ -3,15 +3,15 @@ import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
 const listRowVariants = cva(
-  "flex items-center gap-3 p-3 md:p-4 rounded-xl border-2 border-transparent bg-white transition-all duration-200",
+  "flex items-center gap-3 p-3 md:p-4 rounded-xl border-2 border-transparent bg-slate-800/10 backdrop-blur-md transition-all duration-200 text-white",
   {
     variants: {
       variant: {
         default: "",
-        highlighted: "bg-purple-50 border-primary",
-        success: "bg-green-50 border-green-500",
-        warning: "bg-amber-50 border-amber-500",
-        danger: "bg-red-50 border-red-500",
+        highlighted: "bg-slate-800/30 border-slate-600",
+        success: "bg-emerald-500/10 border-emerald-500/50",
+        warning: "bg-amber-500/10 border-amber-500/50",
+        danger: "bg-red-500/10 border-red-500/50",
       },
       size: {
         sm: "p-2 py-2 text-sm",
@@ -20,7 +20,7 @@ const listRowVariants = cva(
       },
       state: {
         default: "",
-        hover: "hover:border-primary hover:shadow-md cursor-pointer",
+        hover: "hover:border-slate-600 hover:shadow-md cursor-pointer",
         active: "active:scale-[0.98]",
         disabled: "opacity-50 cursor-not-allowed",
       },

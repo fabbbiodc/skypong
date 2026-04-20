@@ -62,17 +62,17 @@ export default function PlayerDeleteUI() {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               {t.user.deleteAccountTitle}
             </h2>
 
-            <p className="text-gray-600 mb-4">
+            <p className="text-slate-300 mb-4">
               {t.user.deleteAccountWarning}
             </p>
 
-            <p className="text-sm text-gray-500 font-medium mb-2">
+            <p className="text-sm text-slate-400 font-medium mb-2">
               {t.user.typeConfirm}{" "}
-              <span className="font-bold text-red-600 underline">CONFIRM</span>{" "}
+              <span className="font-bold text-red-500 underline">CONFIRM</span>{" "}
               {t.user.toContinue}:
             </p>
 

@@ -6,9 +6,9 @@ const sectionVariants = cva("", {
   variants: {
     variant: {
       default: "",
-      card: "bg-white rounded-xl border border-gray-200",
-      elevated: "bg-white rounded-xl shadow-md",
-      bordered: "bg-white rounded-xl border-2 border-primary",
+      card: "bg-slate-800/10 backdrop-blur-md rounded-xl border border-slate-700/30",
+      elevated: "bg-slate-800/20 backdrop-blur-md rounded-xl shadow-md",
+      bordered: "bg-slate-800/20 backdrop-blur-md rounded-xl border-2 border-slate-600",
     },
     padding: {
       none: "p-0",
@@ -60,11 +60,11 @@ export function Section({
       {(title || subtitle) && (
         <div className="mb-4">
           {title && (
-            <h2 className="text-xl md:text-2xl font-bold font-display text-gray-900">
+            <h2 className="text-xl md:text-2xl font-bold font-display text-white">
               {title}
             </h2>
           )}
-          {subtitle && <p className="text-sm text-muted mt-1">{subtitle}</p>}
+          {subtitle && <p className="text-sm text-slate-400 mt-1">{subtitle}</p>}
         </div>
       )}
       {children}

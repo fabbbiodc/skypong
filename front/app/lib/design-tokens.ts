@@ -13,67 +13,74 @@
 //
 // ============================================
 
-// COLORS
+// COLORS - Modern Minimalist Dark Theme
 export const colors = {
-  // Primary - Purple
+  // Primary - Slate (neutral, modern)
   primary: {
-    DEFAULT: "#9333ea",
-    hover: "#7e22ce",
-    pressed: "#D0BCFF",
-    light: "#faf5ff",
+    DEFAULT: "#475569",
+    hover: "#334155",
+    pressed: "#1e293b",
+    light: "#f1f5f9",
   },
-  // Secondary - Gray
+  // Secondary - Slate (complementary neutral)
   secondary: {
-    DEFAULT: "#4b5563",
-    hover: "#374151",
+    DEFAULT: "#64748b",
+    hover: "#475569",
   },
-  // Danger - Red
+  // Success - Emerald
+  success: {
+    DEFAULT: "#10b981",
+    hover: "#059669",
+  },
+  // Danger - Red (warnings, destructive)
   danger: {
-    DEFAULT: "#dc2626",
-    hover: "#b91c1c",
+    DEFAULT: "#ef4444",
+    hover: "#dc2626",
   },
-  // Ghost - Transparent
+  // Ghost - Transparent (subtle interactions)
   ghost: {
     DEFAULT: "transparent",
-    hover: "#f3f4f6",
+    hover: "rgba(71, 85, 105, 0.1)",
   },
 
   // Semantic groupings
   background: {
     page: "transparent",
-    card: "#ffffff",
-    content: "#f9fafb",
+    card: "#1e293b",
+    cardFrosted: "rgba(30, 41, 59, 0.1)",
+    surface: "#0f172a",
+    content: "#1e293b",
   },
   border: {
-    DEFAULT: "#d1d5db",
-    hover: "#9ca3af",
-    focus: "#a855f7",
+    DEFAULT: "#334155",
+    hover: "#475569",
+    focus: "#64748b",
     error: "#ef4444",
   },
   text: {
-    primary: "#111827",
-    secondary: "#6b7280",
-    muted: "#64748b",
-    link: "#9333ea",
+    primary: "#ffffff",
+    secondary: "#cbd5e1",
+    muted: "#94a3b8",
+    link: "#64748b",
   },
 
-  // Chip colors
+  // Chip colors (updated for dark theme)
   chip: {
-    default: { bg: "#f3f4f6", text: "#1f2937" },
-    success: { bg: "#d1fae5", text: "#065f46" },
-    warning: { bg: "#fef3c7", text: "#92400e" },
-    error: { bg: "#fee2e2", text: "#991b1b" },
+    default: { bg: "#334155", text: "#e2e8f0" },
+    success: { bg: "#10b981", text: "#f0fdf4" },
+    warning: { bg: "#f59e0b", text: "#fffbeb" },
+    error: { bg: "#ef4444", text: "#fef2f2" },
   },
 
-  // Input backgrounds
+  // Input backgrounds (dark theme)
   input: {
-    filled: "#d4c2fc",
-    filledHover: "#e5e7eb",
-    filledFocus: "#ffffff",
+    filled: "#334155",
+    filledHover: "#475569",
+    filledFocus: "#1e293b",
   },
 
-  // Focus ring
-  focus: "#a855f7",
+  // Focus ring (subtle for dark backgrounds)
+  focus: "#64748b",
 } as const;
 
 // TYPOGRAPHY
@@ -149,10 +156,28 @@ export const transitions = {
     fast: "150ms",
     DEFAULT: "200ms",
     slow: "300ms",
+    slower: "500ms",
   },
   easings: {
     DEFAULT: "ease-in-out",
+    in: "ease-in",
+    out: "ease-out",
   },
+} as const;
+
+// Z-INDEX MANAGEMENT
+export const zIndex = {
+  hide: "-10",
+  base: "0",
+  dropdown: "40",
+  sticky: "20",
+  fixed: "30",
+  modalBackdrop: "50",
+  modal: "60",
+  popover: "70",
+  notification: "80",
+  navbar: "50",
+  tooltip: "85",
 } as const;
 
 // CSS VARIABLE NAMES
@@ -206,9 +231,12 @@ export const variants = {
 // BACKGROUNDS
 
 export const backgrounds = {
-  main: "bg-white",
+  main: "bg-slate-800",
+  mainFrosted: "bg-slate-800/10 backdrop-blur-md",
   transparent: "bg-transparent",
   primary: "bg-primary",
+  surface: "bg-slate-900",
+  surfaceFrosted: "bg-slate-900/20 backdrop-blur-md",
 } as const;
 
 // SHADOW CLASSES (for CVA usage)
@@ -237,17 +265,20 @@ export const navbar = {
     desktop: "px-8 py-4",
     mobile: "px-6 py-3",
   },
+  background: backgrounds.mainFrosted,
   shadow: shadowClasses.lg,
   transitions: transitions.durations.DEFAULT,
+  textColor: "text-white",
   dropdown: {
-    container: "absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1",
+    container: "absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1",
     buttonAlignment: "w-full justify-start",
+    textColor: "text-white",
   },
   hamburger: {
-    container: "p-2 hover:bg-gray-100 rounded-lg transition-colors text-primary",
+    container: "p-2 hover:bg-slate-700/50 rounded-lg transition-colors text-slate-300",
     iconSize: "lg",
   },
-  userLabel: "flex items-center mr-2 text-sm text-right",
+  userLabel: "flex items-center mr-2 text-sm text-right text-slate-300",
   avatar: "cursor-pointer",
 } as const;
 
@@ -256,7 +287,7 @@ export const homepage = {
   mainContainer: {
     height: "h-dvh",
     background: backgrounds.transparent,
-    textColor: "text-slate-900",
+    textColor: "text-white",
     padding: "lg:px-10",
     layout: "flex flex-col",
   },
@@ -270,7 +301,7 @@ export const homepage = {
       desktop: "lg:h-[70%] lg:flex-none",
     },
     maxWidth: "max-w-full",
-    background: backgrounds.main,
+    background: backgrounds.mainFrosted,
     radius: "rounded-[2.5rem]",
     shadow: shadowClasses.md,
     padding: {
@@ -287,6 +318,7 @@ export const homepage = {
       tablet: "md:gap-8 md:py-6",
       desktop: "lg:gap-10 lg:py-10",
     },
+    textColor: "text-white",
   },
   footer: {
     position: "mt-auto pb-4",
@@ -307,15 +339,15 @@ export const buttonMenu = {
 
 // ============ DROPDOWN CONTAINERS ============
 export const dropdownContainer = {
-  desktop: "absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1",
+  desktop: "absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1",
   mobile: {
     positioning: "absolute top-full left-0 right-0 mt-2",
-    background: backgrounds.main,
+    background: backgrounds.mainFrosted,
     radius: "rounded-2xl",
     shadow: shadowClasses.lg,
-    border: "border border-gray-200",
     padding: "px-4 py-4 flex flex-col gap-1",
     alignment: "items-center",
+    textColor: "text-white",
   },
 } as const;
 
@@ -343,14 +375,14 @@ export const authPages = {
     layout: "flex flex-col gap-4 w-full",
   },
   formTitle: {
-    subtitle: "text-sm md:text-lg mb-2 block",
-    title: "text-lg md:text-xl mb-6",
+    subtitle: "text-sm md:text-lg mb-2 block text-slate-300",
+    title: "text-lg md:text-xl mb-6 text-white",
   },
   formField: "w-full",
   errorSpace: "error-message-space",
-  errorMessage: "error-message",
+  errorMessage: "error-message text-red-400",
   footer: "mt-auto pb-4",
-  link: "text-primary hover:text-primary-hover transition-colors duration-200",
+  link: "text-slate-300 hover:text-slate-200 transition-colors duration-200",
 } as const;
 
 // ============ PROFILE PAGES (ME, [ID]) ============
@@ -378,9 +410,9 @@ export const settingsPages = {
 export const legalPages = {
   mainContainer: "h-dvh bg-page-bg flex flex-col",
   centerContainer: "flex flex-1 items-center justify-center",
-  title: "text-3xl font-bold mb-4",
+  title: "text-3xl font-bold mb-4 text-white",
   footer: "mt-auto pb-4",
-  link: "text-primary hover:text-primary-hover transition-colors duration-200",
+  link: "text-slate-300 hover:text-slate-200 transition-colors duration-200",
 } as const;
 
 // ============ MAIN CONTAINERS (NAVBAR-AWARE) ============
@@ -389,21 +421,21 @@ export const legalPages = {
 export const mainContainers = {
   // For pages where content is vertically centered (game-mode, play)
   centeredLayout: {
-    wrapper: "h-dvh bg-page-bg flex flex-col",
+    wrapper: "h-dvh bg-page-bg flex flex-col text-white",
     contentArea: "flex flex-1 items-center justify-center pt-[70px]",
     footer: "mt-auto pb-4",
   },
   
   // For pages where content starts at top (login, signup, terms, privacy)
   topLayout: {
-    wrapper: "h-dvh bg-page-bg flex flex-col",
+    wrapper: "h-dvh bg-page-bg flex flex-col text-white",
     contentArea: "flex flex-1 items-center justify-center pt-[70px]",
     footer: "mt-auto pb-4",
   },
   
   // For pages with scrollable content (profiles with tabs)
   scrollableLayout: {
-    wrapper: "min-h-dvh bg-page-bg flex flex-col",
+    wrapper: "min-h-dvh bg-page-bg flex flex-col text-white",
     contentArea: "flex flex-1 items-start justify-center pt-[70px]",
     footer: "pb-4",
   },
@@ -419,6 +451,7 @@ export type ChipVariant =
   (typeof variants.chipState)[keyof typeof variants.chipState];
 export type BackgroundToken = keyof typeof backgrounds;
 export type ShadowClassToken = keyof typeof shadowClasses;
+export type ZIndexToken = keyof typeof zIndex;
 
 // Component token types
 export type NavbarToken = typeof navbar;

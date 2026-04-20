@@ -130,7 +130,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
         ) : (
           <div className="relative" ref={dropdownRef}>
             <div className="flex items-stretch justify-center p-2">
-              <span className="flex items-center mr-2 text-sm text-right">
+              <span className="flex items-center mr-2 text-sm text-right text-slate-300">
                 {user?.nickname || "User"}
               </span>
               <Avatar
@@ -142,7 +142,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1 z-[60]">
+              <div className="absolute right-0 mt-2 w-48 bg-slate-800/20 backdrop-blur-md rounded-lg shadow-lg py-2 flex flex-col gap-1 z-[60]">
                 <Button
                   variant="primary"
                   size="sm"

@@ -169,7 +169,7 @@ export default function GlobalChatUI() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <FontAwesomeIcon icon={faCommentDots} className="text-primary" />
-              <span className="font-display font-bold text-gray-900">
+              <span className="font-display font-bold text-white">
                 {t?.chat?.title || "Global Chat"}
               </span>
               <Badge
@@ -185,7 +185,7 @@ export default function GlobalChatUI() {
               variant="ghost"
               size="sm"
               onClick={() => setIsMinimized(true)}
-              className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full"
+              className="h-8 w-8 p-0 hover:bg-slate-700/30 rounded-full"
               aria-label="Minimize global chat"
             >
               <span className="text-xl leading-none">−</span>
@@ -193,9 +193,9 @@ export default function GlobalChatUI() {
           </div>
 
           {/* Messages Container */}
-          <div className="h-[220px] overflow-y-auto rounded-lg bg-gray-50 border border-gray-200 p-3 mb-3 scroll-smooth">
+          <div className="h-[220px] overflow-y-auto rounded-lg bg-slate-800/10 backdrop-blur-md border border-slate-700 p-3 mb-3 scroll-smooth">
             {messages.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4">
+              <p className="text-sm text-slate-400 text-center py-4">
                 {t?.chat?.noMessages ||
                   "No messages yet. Start the conversation!"}
               </p>
@@ -205,14 +205,14 @@ export default function GlobalChatUI() {
                   <div
                     key={`${message.timestamp || "no-ts"}-${index}`}
                     className={cn(
-                      "pb-2 border-b border-gray-200 last:border-0",
+                      "pb-2 border-b border-slate-700 last:border-0",
                       "break-words text-sm",
                     )}
                   >
                     <span className="font-semibold text-primary">
                       {message.sender}:
                     </span>{" "}
-                    <span className="text-gray-700">{message.text}</span>
+                    <span className="text-slate-300">{message.text}</span>
                   </div>
                 ))}
                 <div ref={messagesEndRef} />

@@ -179,7 +179,7 @@ function AchievementCard({ achievement }: { achievement: AchievementItem }) {
 
       {/* Content */}
       <div className="achievement-content">
-        <h4 className="text-sm md:text-base font-semibold font-display text-gray-900 mb-1">
+        <h4 className="text-sm md:text-base font-semibold font-display text-white mb-1">
           {title}
         </h4>
         <p className="text-xs md:text-sm text-muted mb-3">{description}</p>
@@ -210,7 +210,7 @@ function AchievementCard({ achievement }: { achievement: AchievementItem }) {
 
         {/* Lock indicator for locked achievements */}
         {!unlocked && !comingSoon && (
-          <div className="absolute top-3 right-3 text-gray-400 text-sm">
+          <div className="absolute top-3 right-3 text-slate-400 text-sm">
             <FontAwesomeIcon icon={faLock} className="text-primary" />
           </div>
         )}

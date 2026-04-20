@@ -2,13 +2,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
-const cardVariants = cva("bg-white rounded-xl transition-all duration-200", {
+const cardVariants = cva("rounded-xl transition-all duration-200", {
   variants: {
     variant: {
-      default: "border border-gray-200",
-      elevated: "shadow-md hover:shadow-lg",
-      bordered: "border-2 border-primary",
-      ghost: "border border-transparent hover:border-gray-200",
+      default: "bg-slate-800/10 backdrop-blur-md border border-slate-700/30",
+      elevated: "bg-slate-800/20 backdrop-blur-md shadow-md hover:shadow-lg border border-slate-700/30",
+      bordered: "bg-slate-800/20 backdrop-blur-md border-2 border-slate-600",
+      ghost: "bg-transparent border border-transparent hover:border-slate-700/50",
     },
     padding: {
       none: "p-0",
@@ -18,7 +18,7 @@ const cardVariants = cva("bg-white rounded-xl transition-all duration-200", {
     },
     state: {
       default: "",
-      hover: "hover:border-primary-hover",
+      hover: "hover:border-slate-600",
       active: "active:scale-[0.98]",
       disabled: "opacity-50 pointer-events-none",
     },
@@ -59,7 +59,7 @@ export function Card({
 }: CardProps) {
   const cardClass = cn(
     cardVariants({ variant, padding, state }),
-    onClick && "cursor-pointer hover:border-primary",
+    onClick && "cursor-pointer hover:border-slate-600",
     className,
   );
 
@@ -70,12 +70,12 @@ export function Card({
           {icon && <div className="text-2xl">{icon}</div>}
           <div className="flex-1 min-w-0">
             {title && (
-              <h3 className="text-lg md:text-xl font-semibold font-display text-gray-900">
+              <h3 className="text-lg md:text-xl font-semibold font-display text-white">
                 {title}
               </h3>
             )}
             {subtitle && (
-              <p className="text-sm md:text-base text-muted mt-1">{subtitle}</p>
+              <p className="text-sm md:text-base text-slate-400 mt-1">{subtitle}</p>
             )}
           </div>
         </div>

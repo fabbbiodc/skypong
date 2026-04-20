@@ -8,7 +8,7 @@
 import { Color3, Vector3 } from "@babylonjs/core";
 
 export const GAME_SCENE_BG_CONFIG = {
-  // Environment texture (symlinked from game/client/public)
+  // Environment texture (copied from game/client/public)
   ENVIRONMENT: {
     TEXTURE_PATH: "./environment/dramatic-sky1.exr",
     TEXTURE_SIZE: 512,

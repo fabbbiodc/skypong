@@ -10,42 +10,46 @@
    ============================================================================ */
 
 @theme {
-  /* Color System - Primary, Secondary, Danger, Ghost */
-  --color-primary: #9333ea;
-  --color-primary-hover: #7e22ce;
-  --color-secondary: #4b5563;
-  --color-secondary-hover: #374151;
-  --color-danger: #dc2626;
-  --color-danger-hover: #b91c1c;
+  /* Color System - Slate (neutral, modern) */
+  --color-primary: #475569;
+  --color-primary-hover: #334155;
+  --color-secondary: #64748b;
+  --color-secondary-hover: #475569;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
   --color-ghost: transparent;
-  --color-ghost-hover: #f3f4f6;
+  --color-ghost-hover: rgba(71, 85, 105, 0.1);
 
-  /* Chip Colors */
-  --color-chip-default: #f3f4f6;
-  --color-chip-default-text: #1f2937;
-  --color-chip-success: #d1fae5;
-  --color-chip-success-text: #065f46;
-  --color-chip-warning: #fef3c7;
-  --color-chip-warning-text: #92400e;
-  --color-chip-error: #fee2e2;
-  --color-chip-error-text: #991b1b;
+  /* Chip Colors - Dark theme */
+  --color-chip-default: #334155;
+  --color-chip-default-text: #e2e8f0;
+  --color-chip-success: #10b981;
+  --color-chip-success-text: #f0fdf4;
+  --color-chip-warning: #f59e0b;
+  --color-chip-warning-text: #fffbeb;
+  --color-chip-error: #ef4444;
+  --color-chip-error-text: #fef2f2;
 
-  /* Focus and Border Colors */
-  --color-focus: #a855f7;
-  --color-border: #d1d5db;
-  --color-border-hover: #9ca3af;
+  /* Focus and Border Colors - Dark theme */
+  --color-focus: #64748b;
+  --color-border: #334155;
+  --color-border-hover: #475569;
   --color-border-error: #ef4444;
 
-  /* Input backgrounds */
-  --color-input-filled: #d4c2fc;
-  --color-input-filled-hover: #e5e7eb;
-  --color-input-filled-focus: #ffffff;
+  /* Input backgrounds - Dark theme */
+  --color-input-filled: #334155;
+  --color-input-filled-hover: #475569;
+  --color-input-filled-focus: #1e293b;
 
   /* Page Background */
   --color-page-bg: transparent;
 
-  /* Muted text color */
-  --color-muted: #6b7280;
+  /* Text colors - Light text for dark backgrounds */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
 
   /* Animations */
   @keyframes fade-in {
@@ -142,17 +146,17 @@
 .rainbowtext {
   background: linear-gradient(
     90deg,
-    #a78bfa,
-    #818cf8,
-    #60a5fa,
-    #818cf8,
-    #c084fc,
-    #e879f9,
-    #f472b6,
-    #e879f9,
-    #c084fc,
-    #818cf8,
-    #a78bfa
+    #cbd5e1,
+    #94a3b8,
+    #64748b,
+    #94a3b8,
+    #cbd5e1,
+    #e2e8f0,
+    #f1f5f9,
+    #e2e8f0,
+    #cbd5e1,
+    #94a3b8,
+    #cbd5e1
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -167,7 +171,7 @@
 
 .skypong-logo {
   font-family: var(--font-display);
-  color: var(--color-primary);
+  color: #cbd5e1;
   font-size: 1.5rem;
   font-weight: 700;
   text-decoration: none;
@@ -241,22 +245,22 @@
 }
 
 .error-message {
-  color: var(--color-danger);
+  color: #fca5a5;
   font-size: 0.875rem;
   text-align: center;
   margin: 0;
 }
 
 .error-box {
-  background-color: #fee2e2;
-  border: 1px solid #fecaca;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid #dc2626;
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
 }
 
 .error-box p {
-  color: var(--color-danger);
+  color: #fca5a5;
   font-size: 0.875rem;
   margin: 0;
 }
@@ -298,10 +302,12 @@
   overflow-x: hidden;
   width: 90%;
   max-width: 100%;
-  background-color: #ffffff;
+  background-color: rgba(30, 41, 59, 0.1);
+  backdrop-filter: blur(0.5px);
   border-radius: 2.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   padding: 2rem 1.5rem;
+  color: #e2e8f0;
 }
 
 @media (min-width: 640px) {
@@ -338,13 +344,16 @@
   padding: 0.875rem 1rem;
   border: 1.5px solid transparent;
   border-radius: 0.75rem;
-  background-color: #ffffff;
+  background-color: rgba(30, 41, 59, 0.1);
+  backdrop-filter: blur(0.5px);
   transition: all 0.2s ease;
+  color: #e2e8f0;
 }
 
 .game-row:hover {
-  border-color: #9333ea;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
+  border-color: #475569;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
+  background-color: rgba(30, 41, 59, 0.2);
 }
 
 @media (min-width: 768px) {
@@ -367,24 +376,27 @@
   padding: 0.875rem 1rem;
   border-radius: 0.75rem;
   border: 1.5px solid transparent;
-  background-color: #ffffff;
+  background-color: rgba(30, 41, 59, 0.1);
+  backdrop-filter: blur(0.5px);
   transition: all 0.2s ease;
+  color: #e2e8f0;
 }
 
 .leaderboard-row:hover {
-  border-color: #9333ea;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
+  border-color: #475569;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
+  background-color: rgba(30, 41, 59, 0.2);
 }
 
 .leaderboard-row-highlighted {
-  background-color: #faf5ff;
-  border: 1.5px solid #9333ea;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
+  background-color: rgba(71, 85, 105, 0.2);
+  border: 1.5px solid #475569;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
 }
 
 .leaderboard-row-highlighted:hover {
-  border-color: #7e22ce;
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
+  border-color: #64748b;
+  box-shadow: 0 4px 12px rgba(71, 85, 105, 0.4);
 }
 
 /* ============================================================================
@@ -398,25 +410,28 @@
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   border: 1.5px solid transparent;
-  background-color: #ffffff;
+  background-color: rgba(30, 41, 59, 0.1);
+  backdrop-filter: blur(0.5px);
   transition: all 0.2s ease;
+  color: #e2e8f0;
 }
 
 .friend-row:hover {
-  border-color: #9333ea;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
+  border-color: #475569;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
+  background-color: rgba(30, 41, 59, 0.2);
 }
 
 .friend-row-incoming {
-  background-color: #faf5ff;
-  border: 1.5px solid rgba(147, 51, 234, 0.3);
+  background-color: rgba(71, 85, 105, 0.15);
+  border: 1.5px solid rgba(71, 85, 105, 0.4);
 }
 
 .friend-row-incoming:hover {
-  border-color: #9333ea;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
+  border-color: #475569;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.3);
 }
 
 .friend-row-outgoing {
-  opacity: 0.75;
+  opacity: 0.6;
 }

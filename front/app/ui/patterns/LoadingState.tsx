@@ -9,7 +9,7 @@ const spinnerVariants = cva("animate-spin rounded-full", {
       lg: "w-8 h-8",
     },
     color: {
-      default: "border-gray-300",
+      default: "border-slate-600",
       primary: "border-primary",
       secondary: "border-secondary",
       danger: "border-danger",
@@ -29,8 +29,8 @@ const skeletonVariants = cva("animate-pulse rounded", {
       lg: "h-5 w-32",
     },
     color: {
-      default: "bg-gray-200",
-      primary: "bg-purple-200",
+      default: "bg-slate-700",
+      primary: "bg-slate-600",
     },
   },
   defaultVariants: {
@@ -67,7 +67,7 @@ export function LoadingState({
     return (
       <div className={cn("flex items-center justify-center gap-2", className)}>
         <div className={cn(spinnerVariants({ size, color }), "border-2")} />
-        {text && <span className="text-sm text-muted">{text}</span>}
+        {text && <span className="text-sm text-slate-300">{text}</span>}
       </div>
     );
   }
@@ -113,7 +113,7 @@ export function LoadingState({
         )}
         style={{ animationDelay: "300ms" }}
       />
-      {text && <span className="text-sm text-muted ml-2">{text}</span>}
+      {text && <span className="text-sm text-slate-300 ml-2">{text}</span>}
     </div>
   );
 }

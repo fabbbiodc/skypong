@@ -8,11 +8,11 @@ const progressBarVariants = cva(
       color: {
         primary: "bg-primary",
         secondary: "bg-secondary",
-        success: "bg-green-500",
-        danger: "bg-red-500",
+        success: "bg-success",
+        danger: "bg-danger",
         warning: "bg-amber-500",
         info: "bg-blue-500",
-        neutral: "bg-gray-400",
+        neutral: "bg-slate-600",
       },
       size: {
         sm: "h-1.5",
@@ -72,9 +72,9 @@ export function ProgressBar({
     <div className={cn("w-full", className)}>
       {showLabel && label && (
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-sm font-medium text-gray-700">{label}</span>
+          <span className="text-sm font-medium text-slate-300">{label}</span>
           {showPercentage && (
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-semibold text-white">
               {percentage}%
             </span>
           )}
@@ -82,7 +82,7 @@ export function ProgressBar({
       )}
       <div
         className={cn(
-          "w-full bg-gray-200 rounded-full overflow-hidden",
+          "w-full bg-slate-700 rounded-full overflow-hidden",
           progressBarVariants({ size }),
         )}
       >
@@ -97,7 +97,7 @@ export function ProgressBar({
         />
       </div>
       {showPercentage && !showLabel && (
-        <div className="text-sm text-gray-600 mt-1 text-right font-medium">
+        <div className="text-sm text-slate-400 mt-1 text-right font-medium">
           {value} / {max}
         </div>
       )}

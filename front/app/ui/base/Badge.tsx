@@ -9,12 +9,12 @@ const badgeVariants = cva(
       variant: {
         primary: "bg-primary text-white",
         secondary: "bg-secondary text-white",
-        success: "bg-green-500 text-white",
+        success: "bg-success text-white",
         warning: "bg-amber-500 text-white",
         danger: "bg-danger text-white",
         info: "bg-blue-500 text-white",
-        neutral: "bg-gray-200 text-gray-800",
-        outline: "border-2 border-primary text-primary bg-transparent",
+        neutral: "bg-slate-700 text-slate-200",
+        outline: "border-2 border-slate-600 text-slate-300 bg-transparent",
       },
       size: {
         sm: "text-xs px-2 py-0.5 min-w-[1.5rem] min-h-[1.5rem]",

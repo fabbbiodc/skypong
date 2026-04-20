@@ -7,11 +7,11 @@ const statCardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white border-gray-200 hover:border-gray-300",
-        primary: "bg-purple-50 border-primary hover:border-primary-hover",
-        success: "bg-green-50 border-green-500 hover:border-green-600",
-        danger: "bg-red-50 border-red-500 hover:border-red-600",
-        warning: "bg-amber-50 border-amber-500 hover:border-amber-600",
+        default: "bg-slate-800/20 border-slate-700/50 hover:border-slate-600 backdrop-blur-md",
+        primary: "bg-slate-800/30 border-slate-700 hover:border-slate-600 backdrop-blur-md",
+        success: "bg-emerald-500/10 border-emerald-500/50 hover:border-emerald-500 backdrop-blur-md",
+        danger: "bg-red-500/10 border-red-500/50 hover:border-red-500 backdrop-blur-md",
+        warning: "bg-amber-500/10 border-amber-500/50 hover:border-amber-500 backdrop-blur-md",
       },
       size: {
         sm: "p-3 text-2xl",
@@ -62,9 +62,9 @@ export function StatCard({
   trendValue,
 }: StatCardProps) {
   const trendColor = {
-    up: "text-green-600",
-    down: "text-red-600",
-    neutral: "text-gray-500",
+    up: "text-emerald-400",
+    down: "text-red-400",
+    neutral: "text-slate-400",
   }[trend || "neutral"];
 
   const trendIcon = {
@@ -91,7 +91,7 @@ export function StatCard({
       )}
       <div
         className={cn(
-          "font-bold font-display text-gray-900",
+          "font-bold font-display text-white",
           size === "sm" ? "text-2xl" : size === "lg" ? "text-4xl" : "text-3xl",
         )}
       >
@@ -99,7 +99,7 @@ export function StatCard({
       </div>
       <div
         className={cn(
-          "text-gray-600 mt-1 font-medium",
+          "text-slate-400 mt-1 font-medium",
           size === "sm" ? "text-xs" : size === "lg" ? "text-lg" : "text-sm",
         )}
       >

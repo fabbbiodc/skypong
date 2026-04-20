@@ -17,6 +17,8 @@ import { GAME_SCENE_BG_CONFIG } from "./GameSceneBackgroundConfig";
  * Renders a slowly rotating Babylon.js skybox using the game's EXR environment map.
  * This creates a visually cohesive experience between the frontend and game.
  *
+ * The EXR file is copied to front/public/environment/ during setup.
+ *
  * Features:
  * - Async EXR texture loading with timeout
  * - Smooth rotation animation (~60s per full revolution)

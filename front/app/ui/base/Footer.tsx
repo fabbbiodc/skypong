@@ -62,7 +62,7 @@ export function Footer({ links, size = "default", className }: FooterProps) {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-primary hover:text-primary-hover transition-colors duration-200"
+              className="text-slate-300 hover:text-slate-200 transition-colors duration-200"
             >
               {link.label}
             </Link>

@@ -3,16 +3,16 @@ import { cn } from "@/lib/utils";
 import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
 const inputVariants = cva(
-  "w-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+  "w-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-white placeholder-slate-500",
   {
     variants: {
       variant: {
         filled:
-          "bg-[var(--color-input-filled)] hover:bg-[var(--color-input-filled-hover)] focus:bg-[var(--color-input-filled-focus)] border border-transparent focus:border-primary rounded-lg",
+          "bg-[var(--color-input-filled)] hover:bg-[var(--color-input-filled-hover)] focus:bg-[var(--color-input-filled-focus)] border border-slate-600 focus:border-slate-500 rounded-lg",
         outlined:
-          "bg-transparent border border-border hover:border-border-hover focus:border-primary rounded-lg",
+          "bg-transparent border border-slate-600 hover:border-slate-500 focus:border-slate-400 rounded-lg",
         underlined:
-          "bg-transparent border-0 border-b border-border hover:border-border-hover focus:border-primary rounded-none",
+          "bg-transparent border-0 border-b border-slate-600 hover:border-slate-500 focus:border-slate-400 rounded-none",
       },
       size: {
         sm: "px-3 py-1.5 text-sm",
@@ -34,7 +34,7 @@ const inputVariants = cva(
   },
 );
 
-const labelVariants = cva("block font-medium text-gray-700 mb-1", {
+const labelVariants = cva("block font-medium text-slate-300 mb-1", {
   variants: {
     size: {
       sm: "text-xs",
@@ -132,7 +132,7 @@ export function TextField<TFieldValues extends FieldValues = FieldValues>({
         <p
           className={cn(
             "mt-1 text-sm",
-            error ? "text-red-600" : "text-gray-500",
+            error ? "text-red-400" : "text-slate-400",
           )}
         >
           {error || helperText}

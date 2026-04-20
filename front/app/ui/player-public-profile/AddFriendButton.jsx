@@ -54,7 +54,7 @@ function DropdownMenu({ items, onClose }) {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+      className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-slate-700 bg-slate-800/10 backdrop-blur-md p-1 shadow-lg"
     >
       {items.map((item) => (
         <button
@@ -68,8 +68,8 @@ function DropdownMenu({ items, onClose }) {
             "font-display text-[11px] uppercase tracking-wider",
             "transition-colors duration-150",
             item.danger
-              ? "text-danger hover:bg-red-50"
-              : "text-gray-700 hover:bg-gray-100",
+              ? "text-danger hover:bg-red-950"
+              : "text-slate-300 hover:bg-slate-700/30",
           )}
         >
           {item.label}
@@ -123,7 +123,7 @@ export default function AddFriendButton({
     },
     blocked_by: {
       label: "— " + t.player.unavailable,
-      classes: "bg-gray-200 text-gray-600 cursor-not-allowed",
+      classes: "bg-slate-700/30 text-slate-400 cursor-not-allowed",
     },
   });
 
@@ -262,7 +262,7 @@ export default function AddFriendButton({
   // ── Loading ──
   if (relation === undefined) {
     return (
-      <div className="font-display text-[11px] text-gray-400 tracking-wide">
+      <div className="font-display text-[11px] text-slate-400 tracking-wide">
         ...
       </div>
     );

@@ -155,14 +155,14 @@ function FriendRow({
       <Avatar src={friend.avatarUrl} fallbackText={friend.nickname} size="md" />
       <div className="flex-1 min-w-0">
         <div
-          className="text-sm truncate font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
+          className="text-sm truncate font-medium text-white hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(friend.user_id)}
         >
           {friend.nickname}
         </div>
         {!connected ? (
           <div className="text-xs text-muted mt-0.5">
-            <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-gray-400"></span>
+            <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-slate-600"></span>
             {t.player.inactive}
           </div>
         ) : absent ? (
@@ -242,13 +242,13 @@ function IncomingRow({
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
       <div className="flex-1 min-w-0">
         <div
-          className="text-sm font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
+          className="text-sm font-medium text-white hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(r.user_id)}
         >
           {r.nickname}
         </div>
-        <div className="text-xs text-purple-600 mt-0.5">
-          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-purple-600"></span>
+        <div className="text-xs text-slate-400 mt-0.5">
+          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-slate-500"></span>
           {t.player.incomingRequest}
         </div>
       </div>
@@ -289,13 +289,13 @@ function OutgoingRow({ r, onCancel, onProfile, busy }: OutgoingRowProps) {
       <Avatar src={r.avatarUrl} fallbackText={r.nickname} size="md" />
       <div className="flex-1 min-w-0">
         <div
-          className="text-sm font-medium text-gray-900 hover:text-primary transition-colors duration-200 cursor-pointer"
+          className="text-sm font-medium text-white hover:text-primary transition-colors duration-200 cursor-pointer"
           onClick={() => onProfile(r.user_id)}
         >
           {r.nickname}
         </div>
-        <div className="text-xs text-amber-600 mt-0.5">
-          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-amber-600"></span>
+        <div className="text-xs text-slate-300 mt-0.5">
+          <span className="inline-block w-1.5 h-1.5 mr-1.5 rounded-full !bg-slate-400"></span>
           {t.player.pendingResponse}
         </div>
       </div>
@@ -323,14 +323,14 @@ function SectionLabel({
 }) {
   const colors = {
     success: "bg-green-600",
-    muted: "bg-gray-400",
+    muted: "bg-slate-600",
     danger: "bg-red-600",
   };
 
   return (
     <div className="flex items-center gap-2 py-2.5 px-1">
       <div className={`w-1 h-3 rounded ${colors[variant]}`} />
-      <span className="text-xs font-semibold tracking-wider uppercase text-gray-600">
+      <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">
         {label}
       </span>
     </div>
@@ -493,7 +493,7 @@ export default function FriendsSection({
     <ProfileSection>
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-wide uppercase">
+        <h2 className="text-base md:text-lg font-bold text-white tracking-wide uppercase">
           <FontAwesomeIcon icon={faUsers} className="text-primary" />{" "}
           {t.player.friends}
         </h2>
@@ -510,7 +510,7 @@ export default function FriendsSection({
       {loading ? (
         <LoadingState variant="spinner" size="md" text={t.form.loading} />
       ) : fetchError ? (
-        <div className="text-center py-8 text-sm text-red-600">
+        <div className="text-center py-8 text-sm text-red-500">
           <FontAwesomeIcon
             icon={faTriangleExclamation}
             className="text-primary"

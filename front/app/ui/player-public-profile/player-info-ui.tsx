@@ -69,7 +69,7 @@ export default function PlayerInfo({ profile, csrfToken }: PlayerInfoProps) {
           )}
         </div>
         <ProfileIdentity>
-          <h2 className="text-2xl md:text-3xl font-bold font-display text-gray-900">
+          <h2 className="text-2xl md:text-3xl font-bold font-display text-white">
             {profile?.nickname || "Player"}
           </h2>
           {profile?.winPhrase && (

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const profileHeaderVariants = cva(
-  "mb-6 flex flex-col items-center gap-4 border-b border-gray-200 pb-6 md:flex-row md:items-start",
+  "mb-6 flex flex-col items-center gap-4 border-b border-slate-700 pb-6 md:flex-row md:items-start",
   {
     variants: {
       align: {

@@ -93,7 +93,7 @@ export default function AvatarUpload() {
 
   return (
     <div className="flex flex-col items-center gap-4 py-4">
-      <div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-gray-300">
+      <div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-slate-700">
         <img src={displayImage} alt="Avatar" className="w-full h-full object-cover" />
         {uploading && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs">
