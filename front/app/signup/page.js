@@ -15,6 +15,7 @@ import {
   ContentContainer,
   FormCard,
 } from "../ui/patterns";
+import { authPages, mainContainers } from "../lib/design-tokens";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -88,33 +89,33 @@ export default function SignUpPage() {
           text={t.common.loading}
         />
       ) : (
-        <main className="h-dvh bg-page-bg flex flex-col">
-          <div className="absolute top-6 left-6 z-10">
-            <Link href="/" className="skypong-logo">
+        <main className={mainContainers.topLayout.wrapper}>
+          <div className={authPages.logo.position}>
+            <Link href="/" className={authPages.logo.className}>
               SKYPONG
             </Link>
           </div>
 
-          <div className="flex flex-1 items-center justify-center">
+          <div className={mainContainers.topLayout.contentArea}>
             <PageContainer>
               <ContentContainer size="sm">
                 <FormCard className="form-wrapper">
                   <div className="text-center">
-                    <span className="text-sm md:text-lg mb-2 block">
+                    <span className={authPages.formTitle.subtitle}>
                       {t.signUpPage.title}
                     </span>
-                    <h1 className="text-lg md:text-xl mb-6">
+                    <h1 className={authPages.formTitle.title}>
                       {t.homePage.title}
                     </h1>
                   </div>
 
                   {/* Use handleSubmit */}
                   <form
-                    className="flex flex-col gap-4 w-full"
+                    className={authPages.form.layout}
                     onSubmit={handleSubmit(onSubmit)}
                   >
                     {/* Email Field */}
-                    <div className="w-full">
+                    <div className={authPages.formField}>
                       <TextField
                         name="email"
                         type="email"
@@ -127,7 +128,7 @@ export default function SignUpPage() {
                     </div>
 
                     {/* Password Field */}
-                    <div className="w-full">
+                    <div className={authPages.formField}>
                       <TextField
                         name="password"
                         type="password"
@@ -140,7 +141,7 @@ export default function SignUpPage() {
                     </div>
 
                     {/* Confirm Password Field */}
-                    <div className="w-full">
+                    <div className={authPages.formField}>
                       <TextField
                         name="confirmPassword"
                         type="password"
@@ -153,9 +154,9 @@ export default function SignUpPage() {
                     </div>
 
                     {/* Server Error - Reserved space to prevent layout shift */}
-                    <div className="error-message-space">
+                    <div className={authPages.errorSpace}>
                       {serverError && (
-                        <p className="error-message">
+                        <p className={authPages.errorMessage}>
                           {/* { console.log("Error:", serverError)}*/}
                           {serverError}
                         </p>
@@ -178,7 +179,7 @@ export default function SignUpPage() {
                   <div className="mt-4 text-center">
                     <Link
                       href="/login"
-                      className="text-primary hover:text-primary-hover transition-colors duration-200"
+                      className={authPages.link}
                     >
                       {t.signUpPage.hasAccount}
                     </Link>
@@ -188,7 +189,7 @@ export default function SignUpPage() {
             </PageContainer>
           </div>
 
-          <div className="mt-auto pb-4">
+          <div className={mainContainers.topLayout.footer}>
             <Footer />
           </div>
         </main>

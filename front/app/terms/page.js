@@ -5,6 +5,7 @@ import { useTranslation } from "../hooks/use-translation";
 import { useEffect, useState } from "react";
 import { Navbar, Footer } from "../ui/base";
 import { PageContainer, ContentContainer, LegalContent } from "../ui/patterns";
+import { mainContainers, legalPages } from "../lib/design-tokens";
 
 export default function TermsPage() {
   const [backlink, setBacklink] = useState("");
@@ -16,24 +17,24 @@ export default function TermsPage() {
   }, []);
   return (
     <>
-      <main className="h-dvh bg-page-bg flex flex-col">
+      <main className={mainContainers.centeredLayout.wrapper}>
         <Navbar />
-        <div className="flex flex-1 items-center justify-center">
+        <div className={mainContainers.centeredLayout.contentArea}>
           <PageContainer>
             <ContentContainer size="lg">
-              <h1 className="text-3xl font-bold mb-4">
+              <h1 className={legalPages.title}>
                 {t.legal.termsPage.title}
               </h1>
               <LegalContent html={t.legal.termsPage.content} />
               <div className="mt-4">
-                <Link href={backlink || "/"} className="text-primary hover:text-primary-hover transition-colors duration-200">
+                <Link href={backlink || "/"} className={legalPages.link}>
                   {t.navigation.goBack}
                 </Link>
               </div>
             </ContentContainer>
           </PageContainer>
         </div>
-        <div className="mt-auto pb-4">
+        <div className={mainContainers.centeredLayout.footer}>
           <Footer />
         </div>
       </main>

@@ -220,9 +220,215 @@ export const shadowClasses = {
   none: "shadow-none",
 } as const;
 
+// ========================================
+// COMPONENT TOKENS
+// Coarser-grained, combined strings for reusable component styling
+// ========================================
+
+// ============ NAVBAR TOKENS ============
+export const navbar = {
+  layout: {
+    base: "fixed z-50 flex items-center justify-between mx-auto",
+    positioning: "top-4 left-4 right-4",
+    shape: "rounded-full",
+    maxWidth: "max-w-[1200px]",
+  },
+  padding: {
+    desktop: "px-8 py-4",
+    mobile: "px-6 py-3",
+  },
+  shadow: shadowClasses.lg,
+  transitions: transitions.durations.DEFAULT,
+  dropdown: {
+    container: "absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1",
+    buttonAlignment: "w-full justify-start",
+  },
+  hamburger: {
+    container: "p-2 hover:bg-gray-100 rounded-lg transition-colors text-primary",
+    iconSize: "lg",
+  },
+  userLabel: "flex items-center mr-2 text-sm text-right",
+  avatar: "cursor-pointer",
+} as const;
+
+// ============ HOMEPAGE TOKENS ============
+export const homepage = {
+  mainContainer: {
+    height: "h-dvh",
+    background: backgrounds.transparent,
+    textColor: "text-slate-900",
+    padding: "lg:px-10",
+    layout: "flex flex-col",
+  },
+  contentCard: {
+    width: {
+      mobile: "w-[90%]",
+      desktop: "lg:w-[50%]",
+    },
+    height: {
+      mobile: "flex-1",
+      desktop: "lg:h-[70%] lg:flex-none",
+    },
+    maxWidth: "max-w-full",
+    background: backgrounds.main,
+    radius: "rounded-[2.5rem]",
+    shadow: shadowClasses.md,
+    padding: {
+      base: "p-8 sm:p-10 md:p-12",
+      large: "lg:p-14",
+    },
+    layout: "flex flex-1 items-center justify-center",
+    wrapper: "w-full max-w-4xl",
+  },
+  heroSection: {
+    layout: "flex min-h-0 flex-1 flex-col items-center justify-center",
+    spacing: {
+      mobile: "gap-6 py-4",
+      tablet: "md:gap-8 md:py-6",
+      desktop: "lg:gap-10 lg:py-10",
+    },
+  },
+  footer: {
+    position: "mt-auto pb-4",
+  },
+} as const;
+
+// ============ BUTTON MENU VARIANTS ============
+export const buttonMenu = {
+  desktop: {
+    width: "w-full",
+    alignment: "justify-start",
+  },
+  mobile: {
+    width: "w-auto min-w-40",
+    alignment: "justify-center",
+  },
+} as const;
+
+// ============ DROPDOWN CONTAINERS ============
+export const dropdownContainer = {
+  desktop: "absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1",
+  mobile: {
+    positioning: "absolute top-full left-0 right-0 mt-2",
+    background: backgrounds.main,
+    radius: "rounded-2xl",
+    shadow: shadowClasses.lg,
+    border: "border border-gray-200",
+    padding: "px-4 py-4 flex flex-col gap-1",
+    alignment: "items-center",
+  },
+} as const;
+
+// ============ RESPONSIVE SPACING ============
+export const responsiveSpacing = {
+  padding: {
+    compact: "p-8",
+    comfortable: "p-8 sm:p-10 md:p-12 lg:p-14",
+  },
+  gap: {
+    compact: "gap-6 py-4",
+    comfortable: "gap-6 py-4 md:gap-8 md:py-6 lg:gap-10 lg:py-10",
+  },
+} as const;
+
+// ============ AUTH PAGES (LOGIN, SIGNUP) ============
+export const authPages = {
+  mainContainer: "h-dvh bg-page-bg flex flex-col",
+  logo: {
+    position: "absolute top-6 left-6 z-10",
+    className: "skypong-logo",
+  },
+  centerContainer: "flex flex-1 items-center justify-center",
+  form: {
+    layout: "flex flex-col gap-4 w-full",
+  },
+  formTitle: {
+    subtitle: "text-sm md:text-lg mb-2 block",
+    title: "text-lg md:text-xl mb-6",
+  },
+  formField: "w-full",
+  errorSpace: "error-message-space",
+  errorMessage: "error-message",
+  footer: "mt-auto pb-4",
+  link: "text-primary hover:text-primary-hover transition-colors duration-200",
+} as const;
+
+// ============ PROFILE PAGES (ME, [ID]) ============
+export const profilePages = {
+  mainContainer: "min-h-dvh bg-page-bg flex flex-col",
+  centerContainer: "flex flex-1 items-start justify-center",
+  footer: "pb-4",
+} as const;
+
+// ============ GAME MODE PAGE ============
+export const gameModePages = {
+  mainContainer: "h-dvh bg-page-bg flex flex-col",
+  centerContainer: "flex flex-1 items-center justify-center",
+  footer: "mt-auto pb-4",
+} as const;
+
+// ============ SETTINGS PAGE (UPDATEME) ============
+export const settingsPages = {
+  mainContainer: "min-h-dvh bg-page-bg flex flex-col",
+  centerContainer: "flex flex-1 items-start justify-center",
+  footer: "pb-4",
+} as const;
+
+// ============ LEGAL PAGES (PRIVACY, TERMS) ============
+export const legalPages = {
+  mainContainer: "h-dvh bg-page-bg flex flex-col",
+  centerContainer: "flex flex-1 items-center justify-center",
+  title: "text-3xl font-bold mb-4",
+  footer: "mt-auto pb-4",
+  link: "text-primary hover:text-primary-hover transition-colors duration-200",
+} as const;
+
+// ============ MAIN CONTAINERS (NAVBAR-AWARE) ============
+// Unified container system that accounts for fixed navbar positioning
+// Navbar is fixed at top-4 left-4 right-4 with ~60px height, so we add mt-[70px] offset
+export const mainContainers = {
+  // For pages where content is vertically centered (game-mode, play)
+  centeredLayout: {
+    wrapper: "h-dvh bg-page-bg flex flex-col",
+    contentArea: "flex flex-1 items-center justify-center pt-[70px]",
+    footer: "mt-auto pb-4",
+  },
+  
+  // For pages where content starts at top (login, signup, terms, privacy)
+  topLayout: {
+    wrapper: "h-dvh bg-page-bg flex flex-col",
+    contentArea: "flex flex-1 items-center justify-center pt-[70px]",
+    footer: "mt-auto pb-4",
+  },
+  
+  // For pages with scrollable content (profiles with tabs)
+  scrollableLayout: {
+    wrapper: "min-h-dvh bg-page-bg flex flex-col",
+    contentArea: "flex flex-1 items-start justify-center pt-[70px]",
+    footer: "pb-4",
+  },
+} as const;
+
+// ========================================
+// TYPE EXPORTS (updated)
+// ========================================
+
 export type ColorVariant = (typeof variants.color)[keyof typeof variants.color];
 export type SizeVariant = (typeof variants.size)[keyof typeof variants.size];
 export type ChipVariant =
   (typeof variants.chipState)[keyof typeof variants.chipState];
 export type BackgroundToken = keyof typeof backgrounds;
 export type ShadowClassToken = keyof typeof shadowClasses;
+
+// Component token types
+export type NavbarToken = typeof navbar;
+export type HomepageToken = typeof homepage;
+export type ButtonMenuToken = typeof buttonMenu;
+export type DropdownContainerToken = typeof dropdownContainer;
+export type ResponsiveSpacingToken = typeof responsiveSpacing;
+export type AuthPagesToken = typeof authPages;
+export type ProfilePagesToken = typeof profilePages;
+export type GameModeToken = typeof gameModePages;
+export type SettingsPagesToken = typeof settingsPages;
+export type LegalPagesToken = typeof legalPages;
+export type MainContainersToken = typeof mainContainers;

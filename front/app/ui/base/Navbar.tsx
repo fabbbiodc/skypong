@@ -12,7 +12,7 @@ import { Avatar } from "./Avatar";
 import { backgrounds } from "@/lib/design-tokens";
 
 const navbarVariants = cva(
-  "fixed top-0 right-0 z-50 flex items-center justify-between w-full px-4 py-3 transition-transform duration-300",
+  "fixed top-4 left-4 right-4 z-50 flex items-center justify-between mx-auto px-8 py-4 rounded-full shadow-lg max-w-[1200px] transition-transform duration-300",
   {
     variants: {
       visibility: {
@@ -142,7 +142,7 @@ export function Navbar({ className, background = "main" }: NavbarProps) {
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 flex flex-col gap-1 z-[60]">
                 <Button
                   variant="primary"
                   size="sm"

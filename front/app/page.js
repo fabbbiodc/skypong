@@ -2,24 +2,26 @@
 
 import { useTranslation } from "./hooks/use-translation";
 import { Navbar, Footer, Hero, LanguageSelector } from "./ui/base";
+import { homepage, responsiveSpacing } from "./lib/design-tokens";
+import { cn } from "./lib/utils";
 
 export default function HomePage() {
   const { t } = useTranslation();
 
   return (
-    <main className="h-dvh bg-transparent text-slate-900 lg:px-10 flex flex-col">
+    <main className={cn(homepage.mainContainer.height, homepage.mainContainer.background, homepage.mainContainer.textColor, homepage.mainContainer.padding, homepage.mainContainer.layout)}>
       <Navbar />
-      <div className="flex flex-1 items-center justify-center">
-        <div className="w-[90%] max-w-full bg-white rounded-[2.5rem] shadow-md p-8 sm:p-10 md:p-12 lg:w-[50%] lg:h-[70%] lg:flex-none lg:p-14">
-          <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 py-4 md:gap-8 md:py-6 lg:gap-10 lg:py-10">
-            <div className="w-full max-w-4xl">
+      <div className={homepage.contentCard.layout}>
+        <div className={cn(homepage.contentCard.width.mobile, homepage.contentCard.maxWidth, homepage.contentCard.background, homepage.contentCard.radius, homepage.contentCard.shadow, homepage.contentCard.padding.base, homepage.contentCard.height.mobile, homepage.contentCard.padding.large, homepage.contentCard.width.desktop, homepage.contentCard.height.desktop)}>
+          <section className={cn(homepage.heroSection.layout, homepage.heroSection.spacing.mobile, homepage.heroSection.spacing.tablet, homepage.heroSection.spacing.desktop)}>
+            <div className={homepage.contentCard.wrapper}>
               <Hero titleSize="lg" iconSize="lg" />
             </div>
             <LanguageSelector />
           </section>
         </div>
       </div>
-      <div className="mt-auto pb-4">
+      <div className={homepage.footer.position}>
         <Footer />
       </div>
     </main>

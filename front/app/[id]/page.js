@@ -16,6 +16,7 @@ import {
   ProfileTabsContainer,
   ProfileTabContent,
 } from "../ui/patterns";
+import { mainContainers } from "../lib/design-tokens";
 import { useParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -128,9 +129,9 @@ export default function ProfilePagePublic() {
   ];
 
   return (
-    <main className="min-h-dvh bg-page-bg flex flex-col">
+    <main className={mainContainers.scrollableLayout.wrapper}>
       <Navbar />
-      <div className="flex flex-1 items-start justify-center">
+      <div className={mainContainers.scrollableLayout.contentArea}>
         <PageContainerScrollable>
           <ContentContainer size="xl">
             {/* Player Info - Always visible */}
@@ -174,7 +175,7 @@ export default function ProfilePagePublic() {
           </ContentContainer>
         </PageContainerScrollable>
       </div>
-      <div className="pb-4">
+      <div className={mainContainers.scrollableLayout.footer}>
         <Footer />
       </div>
     </main>
