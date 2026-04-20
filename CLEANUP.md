@@ -1,7 +1,7 @@
 # Frontend Cleanup Plan
 
 **Scope:** `front/` directory only
-**Last Updated:** 2026-04-20 (updated)
+**Last Updated:** 2026-04-20 (comprehensive updates)
 
 ---
 
@@ -333,6 +333,101 @@ Removed files with no remaining imports/usages:
 - Validation:
   - `npm exec tsc -- --noEmit` passes
   - `npm exec next build -- --webpack` passes
+
+---
+
+## Phase N: Theme Updates - Dark Mode (2026-04-20)
+
+- Updated all design tokens to dark theme with slate colors:
+  - Primary color: `#475569` (slate) instead of purple
+  - Text colors brightened throughout
+  - Container backgrounds: transparent
+  - Subtle slate backgrounds for interactive elements
+
+- Updated `design-tokens.ts`:
+  - `text.secondary`: `#e2e8f0` → `#f1f5f9`
+  - `text.muted`: `#cbd5e1` → `#e2e8f0`
+  - `text.link`: `#94a3b8` → `#cbd5e1`
+  - Border colors brightened
+  - Chip backgrounds: `#334155` → `#475569`
+  - Input backgrounds updated for visibility
+
+- Updated `globals.css`:
+  - Increased row background opacity: `0.15` → `0.3`
+  - Increased hover opacity: `0.25` → `0.45`
+  - Text color updated: `#e2e8f0` → `#f1f5f9`
+
+---
+
+## Phase O: Navbar & Dropdown Fixes (2026-04-20)
+
+- Added `bg-slate-800/20` background to dropdown container
+- Changed button text centering: `justify-start` → `justify-center`
+- Increased dropdown sizing: `w-48` → `w-52`, `py-2` → `py-3`
+- Increased button gap: `gap-1` → `gap-2`
+
+---
+
+## Phase P: Content Clipping Fix (2026-04-20)
+
+- Removed `overflow-y-auto` from `PageContainerScrollable`
+- Updated `.page-content-container` CSS:
+  - Changed `height: 70vh` → `height: auto`
+  - Changed `justify-content: center` → `justify-content: flex-start`
+  - Changed `overflow-y: auto` → `overflow-y: visible`
+
+- Updated `design-tokens.ts`:
+  - Changed `scrollableLayout` to use `flex-col` instead of `flex-1`
+  - Increased contentArea padding: `pt-[70px]` → `pt-[120px]`
+
+---
+
+## Phase Q: Winphrase Removal (2026-04-20)
+
+- Removed from all frontend components and validation:
+  - `player-ui.tsx`: Form field, interface, submission
+  - `player-info-ui.tsx`: Profile display
+  - `auth-context.tsx`: User interface
+  - `player-data.ts`: Validation schema
+  - Translation files (en.ts, es.ts, it.ts)
+
+---
+
+## Phase R: Auth Pages Navbar (2026-04-20)
+
+- Added Navbar to `/login/page.js`
+- Added Navbar to `/signup/page.js`
+- Removed duplicate logo sections from both pages
+
+---
+
+## Phase S: Game Client UI Update (2026-04-20)
+
+- Updated `game/client/src_cli/config/GUIStyles.ts`:
+  - Changed button background: `#9333ea` → `#475569`
+
+---
+
+## Phase T: Branding Updates (2026-04-20)
+
+- Updated page title in `layout.js`: "Transcendence" → "SkyPong"
+- Updated favicon colors in both front/ and game/client/:
+  - Changed: `#9333ea` → `#475569`
+
+---
+
+## Phase U: Hero Section Update (2026-04-20)
+
+- Removed `rainbowtext` animated gradient effect from Hero.tsx
+- Changed to `text-white opacity-50` for transparency
+
+---
+
+## Phase V: Match History Link Styling (2026-04-20)
+
+- Updated `GameHistory.tsx`:
+  - Changed link color: `text-primary` → `text-slate-200`
+  - Added underline for clickability
 
 ---
 

@@ -1,4 +1,4 @@
-# 42-transcendence
+# SkyPong
 
 A production-style microservices platform for a multiplayer Pong experience, user identity, social features, and game statistics.
 
@@ -6,7 +6,7 @@ A production-style microservices platform for a multiplayer Pong experience, use
 
 ## 1) Project Overview
 
-`42-transcendence` is a containerized distributed system that combines:
+`SkyPong` is a containerized distributed system that combines:
 
 - A **Next.js web application** for product UI and account flows.
 - A **real-time game engine** (SkyPong) powered by Colyseus and WebSockets.

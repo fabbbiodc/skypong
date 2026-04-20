@@ -1,4 +1,4 @@
-# AGENTS.md - Transcendence Project
+# AGENTS.md - SkyPong Project
 
 ## Project Overview
 
@@ -199,6 +199,8 @@ Each service has a Dockerfile. For local development:
 
 ### Frontend Design System
 
+**Theme**: Modern minimalist dark theme with transparent containers
+
 **Single Source of Truth:** `front/app/lib/design-tokens.ts`
 
 All pages should use the design tokens for consistent styling:
@@ -221,6 +223,12 @@ import { mainContainers } from "@/lib/design-tokens";
 - `scrollableLayout`: Scrollable with items-start (profile pages)
 
 **Key Tokens:**
-- All include `pt-[70px]` to account for fixed navbar
+- All include `pt-[120px]` to account for fixed navbar
 - Navbar uses pill design: `fixed top-4 left-4 right-4 z-50 rounded-full`
 - Dropdown has `z-[60]` to appear above navbar
+- Background colors for dropdown: `bg-slate-800/20`
+
+**Color System:**
+- Primary: Slate (#475569) instead of purple
+- Text: Bright (#f1f5f9) for contrast on dark backgrounds
+- Interactive elements: Use subtle slate backgrounds (rgba(71, 85, 105, 0.3))

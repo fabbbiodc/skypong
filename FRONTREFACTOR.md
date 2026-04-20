@@ -6,7 +6,7 @@
 
 All paths and references in this document are relative to `front/`. The project root is `../` from the perspective of this document.
 
-**Last Updated:** 2026-04-16
+**Last Updated:** 2026-04-20 (updated with UI refinements and theme changes)
 
 ---
 
