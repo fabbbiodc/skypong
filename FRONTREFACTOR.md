@@ -1031,3 +1031,39 @@ const myComponentVariants = cva("base classes", {
   - `npm exec tsc -- --noEmit` passes
   - `npm exec next build -- --webpack` passes
   - No bundle size impact increase (Babylon.js already compiled)
+
+**Interactive Marble Ball CTA**
+
+- Created `front/app/ui/base/InteractiveMarbleBall.tsx` - Babylon.js spinning marble ball component
+- Created `front/app/ui/base/BallCTA.tsx` - Wrapper with "Click to play" text label
+- Copied marble textures from game/client/public to front/public
+- Added translation key `game.clickToPlay` to all 3 locales
+
+- Features:
+  - Uses PBR marble material with textures from the game
+  - Spins slowly (~20 seconds per rotation)
+  - Clickable → navigates to /play
+  - Size variants: sm/md/lg with responsive breakpoints
+  - Keyboard accessible (Enter/Space to activate)
+
+- Fixes applied:
+  - Reduced sizes for mobile: 80px/90px/100px base
+  - Added overflow handling to prevent canvas duplication
+  - Proper cleanup order on unmount
+  - Constrained homepage to 70dvh on desktop
+
+- Files created:
+  - `front/app/ui/base/InteractiveMarbleBall.tsx`
+  - `front/app/ui/base/BallCTA.tsx`
+
+- Files modified:
+  - `front/app/ui/base/Hero.tsx` - replaced arrow with BallCTA
+  - `front/app/ui/base/index.ts` - exports
+  - `front/app/page.js` - uses homepageCard height constraint
+  - `front/app/lib/design-tokens.ts` - added homepageCard tokens
+  - `front/app/lib/i18n/locales/{en,es,it}.ts` - added clickToPlay
+
+- Validation:
+  - `npm exec tsc -- --noEmit` passes
+  - `npm exec next build -- --webpack` passes
+  - `npm run check:locales` passes (477 keys in parity)

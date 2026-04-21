@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { BallCTA } from "./BallCTA";
 
 const heroVariants = cva(
-  "mb-4 flex flex-col items-center justify-center gap-4",
+  "mb-2 flex flex-col items-center justify-center gap-2 overflow-hidden",
   {
     variants: {
       alignment: {
@@ -22,9 +22,9 @@ const heroVariants = cva(
 const titleVariants = cva("font-display font-bold text-white opacity-50", {
   variants: {
     size: {
-      sm: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl",
-      md: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",
-      lg: "text-5xl sm:text-6xl md:text-7xl lg:text-8xl",
+      sm: "text-2xl sm:text-3xl md:text-4xl lg:text-5xl",
+      md: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl",
+      lg: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",
     },
   },
   defaultVariants: {
@@ -45,13 +45,13 @@ interface HeroProps {
 export function Hero({
   alignment = "center",
   titleSize = "md",
-  ballSize = "md",
+  ballSize = "sm",
   className,
 }: HeroProps) {
   return (
     <section className={cn(heroVariants({ alignment }), className)}>
       <div>
-        <h1 className={cn(titleVariants({ size: titleSize }), "mb-1")}>
+        <h1 className={cn(titleVariants({ size: titleSize }), "mb-0")}>
           SKYPONG
         </h1>
       </div>

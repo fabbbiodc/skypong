@@ -289,15 +289,15 @@ export const homepage = {
     background: backgrounds.transparent,
     textColor: "text-white",
     padding: "lg:px-10",
-    layout: "flex flex-col",
+    layout: "flex flex-col items-center justify-center",
   },
   contentCard: {
     width: {
-      mobile: "w-[90%]",
+      mobile: "w-[95%]",
       desktop: "lg:w-[50%]",
     },
     height: {
-      mobile: "flex-1",
+      mobile: "flex-1 overflow-hidden",
       desktop: "lg:h-[70%] lg:flex-none",
     },
     maxWidth: "max-w-full",
@@ -305,20 +305,25 @@ export const homepage = {
     radius: "rounded-[2.5rem]",
     shadow: "shadow-none",
     padding: {
-      base: "p-4 sm:p-6 md:p-8",
-      large: "lg:p-10",
+      base: "p-2 sm:p-2 md:p-2",
+      large: "lg:p-2",
     },
     layout: "flex flex-1 items-center justify-center",
-    wrapper: "w-full max-w-4xl",
+    wrapper: "w-full max-w-4xl flex flex-col items-center justify-center",
   },
   heroSection: {
-    layout: "flex flex-col items-center justify-center",
+    layout: "flex flex-col items-center justify-center overflow-hidden",
     spacing: {
-      mobile: "gap-2 py-1",
-      tablet: "md:gap-4 md:py-2",
-      desktop: "lg:gap-4 lg:py-4",
+      mobile: "gap-0 py-0",
+      tablet: "md:gap-0 md:py-0",
+      desktop: "lg:gap-0 lg:py-0",
     },
     textColor: "text-white",
+  },
+  homepageCard: {
+    // Homepage-specific: 70vh on desktop to constrain hero section
+    height: "h-[60dvh] lg:h-[70dvh]",
+    layout: "flex flex-col items-center justify-center",
   },
   footer: {
     position: "mt-auto pb-4",

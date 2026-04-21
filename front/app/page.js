@@ -9,16 +9,12 @@ export default function HomePage() {
   const { t } = useTranslation();
 
   return (
-    <main className={cn(homepage.mainContainer.height, homepage.mainContainer.background, homepage.mainContainer.textColor, homepage.mainContainer.padding, homepage.mainContainer.layout)}>
+    <main className={cn(homepage.mainContainer.height, homepage.mainContainer.background, homepage.mainContainer.textColor, "flex flex-col")}>
       <Navbar />
-      <div className={homepage.contentCard.layout}>
-        <div className={cn(homepage.contentCard.width.mobile, homepage.contentCard.maxWidth, homepage.contentCard.background, homepage.contentCard.radius, homepage.contentCard.shadow, homepage.contentCard.padding.base, homepage.contentCard.height.mobile, homepage.contentCard.padding.large, homepage.contentCard.width.desktop, homepage.contentCard.height.desktop)}>
-          <section className={cn(homepage.heroSection.layout, homepage.heroSection.spacing.mobile, homepage.heroSection.spacing.tablet, homepage.heroSection.spacing.desktop)}>
-            <div className={homepage.contentCard.wrapper}>
-              <Hero titleSize="lg" ballSize="lg" />
-            </div>
-            <LanguageSelector className="mt-8" />
-          </section>
+      <div className="flex-1 flex items-center justify-center pt-8">
+        <div className={cn(homepage.contentCard.width.mobile, homepage.contentCard.maxWidth, homepage.contentCard.width.desktop, "flex flex-col items-center", "max-h-[70dvh]")}>
+          <Hero titleSize="lg" ballSize="lg" />
+          <LanguageSelector className="mt-2" />
         </div>
       </div>
       <div className={homepage.footer.position}>
