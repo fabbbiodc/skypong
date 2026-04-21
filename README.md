@@ -1,179 +1,154 @@
 # SkyPong
 
-A production-style microservices platform for a multiplayer Pong experience, user identity, social features, and game statistics.
+[![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Babylon.js](https://img.shields.io/badge/babylon.js-351961?style=flat&logo=html5)](https://www.babylonjs.com)
+[![Next.js](https://img.shields.io/badge/next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org)
+[![Node.js](https://img.shields.io/badge/node.js-5FA04E?style=flat&logo=node.js&logoColor=white)](https://nodejs.org)
 
----
 
-## 1) Project Overview
+## Demo
 
-`SkyPong` is a containerized distributed system that combines:
+![Screen Recording 01](assets/screenrecording_01.gif)
 
-- A **Next.js web application** for product UI and account flows.
-- A **real-time game engine** (SkyPong) powered by Colyseus and WebSockets.
-- A set of backend **Node.js/TypeScript microservices** for auth, profile/social data, and statistics.
-- A complete **observability stack** (Prometheus, Alertmanager, Grafana, exporters).
+![Screen Recording 02](assets/screenrecording_02.gif)
 
-### What problem it solves
+## Description
 
-The project solves the typical challenges of multiplayer web products:
+SkyPong is a production-style multiplayer Pong platform built as a microservices architecture. The core is a real-time 3D Pong game with server-authoritative physics, PBR rendering, and multiple game modes. Around it sits a full product platform with authentication, profiles, social features, and game statistics.
 
-- Secure user identity and session management.
-- Separation of concerns between domains (auth, profile, stats, game).
-- Real-time gameplay and chat over WebSockets.
-- Operational visibility and reliability through metrics + alerts.
+This is a reupload with a fresh frontend UI of a project originally built by a team of 4 developers. The new version features a complete redesign of the Next.js web application with a unified design system while keeping the robust game engine and backend services intact.
 
-### High-level system description
+## Technologies & Concepts
 
-A TLS-enabled NGINX gateway receives all external traffic, routes REST/WebSocket calls to domain services, and exposes a unified entrypoint (`https://localhost:8443`). Services communicate internally via Docker networking and shared service-to-service authentication, while SQLite-backed storage keeps each domain isolated.
+- **Web application** — Next.js (React), TypeScript, Tailwind v4, class-variance-authority, i18n (EN/ES/IT)
+- **Game client** — Babylon.js 8, React 18, Vite 5, Colyseus.js client
+- **Game server** — Colyseus 0.15, Babylon.js NullEngine (headless physics), Express
+- **Backend services** — Fastify, SQLite, JWT (Argon2), Sharp (avatar processing)
+- **Infrastructure** — Docker Compose, NGINX (TLS gateway), Prometheus, Grafana, Alertmanager
+- **Real-time sync** — WebSocket via Colyseus, Schema-based state diffs, client-side interpolation
+- **Physics** — Server-authoritative, continuous collision detection, angle-based bounce response
+- **Rendering** — PBR materials, EXR environment maps, refractive glass, real-time shadows
+- **Design system** — Unified design tokens, full CVA component library, responsive mobile layout
 
----
+## Frontend Redesign
 
-## 2) Architecture
+A complete redesign of the Next.js web application targeting consistency, maintainability, and scalable UI:
 
-### Architecture style
+- **Design tokens** — Single source of truth with TypeScript types for colors, typography, spacing, shadows
+- **Component library** — Full class-variance-authority patterns (Button, Card, TextField, Chip, Avatar, Badge, StatCard, Tabs)
+- **Pattern components** — Section, ListRow, EmptyState, LoadingState, PageContainer, FormCard, ProfileLayout
+- **Simplified CSS** — Reduced globals.css from 1300 to ~250 lines
+- **Background & shadow tokens** — Unified system replacing hardcoded values
+- **Navbar** — Auth-aware navigation with scroll behavior, dropdown menu
+- **Homepage** — Hero section, Footer, LanguageSelector, interactive PBR marble ball CTA
+- **Game scene background** — Babylon.js rotating EXR skybox integrated into Next.js layout
+- **i18n** — 477 translation keys verified across English, Spanish, and Italian
+- **TypeScript** — Strict typing on auth context, translation context, form validation
+- **Color system** — Updated from purple to slate palette for better contrast
 
-The project uses a **microservices architecture** behind an **API gateway**:
+## How It Works
 
-- **Edge layer:** `nginx-gateway` terminates TLS and routes traffic.
-- **Application layer:** frontend apps + domain microservices.
-- **Data layer:** per-service SQLite persistence (mounted Docker volumes).
-- **Observability layer:** Prometheus, Alertmanager, Grafana, cAdvisor, and nginx-exporter.
+### Architecture Overview
 
-### Why this architecture
-
-This architecture is a good fit for a multiplayer platform because it enables:
-
-- **Independent evolution per domain** (auth/profile/stats/game).
-- **Fault isolation**: one service can fail without collapsing the full stack.
-- **Operational clarity**: health checks, exporters, and dashboards per component.
-- **Gateway control**: centralized security, routing, and protocol upgrades (HTTP/WebSocket).
-
-### Component interaction (conceptual)
-
-1. Client requests enter through NGINX over HTTPS.
-2. NGINX routes `/api/auth/*`, `/api/profile/*`, `/api/statistics/*`, `/api/game/*`, `/ws/*`, and `/api/chat/ws` to the appropriate upstream service.
-3. Auth validation is delegated to the auth service (`/_internal/auth_verify`) for protected routes.
-4. Services handle their own domain logic and persistence.
-5. Metrics are scraped and visualized through the monitoring stack.
-
----
-
-## 3) Microservices
-
-### `auth-service`
-
-- **Responsibility:** account lifecycle, login/signup, JWT issuance/verification, refresh tokens, optional 2FA, password operations.
-- **Technology:** Node.js, TypeScript, Fastify, SQLite, JWT, Argon2/Bcrypt.
-- **Main components:**
-  - Route handlers and HTTP bootstrap (`src/index.ts`)
-  - Authentication/token logic (`src/auth.ts`, `src/token.ts`, `src/refresh.ts`)
-  - Credential and helper modules (`src/password.ts`, `src/helpers.ts`, `src/keys.ts`)
-  - SQLite access layers (`src/db.ts`, `src/dbTokens.ts`)
-- **Role in the system:** source of truth for identity and access control; gateway uses it for auth checks.
-
-### `profile-service`
-
-- **Responsibility:** user profiles, avatars/media, friendship graph, relationship states, global chat endpoint.
-- **Technology:** Node.js, TypeScript, Fastify, SQLite, Sharp, multipart/static plugins.
-- **Main components:**
-  - HTTP entrypoint (`src/index.ts`)
-  - Profile/friend domain modules (`src/player.ts`, `src/friend.ts`, `src/friendService.ts`)
-  - Database + utilities (`src/dbPlayers.ts`, `src/helpers.ts`, `src/keys.ts`)
-- **Role in the system:** social layer and profile data provider for frontend and other services.
-
-### `statistics-service`
-
-- **Responsibility:** game result ingestion, stat aggregation, leaderboard and derived metrics.
-- **Technology:** Node.js, TypeScript, Fastify, SQLite.
-- **Main components:**
-  - API server (`src/index.ts`)
-  - Data access (`src/dbStats.ts`, `src/dbLeaderboard.ts`)
-  - Processing workers (`src/statsWorker.ts`, `src/leaderboardWorker.ts`)
-  - Domain contracts (`src/stats.types.ts`, `src/stats.enums.ts`, `src/stats.const.ts`)
-- **Role in the system:** analytical backend for rankings and performance insights.
-
-### `game-service` (SkyPong backend)
-
-- **Responsibility:** real-time multiplayer game orchestration and match sessions.
-- **Technology:** Node.js, TypeScript, Colyseus, Express/WebSocket stack.
-- **Main components:** server runtime in `game/server` + shared game contracts in `game/common`.
-- **Role in the system:** authoritative game state and multiplayer synchronization.
-
-### `game-frontend` (SkyPong client)
-
-- **Responsibility:** game-specific client UI rendered under `/game-engine/`.
-- **Technology:** React + Vite + TypeScript + Babylon.js + Colyseus client.
-- **Main components:** source in `game/client`, built and served as a dedicated frontend container.
-- **Role in the system:** specialized game interface decoupled from the main Next.js app.
-
----
-
-## 4) Communication Between Services
-
-### External communication
-
-- **HTTPS (TLS):** all user traffic enters via `https://localhost:8443`.
-- **REST-style HTTP:** domain APIs exposed under `/api/*` prefixes.
-- **WebSocket:**
-  - `/ws/*` for game real-time channels.
-  - `/api/chat/ws` for authenticated global chat.
-
-### Internal communication
-
-- Services communicate over Docker bridge networks (`backend`, `internal`).
-- Internal service URLs are configured via environment variables:
-  - `AUTH_SERVICE_URL`
-  - `PROFILE_SERVICE_URL`
-  - `STATS_SERVICE_URL`
-- A shared `SERVICE_TOKEN` is used for trusted service-to-service calls.
-
-### Data flow examples
-
-- **Login flow:** Frontend → NGINX `/api/auth/*` → auth-service → token/session returned.
-- **Protected profile flow:** Frontend → NGINX `/api/profile/*` → NGINX auth subrequest → auth-service verify → profile-service response.
-- **Game flow:** Frontend/Game client → `/api/game/*` and `/ws/*` → game-service.
-- **Stats flow:** game outcomes → statistics-service ingestion/aggregation → frontend leaderboard queries.
-
----
-
-## 5) Features
-
-- Secure authentication with token lifecycle and optional 2FA.
-- Profile management with avatar upload/static delivery.
-- Friendship operations (requests, accept/reject, block/unblock).
-- Real-time multiplayer game engine integration.
-- Real-time authenticated global chat.
-- Statistics aggregation and leaderboard capabilities.
-- Unified HTTPS gateway with reverse-proxy routing.
-- Built-in monitoring dashboards and alerting pipeline.
-- Containerized development/deployment workflow.
-
----
-
-## 6) Project Structure
-
-```text
-.
-├── auth-service/          # Identity, auth, tokens, 2FA
-├── profile-service/       # Profiles, friendships, avatars, chat
-├── statistics-service/    # Stats ingestion, aggregation, leaderboard
-├── game/                  # SkyPong backend/client/common packages
-├── front/                 # Main Next.js application
-├── nginx-gateway/         # TLS termination + API/WebSocket routing
-├── prometheus/            # Scrape config + alert rules
-├── grafana/               # Provisioning + dashboards
-├── alertmanager/          # Alert routing configuration
-├── seed/                  # One-shot data initialization
-├── sqlite-web/            # Optional SQLite inspection tooling
-├── docs/                  # API and architecture notes
-├── docker-compose-template.yml
-├── config_docker_path.sh
-└── Makefile
+```
+Client (Browser)                    Gateway (NGINX)                    Services (Docker)
+┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
+│ Next.js app      │ ─HTTPS─► │ TLS termination  │          │ auth-service     │
+│ (port 3000)     │          │ Route mapping    │◄──REST──►│ profile-service  │
+│                 │          │ WebSocket proxy │          │ stats-service   │
+├──────────────────┤          └──────────────────┘          ├──────────────────┤
+│ Game client      │ ─WS───► │                │◄──WS────►│ game-service    │
+│ (iframe/port 5173)          │          │               │          │ (Colyseus)      │
+└──────────────────┘          └──────────────────┘          └──────────────────┘
+                                              │
+                                         ┌─────┴─────┐
+                                         │ Observability│
+                                         │ (Prometheus │
+                                         │ Grafana)    │
+                                         └───────────┘
 ```
 
----
+All external traffic enters via NGINX over HTTPS. Services communicate internally over Docker bridge networks with shared service tokens.
 
-## 7) Installation
+### Game State Flow
+
+1. Player sends input (keyboard/touch) via WebSocket message
+2. Server aggregates input, runs physics at 60 Hz (Babylon.js NullEngine)
+3. Server detects collisions (CCD), updates scores, broadcasts state diffs
+4. Client receives diffs, interpolates ball position toward extrapolated target
+5. Client renders at browser refresh rate (60-144 Hz)
+
+## Key Features
+
+- **Game modes** — AI (3 difficulties), local 2-player, online PvP with room matchmaking
+- **PBR rendering** — Environment-based lighting, refractive glass paddles, marble materials, EXR skybox
+- **Server-authoritative** — Physics runs server-side (NullEngine), preventing cheating
+- **Real-time multiplayer** — WebSocket via Colyseus with 60 Hz server tick
+- **Client interpolation** — Exponential smoothing, wall reflection extrapolation, adaptive distance
+- **Design system** — TypeScript tokens, CVA components, unified shadows and backgrounds
+- **i18n** — Full UI in English, Spanish, and Italian with type-safe translation context
+- **Authentication** — JWT with access/refresh tokens, optional 2FA
+- **Social** — Friendship graph (send/accept/reject/block), global chat
+- **Statistics** — Game result ingestion, leaderboard aggregation
+- **Monitoring** — Prometheus metrics, Grafana dashboards, Alertmanager alerts
+- **Responsive** — Mobile touch controls, adaptive HUD sizing
+
+## Project Structure
+
+```
+skypong/
+├── front/                      # Next.js web application (redesigned)
+│   └── app/
+│       ├── lib/design-tokens.ts   # Single source of truth for design values
+│       ├── ui/base/             # CVA component library
+│       ├── ui/patterns/         # Reusable page patterns
+│       ├── ui/GameSceneBackground.tsx  # Babylon.js skybox
+│       └── ui/base/InteractiveMarbleBall.tsx  # PBR marble CTA
+│
+├── game/                      # SkyPong game engine
+│   ├── client/src_cli/
+│   │   ├── game/GameLoop.ts     # Interpolation + extrapolation
+│   │   ├── ui/GameHUD.ts       # Real-time overlay
+│   │   └── entities/           # Client-side ball/paddle/table
+│   ├── server/src_serv/
+│   │   ├── physics/PhysicsEngine.ts  # Server-side physics (CCD, collision response)
+│   │   ├── rooms/             # Colyseus rooms (Game, AI, PvP)
+│   │   └── entities/           # Server-side ball/paddle/table
+│   └── common/                # Shared Schema, constants
+│
+├── auth-service/            # Identity, tokens, 2FA
+├── profile-service/         # Profiles, avatars, friendships
+├── statistics-service/     # Stats, leaderboard
+├── nginx-gateway/          # TLS termination + routing
+├── prometheus/              # Metrics + alert rules
+├── grafana/                # Dashboards
+└── docker-compose.yml      # Orchestrates all services
+```
+
+## Additional Documentation
+
+More detailed documentation is available in the repository:
+
+- [Game Engine README](game/README.md) — Full game architecture, PBR rendering, server setup, Docker deployment, troubleshooting
+- [Frontend README](front/README.md) — Next.js web application structure and components
+- [Design System README](front/Design/README.md) — Design tokens, CVA components, refactoring documentation
+- [Auth Service README](auth-service/README.md) — Authentication service API, JWT, 2FA
+- [Profile Service README](profile-service/README.md) — Profile management, avatars, friendships
+- [Statistics Service README](statistics-service/README.md) — Game stats, leaderboard aggregation
+
+
+## Tech Stack
+
+| Layer                | Technologies                                           |
+| -------------------- | ------------------------------------------------------ |
+| **Web App**          | Next.js, React 18, TypeScript, Tailwind v4, CVA        |
+| **Game Client**      | Babylon.js 8, React 18, Vite 5, Colyseus.js            |
+| **Game Server**      | Colyseus 0.15, Babylon.js NullEngine, Express, Node.js |
+| **Backend Services** | Fastify, SQLite, JWT, Argon2, Sharp                    |
+| **Infrastructure**   | Docker, NGINX, Prometheus, Grafana                     |
+| **Languages**        | TypeScript (full-stack), CSS, GLSL                     |
+
+## Installation
 
 ### Prerequisites
 
@@ -181,214 +156,43 @@ This architecture is a good fit for a multiplayer platform because it enables:
 - GNU Make
 - Git
 
-> Optional for local service-only development: Node.js 20+ and npm.
-
-### Dependencies
-
-The full system dependencies are containerized. For local non-Docker runs, install per-service dependencies with `npm install` in each service directory.
-
 ### Setup
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Gugor/42-transcendence
 cd 42-transcendence
 make config
+make all
 ```
 
-`make config` will:
+This will:
 
-- create `.env` from `.env.example` if missing,
-- sync missing environment variables,
-- generate `docker-compose.yml` from `docker-compose-template.yml`,
-- replace host path placeholders with local `./volumes/*` paths.
+- Create `.env` from `.env.example` if missing
+- Sync missing environment variables
+- Generate `docker-compose.yml` from the template
+- Replace host path placeholders with local `./volumes/*` paths
+- Build and start all containers
 
----
-
-## 8) Running the Application
-
-### Start full system
+### Running
 
 ```bash
-make up
+make up      # Start all services
+make down    # Stop all services
+make logs    # View logs
+make ps      # Show container status
 ```
 
-### Common URLs
+### Access
 
 - Main app: `https://localhost:8443`
 - Grafana: `https://localhost:3001`
 
-### Stop / inspect
+## Repository
 
-```bash
-make ps
-make logs
-make down
-```
+- [Original Project](https://github.com/Gugor/42-transcendence)
 
-### Run individual services (local dev mode)
+## Collaborators
 
-Examples:
-
-```bash
-# Auth service
-cd auth-service
-npm install
-npm run dev
-
-# Profile service
-cd profile-service
-npm install
-npm run dev
-
-# Statistics service
-cd statistics-service
-npm install
-npm run dev
-
-# Main frontend
-cd front
-npm install
-npm run dev
-```
-
----
-
-## 9) Development
-
-### Recommended workflow
-
-1. Create/update `.env` and compose config via `make config`.
-2. Run `make up` for integrated development.
-3. Iterate inside the service folder you are modifying.
-4. Validate via gateway routes and logs.
-
-### Useful commands
-
-```bash
-make build        # Build images
-make rebuild      # Build without cache + start
-make restart      # Restart stack
-make clean        # Stop + remove compose file/orphans
-make clean-hard   # Destructive cleanup (volumes)
-make exec-nginx   # Shell in gateway container
-make exec-auth    # Shell in auth container
-make exec-game    # Shell in game-service container
-```
-
-### Contribution guidance
-
-- Keep domain logic within its owning service.
-- Prefer backward-compatible API changes.
-- Update environment variables and documentation with any contract change.
-- Preserve health checks and observability when adding endpoints/services.
-
----
-
-## 10) Design Decisions
-
-### 1) API Gateway first
-
-Using NGINX as a single entrypoint centralizes TLS, route mapping, and WebSocket proxying. This reduces duplication and enforces consistent security behavior.
-
-### 2) Domain isolation with per-service storage
-
-Each core domain persists its own SQLite data. This simplifies ownership boundaries and avoids tight coupling at the persistence layer.
-
-### 3) Mixed frontend strategy
-
-The repository intentionally contains:
-
-- a product-focused Next.js app (`front/`), and
-- a specialized game frontend (`game/client`) served separately.
-
-This supports independent release cadence for gameplay UX and broader platform UX.
-
-### 4) Observability as a built-in concern
-
-Prometheus/Grafana/Alertmanager are part of the default stack, enabling performance and reliability checks from day one instead of post-hoc instrumentation.
-
-### Trade-offs
-
-- SQLite keeps local setup simple but is less suitable for horizontal scale.
-- Multiple services improve modularity but increase orchestration complexity.
-- Gateway-centered routing is operationally clean but adds a single critical edge component.
-
----
-
-# ft_transcendence Module Compliance Audit
-
-## 1. Executive Summary
-
-Total Major modules fulfilled: **10**
-Total Minor modules fulfilled: **4**
-Estimated total points: **24**
-
-## 2. Fulfilled Modules
-
-### 2.1 Major: Framework for both frontend and backend
-
-- Frontend stack is based on **Next.js + React**.
-- Backend stack uses **Fastify** services and **Express/Colyseus** for game realtime server.
-
-### 2.2 Major: Real-time features using WebSockets
-
-- Realtime game server uses Colyseus websocket transport.
-- Chat websocket is handled in profile-service and proxied via nginx.
-
-### 2.3 Major: Allow users to interact with other users
-
-- Friends system includes send/accept/reject/cancel/remove/block/unblock.
-- Global chat is available in frontend and backend websocket handling.
-
-### 2.4 Minor: Multiple languages (>=3)
-
-- Languages implemented: English, Spanish, Italian.
-- Language switcher present in navigation UI.
-
-### 2.5 Minor: Additional browsers support
-
-- Frontend implementation uses standard web technologies; no browser-locked APIs.
-- Should be defended by showing live run on at least two browsers beyond Chrome during evaluation.
-
-### 2.6 Major: Standard user management and authentication
-
-- Endpoints for signup/login/verify/logout/password change/account deletion.
-- Access/refresh token flow with JWT verification and session checks.
-
-### 2.7 Minor: Game statistics and match history
-
-- Statistics service stores game results and exposes leaderboard/history.
-- Profile/statistics integration supports retrieving per-user match history.
-
-### 2.8 Major: AI Opponent
-
-- AI room (`ai_game_room`) and AI controller (`AIPaddleController`) are implemented in game server.
-
-### 2.9 Major: Implement a complete web-based game where users can play against each other.
-
-- The game can be real-time multiplayer.
-- Players must be able to play live matches.
-- The game must have clear rules and win/loss conditions.
-- The game can be 2D or 3D.
-
-### 2.10 Major: Remote players (2 separate computers)
-
-- PvP Colyseus room supports 2 real-time players connected remotely.
-- Room listing/join flow and game-state sync are implemented.
-
-### 2.11 Major: Advanced 3D graphics with Babylon.js
-
-- Game backend simulation uses Babylon.js engine primitives and 2D scene entities.
-- Game client/server architecture is designed around Babylon.js-compatible 2D gameplay.
-
-### 2.12 Minor: Gamification system
-
-- Achievements section and progression rules are implemented in the profile UI layer.
-
-### 2.13 Major: Monitoring with Prometheus and Grafana
-
-- Compose stack includes Prometheus, Grafana, cAdvisor, nginx exporter and dashboards.
-
-### 2.14 Major: Backend as microservices
-
-- Service decomposition is present (auth/profile/statistics/game/gateway/front/observability).
+- [Gugor](https://github.com/Gugor)
+- [ilropd](https://github.com/ilropd)
+- [MartiMarsa](https://github.com/MartiMarsa)
