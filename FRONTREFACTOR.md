@@ -1064,6 +1064,31 @@ const myComponentVariants = cva("base classes", {
   - `front/app/lib/i18n/locales/{en,es,it}.ts` - added clickToPlay
 
 - Validation:
+   - `npm exec tsc -- --noEmit` passes
+   - `npm exec next build -- --webpack` passes
+   - `npm run check:locales` passes (477 keys in parity)
+
+### 2026-04-21
+
+**PlayPanel Color System Update**
+
+- Updated `PlayPanel` component in `front/app/play/page.js` to use new slate design tokens:
+  - Title: Changed from default (inherited) to explicit `text-slate-900` for contrast
+  - Subtitle: Changed from `text-muted` to `text-slate-700` (using design token palette)
+  - Removed old purple color references from player wait screen
+
+- Files modified:
+  - `front/app/play/page.js` - PlayPanel function (lines 100-116)
+
+- Component usage: PlayPanel is used for all game mode selection screens:
+  - SELECT_MODE (main menu)
+  - AI_SELECT_DIFFICULTY (difficulty selection)
+  - MULTIPLAYER_MENU (multiplayer options)
+  - ONLINE_LOBBY (online lobby)
+  - ONLINE_JOIN_ROOM (room selection)
+  - **ONLINE_WAITING** (player wait for opponent) ← Main target
+  - CONFIGURE_GAME (game setup)
+
+- Validation:
   - `npm exec tsc -- --noEmit` passes
   - `npm exec next build -- --webpack` passes
-  - `npm run check:locales` passes (477 keys in parity)

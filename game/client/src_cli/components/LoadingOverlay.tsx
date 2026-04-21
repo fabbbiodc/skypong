@@ -36,7 +36,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ state, visible }) => {
             fontSize: 36,
             fontWeight: 700,
             letterSpacing: 3,
-            color: "#9333ea",
+            color: "#475569",
             fontFamily: "'Space Grotesk', sans-serif",
             marginBottom: 24,
             textTransform: "uppercase" as const,
@@ -47,7 +47,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ state, visible }) => {
         <div
           style={{
             fontSize: 18,
-            color: "#9333ea",
+            color: "#475569",
             fontFamily: "'Space Grotesk', sans-serif",
             fontWeight: 400,
           }}
