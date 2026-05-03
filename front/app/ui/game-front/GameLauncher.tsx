@@ -26,7 +26,7 @@ export default function GameLauncher() {
       const verifiedToken = encodeGameConfig(verifiedConfig);
       router.replace(`/canvas?config=${encodeURIComponent(verifiedToken)}`);
     } catch {
-      router.replace("/play?error=invalid-config");
+      router.replace("/game-mode?error=invalid-config");
     }
   }, [encodedConfig, router]);
 

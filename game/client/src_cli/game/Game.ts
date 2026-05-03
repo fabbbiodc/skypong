@@ -2,6 +2,7 @@ import { Scene, Vector3, Color3 } from "@babylonjs/core";
 import { InputController } from "../input/InputController";
 import { ClientEngine } from "./ClientEngine";
 import { RoomManager, RoomManagerCallbacks } from "./RoomManager";
+import { LocalGameState, LocalGameStateCallbacks } from "./LocalGameState";
 import { GameLoop } from "./GameLoop";
 import { CountdownManager } from "./CountdownManager";
 import { GameReadyManager } from "./GameReadyManager";
@@ -28,6 +29,7 @@ export class Game {
   private _isPlayer2: boolean = false;
   private _clientEngine: ClientEngine | null = null;
   private _roomManager: RoomManager | null = null;
+  private _localGameState: LocalGameState | null = null;
   private _gameLoop: GameLoop | null = null;
   private _countdownManager: CountdownManager | null = null;
   private _gameReadyManager: GameReadyManager | null = null;
@@ -111,27 +113,83 @@ export class Game {
         const scene = clientEngine.scene;
 
         try {
-          const roomManager = new RoomManager(
-            this._createRoomManagerCallbacks(
-              clientEngine,
-              table,
-              paddle,
-              paddle2,
-              ball,
-              gui,
-            ),
-          );
-
-          this._roomManager = roomManager;
-          const room = await roomManager.connect(
-            gameMode,
-            config,
-            config.roomId,
-          );
-          this._room = room;
-
           const isOnlineMode =
             gameMode === "online-create" || gameMode === "online-join";
+
+          // Create LocalGameState for local modes or RoomManager for online
+          if (isLocalMode) {
+            // Local game mode: AI or Local 2P
+            const localCallbacks: LocalGameStateCallbacks = {
+              onBallUpdate: (params) => {
+                this._gameLoop?.updateBallPosition(params.x, params.y, params.z);
+                this._gameLoop?.updateBallVelocity(params.vx, params.vy, params.vz);
+                this._gameLoop?.setBallEnabled(params.enabled);
+              },
+              onPaddleUpdate: (params) => {
+                this._gameLoop?.updatePaddlePosition(params.paddleIndex, params.x, params.z);
+                this._gameLoop?.setPaddleEnabled(params.paddleIndex, params.enabled);
+              },
+              onScoreUpdate: (params) => {
+                if (gui && gui.hud) {
+                  gui.hud.updateScores(
+                    params.player1Score,
+                    params.player2Score,
+                    this._winningScore ?? "5"
+                  );
+                }
+              },
+              onGameOver: (params) => {
+                this._isGameOver = true;
+                if (gui && gui.gameOverOverlay) {
+                  const isWinnerPlayer1 = params.winner === params.player1Name;
+                  gui.gameOverOverlay.show(
+                    params.winner,
+                    isWinnerPlayer1,
+                    params.player1Score,
+                    params.player2Score,
+                    params.player1Name,
+                    params.player2Name,
+                  );
+                }
+              },
+              onPlayerNameUpdate: (params) => {
+                if (gui && gui.hud) {
+                  gui.hud.updatePlayerNames(params.player1Name, params.player2Name);
+                }
+              },
+              onGameStarted: () => {
+                // Game started callback
+              },
+            };
+
+            this._localGameState = new LocalGameState(
+              ball.mesh,
+              paddle.mesh,
+              paddle2.mesh,
+              config,
+              localCallbacks,
+            );
+          } else {
+            // Online game mode: use RoomManager
+            const roomManager = new RoomManager(
+              this._createRoomManagerCallbacks(
+                clientEngine,
+                table,
+                paddle,
+                paddle2,
+                ball,
+                gui,
+              ),
+            );
+
+            this._roomManager = roomManager;
+            const room = await roomManager.connect(
+              gameMode,
+              config,
+              config.roomId,
+            );
+            this._room = room;
+          }
 
           this._countdownManager = new CountdownManager({
             onCountdownUpdate: (count) => {
@@ -142,17 +200,21 @@ export class Game {
               }
             },
             onCountdownComplete: () => {
-              roomManager.sendLaunch();
+              if (this._roomManager) {
+                this._roomManager.sendLaunch();
+              } else if (this._localGameState) {
+                this._localGameState.launch();
+              }
             },
           });
 
           this._gameReadyManager = new GameReadyManager({
-            roomManager,
+            roomManager: this._roomManager || undefined,
             countdownManager: this._countdownManager,
             gui,
             isPvP: isPvPMode,
             isOnline: isOnlineMode,
-            initialGameStarted: room.state?.gameStarted ?? false,
+            initialGameStarted: this._room?.state?.gameStarted ?? false,
             camera: clientEngine.engineSetup.camera,
             cameraView:
               config.cameraView ||
@@ -161,7 +223,7 @@ export class Game {
           });
 
           this._loadingManager = new LoadingManager({
-            roomManager,
+            roomManager: this._roomManager || undefined,
             isOnline: isOnlineMode,
             isPvP: isPvPMode,
           });
@@ -175,46 +237,54 @@ export class Game {
 
           touchControls.setInputController(input);
 
-          const gameLoop = new GameLoop({
+          const gameLoopConfig = {
             engine,
             scene,
             inputController: input,
-            roomManager,
+            roomManager: this._roomManager || undefined,
+            localGameState: this._localGameState || undefined,
             ball,
             paddle,
             paddle2,
             camera: clientEngine.engineSetup.camera,
-          });
+          };
+
+          const gameLoop = new GameLoop(gameLoopConfig);
           this._gameLoop = gameLoop;
 
           if (isLocalMode) {
             gui.hud.showPauseButton(() => {
               gui.pauseOverlay.show();
               this._gameLoop?.pause();
-              this._roomManager?.sendPause();
+              if (this._roomManager) {
+                this._roomManager.sendPause();
+              }
             });
           }
 
-          gameLoop.setInitialStates(
-            room.state.ball.enabled ?? true,
-            room.state.paddle.enabled ?? true,
-            room.state.paddle2.enabled ?? true,
-          );
-          gameLoop.setupStateListeners();
+          if (this._room) {
+            gameLoop.setInitialStates(
+              this._room.state.ball.enabled ?? true,
+              this._room.state.paddle.enabled ?? true,
+              this._room.state.paddle2.enabled ?? true,
+            );
+            gameLoop.setupStateListeners();
+          }
+
           gameLoop.start();
 
-          if (isPvPMode) {
-            if (this._gui && room.state) {
-              const p1Name = room.state.player1Name || player1Name;
-              const p2Name = room.state.player2Name || "Waiting...";
-              let bottomLabel = p1Name;
-              let topLabel = p2Name;
+          if (isPvPMode && this._room && this._room.state) {
+            const p1Name = this._room.state.player1Name || player1Name;
+            const p2Name = this._room.state.player2Name || "Waiting...";
+            let bottomLabel = p1Name;
+            let topLabel = p2Name;
 
-              if (room.sessionId === room.state.player2Id) {
-                bottomLabel = p2Name || "Waiting...";
-                topLabel = p1Name;
-              }
+            if (this._room.sessionId === this._room.state.player2Id) {
+              bottomLabel = p2Name || "Waiting...";
+              topLabel = p1Name;
+            }
 
+            if (this._gui && this._gui.hud) {
               this._gui.hud.updatePlayerNames(bottomLabel, topLabel);
             }
 
@@ -239,7 +309,7 @@ export class Game {
 
       createScene().then((scene) => {
         this._activeScene = scene;
-        if (this._room && clientEngine) {
+        if ((this._room || this._localGameState) && clientEngine) {
           clientEngine.engineSetup.engine.runRenderLoop(() => scene.render());
         }
       });
@@ -261,6 +331,7 @@ export class Game {
   private _cleanup(): void {
     this._roomManager?.disconnect();
     this._roomManager = null;
+    this._localGameState = null;
     this._room = null;
     this._input?.dispose();
     this._input = null;

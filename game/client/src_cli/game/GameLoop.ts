@@ -3,6 +3,7 @@ import { InputController } from "../input/InputController";
 import { ClientBall } from "../entities/ClientBall";
 import { ClientPaddle } from "../entities/ClientPaddle";
 import { RoomManager } from "./RoomManager";
+import { LocalGameState } from "./LocalGameState";
 import { INTERPOLATION, NETWORK, GMCN } from "@skypong/common/constants";
 import { VISUAL, CLIENT_TIMING } from "../config";
 
@@ -10,7 +11,8 @@ export interface GameLoopConfig {
   engine: Engine;
   scene: Scene;
   inputController: InputController;
-  roomManager: RoomManager;
+  roomManager?: RoomManager;
+  localGameState?: LocalGameState;
   ball: ClientBall;
   paddle: ClientPaddle;
   paddle2: ClientPaddle;
@@ -21,7 +23,8 @@ export class GameLoop {
   private _engine: Engine;
   private _scene: Scene;
   private _inputController: InputController;
-  private _roomManager: RoomManager;
+  private _roomManager: RoomManager | null;
+  private _localGameState: LocalGameState | null;
   private _ball: ClientBall;
   private _paddle: ClientPaddle;
   private _paddle2: ClientPaddle;
@@ -55,7 +58,8 @@ export class GameLoop {
     this._engine = config.engine;
     this._scene = config.scene;
     this._inputController = config.inputController;
-    this._roomManager = config.roomManager;
+    this._roomManager = config.roomManager || null;
+    this._localGameState = config.localGameState || null;
     this._ball = config.ball;
     this._paddle = config.paddle;
     this._paddle2 = config.paddle2;
@@ -167,18 +171,20 @@ export class GameLoop {
   }
 
   public setupStateListeners(): void {
-    const room = this._roomManager.room;
-    if (!room) return;
+    if (this._roomManager) {
+      const room = this._roomManager.room;
+      if (!room) return;
 
-    room.state.ball.listen("enabled", (value: boolean) => {
-      this._isBallEnabled = value ?? true;
-    });
-    room.state.paddle.listen("enabled", (value: boolean) => {
-      this._isPaddle1Enabled = value ?? true;
-    });
-    room.state.paddle2.listen("enabled", (value: boolean) => {
-      this._isPaddle2Enabled = value ?? true;
-    });
+      room.state.ball.listen("enabled", (value: boolean) => {
+        this._isBallEnabled = value ?? true;
+      });
+      room.state.paddle.listen("enabled", (value: boolean) => {
+        this._isPaddle1Enabled = value ?? true;
+      });
+      room.state.paddle2.listen("enabled", (value: boolean) => {
+        this._isPaddle2Enabled = value ?? true;
+      });
+    }
   }
 
   public start(): void {
@@ -202,6 +208,24 @@ export class GameLoop {
     }
 
     const deltaTime = this._engine.getDeltaTime();
+
+    // For local game state, update physics
+    if (this._localGameState) {
+      const p1State = this._inputController.getPaddle1InputState();
+      const p2State = this._inputController.getPaddle2InputState();
+      
+      // Convert key state to direction (-1, 0, 1)
+      // Player 1: W/S or A/D (W up, S down)
+      const player1Input = (p1State.w || p1State.a) ? 1 : (p1State.s || p1State.d) ? -1 : 0;
+      // Player 2: Up/Down or J/L (Up arrow up, Down arrow down)
+      const player2Input = (p2State.arrowup || p2State.j) ? 1 : (p2State.arrowdown || p2State.l) ? -1 : 0;
+      
+      this._localGameState.update(deltaTime, {
+        player1Input,
+        player2Input,
+      });
+    }
+
     const collisionDetected =
       performance.now() - this._lastCollisionAt <
       CLIENT_TIMING.COLLISION.WINDOW_MS;
@@ -313,7 +337,8 @@ export class GameLoop {
 
     if (
       ++this._inputSendCounter >= NETWORK.SYNC.INPUT_SEND_INTERVAL_FRAMES &&
-      !this._isGameOver
+      !this._isGameOver &&
+      this._roomManager
     ) {
       this._roomManager.sendInput({
         paddle1: this._inputController.getPaddle1InputState(),

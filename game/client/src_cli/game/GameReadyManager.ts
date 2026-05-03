@@ -4,7 +4,7 @@ import { FreeCamera } from "@babylonjs/core";
 import { animateCameraIntro } from "../utils/Camera";
 
 export interface GameReadyManagerConfig {
-  roomManager: RoomManager;
+  roomManager?: RoomManager;
   countdownManager: CountdownManager;
   gui: any;
   isPvP: boolean;
@@ -19,7 +19,7 @@ export interface GameReadyManagerConfig {
 }
 
 export class GameReadyManager {
-  private _roomManager: RoomManager;
+  private _roomManager: RoomManager | undefined;
   private _countdownManager: CountdownManager;
   private _gui: any;
   private _isPvP: boolean;
@@ -47,7 +47,7 @@ export class GameReadyManager {
   }
 
   public start(): void {
-    if (this._isOnline) {
+    if (this._isOnline && this._roomManager) {
       this._roomManager.signalClientReady();
     }
 
@@ -73,7 +73,7 @@ export class GameReadyManager {
   }
 
   public signalReady(): void {
-    if (this._isOnline) {
+    if (this._isOnline && this._roomManager) {
       this._roomManager.signalClientReady();
     }
   }
@@ -117,7 +117,7 @@ export class GameReadyManager {
     if (this._hasLaunched) return;
     this._hasLaunched = true;
 
-    const isPlayer2 = this._roomManager.isPlayer2;
+    const isPlayer2 = this._roomManager?.isPlayer2 ?? false;
 
     animateCameraIntro(this._camera, this._cameraView, isPlayer2, () => {
       this._countdownManager.start();

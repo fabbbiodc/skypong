@@ -39,7 +39,7 @@ export default function CanvasPage() {
         <p>{t?.game?.errors.invalidConfiguration}</p>
         <button
           type="button"
-          onClick={() => router.replace("/play?error=invalid-config")}
+          onClick={() => router.replace("/game-mode?error=invalid-config")}
         >
           {t?.common?.back || "Back"}
         </button>
@@ -47,5 +47,5 @@ export default function CanvasPage() {
     );
   }
 
-  return <GameScreen config={config} onExit={() => router.replace("/play")} />;
+  return <GameScreen config={config} onExit={() => router.replace("/game-mode")} />;
 }

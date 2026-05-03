@@ -4,9 +4,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { Space_Grotesk, Funnel_Sans } from "next/font/google";
 config.autoAddCss = false;
 import { LanguageProvider } from "./context/language-context";
-import { AuthProvider } from "./context/auth-context";
 import { getCurrentLocale } from "./lib/i18n/locale-manager";
-import GlobalChatUI from "./ui/global-chat-ui";
 import GameSceneBackground from "./ui/GameSceneBackground";
 
 const spaceGrotesk = Space_Grotesk({
@@ -38,18 +36,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <html lang={getCurrentLocale()}>
-           <body
-             className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}
-           >
-             <GameSceneBackground />
-             {children}
-             <GlobalChatUI />
-           </body>
-        </html>
-      </LanguageProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <html lang={getCurrentLocale()}>
+        <body
+          className={`${funnelSans.variable} ${spaceGrotesk.variable} font-sans`}
+        >
+          <GameSceneBackground />
+          {children}
+        </body>
+      </html>
+    </LanguageProvider>
   );
 }

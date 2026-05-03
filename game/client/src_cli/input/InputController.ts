@@ -27,20 +27,36 @@ export class InputController {
 
     this._keyboardObserver = scene.onKeyboardObservable.add((kbInfo) => {
       const key = kbInfo.event.key.toLowerCase();
+      const isKeyDown = kbInfo.type === KeyboardEventTypes.KEYDOWN;
+      
       switch (key) {
+        // Player 1: A/D keys
         case "a":
-          kbInfo.type == KeyboardEventTypes.KEYDOWN
-            ? this.pressLeft()
-            : this.releaseLeft();
+          this.inputMap["a"] = isKeyDown;
           break;
         case "d":
-          kbInfo.type == KeyboardEventTypes.KEYDOWN
-            ? this.pressRight()
-            : this.releaseRight();
+          this.inputMap["d"] = isKeyDown;
           break;
+        // Player 1: W/S keys (alternative)
+        case "w":
+          this.inputMap["w"] = isKeyDown;
+          break;
+        case "s":
+          this.inputMap["s"] = isKeyDown;
+          break;
+        // Player 2: J/L keys
         case "j":
+          this.inputMap["j"] = isKeyDown;
+          break;
         case "l":
-          this.inputMap[key] = kbInfo.type === KeyboardEventTypes.KEYDOWN;
+          this.inputMap["l"] = isKeyDown;
+          break;
+        // Player 2: Arrow keys
+        case "arrowup":
+          this.inputMap["arrowup"] = isKeyDown;
+          break;
+        case "arrowdown":
+          this.inputMap["arrowdown"] = isKeyDown;
           break;
       }
     });
@@ -50,12 +66,16 @@ export class InputController {
     return {
       a: !!this.inputMap["a"],
       d: !!this.inputMap["d"],
+      w: !!this.inputMap["w"],
+      s: !!this.inputMap["s"],
     };
   }
   public getPaddle2InputState() {
     return {
       j: !!this.inputMap["j"],
       l: !!this.inputMap["l"],
+      arrowup: !!this.inputMap["arrowup"],
+      arrowdown: !!this.inputMap["arrowdown"],
     };
   }
 

@@ -8,7 +8,7 @@ import {
 } from "../types/LoadingTypes";
 
 export interface LoadingManagerConfig {
-  roomManager: RoomManager;
+  roomManager?: RoomManager;
   isOnline: boolean;
   isPvP: boolean;
 }
@@ -16,7 +16,7 @@ export interface LoadingManagerConfig {
 export type StateChangeCallback = (state: LoadingState) => void;
 
 export class LoadingManager {
-  private _roomManager: RoomManager;
+  private _roomManager: RoomManager | undefined;
   private _isOnline: boolean;
   private _isPvP: boolean;
   private _state: LoadingState;
@@ -34,7 +34,7 @@ export class LoadingManager {
   public start(initialGameStarted: boolean): void {
     this._setPhase("connecting");
 
-    if (this._isOnline) {
+    if (this._isOnline && this._roomManager) {
       this._roomManager.signalClientReady();
     }
 
