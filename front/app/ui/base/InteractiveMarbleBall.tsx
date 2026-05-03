@@ -260,7 +260,7 @@ export function InteractiveMarbleBall({
     if (onClick) {
       onClick();
     } else {
-      router.push("/play");
+      router.push("/game-mode");
     }
   };
 

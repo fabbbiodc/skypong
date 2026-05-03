@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import type { GameConfig } from "../../lib/game/launch-config";
 import {
@@ -17,6 +17,20 @@ type Props = {
 export default function GameScreen({ config, onExit }: Props) {
   const { t } = useTranslation();
   const exitLabel = t?.game?.quit ?? "Quit";
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const GAME_CLIENT_URL = process.env.NEXT_PUBLIC_GAME_CLIENT_URL || "http://localhost:5173";
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "game-exit") {
+        onExit();
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [onExit]);
 
   const launchUrl = useMemo(() => {
     const engineConfig = toEngineLaunchConfig(config, {
@@ -24,27 +38,18 @@ export default function GameScreen({ config, onExit }: Props) {
       player2: t?.game?.player(2) || "Player 2",
     });
     const encoded = encodeEngineLaunchConfig(engineConfig);
-    return `/canvas?config=${encodeURIComponent(encoded)}`;
-  }, [config, t]);
+    return `${GAME_CLIENT_URL}/canvas?config=${encodeURIComponent(encoded)}`;
+  }, [config, t, GAME_CLIENT_URL]);
 
   return (
-    <section className="game-screen">
-      <h2>{t?.game?.playButton ?? "Play"}</h2>
-
+    <div className="fixed inset-0 z-50 bg-slate-950">
       <iframe
-        title="Game Engine"
+        ref={iframeRef}
         src={launchUrl}
-        style={{
-          width: "100%",
-          minHeight: "70vh",
-          border: "none",
-          borderRadius: "12px",
-        }}
+        title="Game"
+        className="h-full w-full border-0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       />
-
-      <button type="button" onClick={onExit}>
-        {exitLabel}
-      </button>
-    </section>
+    </div>
   );
 }

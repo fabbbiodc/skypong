@@ -27,7 +27,8 @@ export class ClientBall extends BaseBall {
       { diameter: GMCN.BALL.DIAMETER },
       scene,
     );
-    this.mesh.position.y = GMCN.BALL.RADIUS;
+    // Position on table surface (same as BaseBall sets, but explicit)
+    this.mesh.position.y = GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height / 2 + GMCN.BALL.RADIUS;
 
     const ballMat = MaterialFactory.CreatePBRMaterial(
       scene,

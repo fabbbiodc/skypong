@@ -88,7 +88,7 @@ const CanvasPage = () => {
 
     const isOnlineMode =
       config.gameMode === "online-create" || config.gameMode === "online-join";
-    const isPvPMode = config.gameMode === "local-2p" || isOnlineMode;
+    const isPvPMode = isOnlineMode; // Only online multiplayer waits for opponent
 
     dispose = startGame(
       canvasRef.current,

@@ -62,17 +62,16 @@ export class Game {
     const { gameMode } = config;
 
     const isPvPMode =
-      gameMode === "local-2p" ||
       gameMode === "online-create" ||
       gameMode === "online-join";
     const isAIMode = gameMode.startsWith("ai-");
+    const isLocal2P = gameMode === "local-2p";
+    const isLocalMode = isAIMode || isLocal2P;
     const initialPlayer2Name = isPvPMode
       ? "Waiting..."
       : isAIMode
         ? "AI"
         : player2Name;
-
-    const isLocalMode = isAIMode || gameMode === "local-2p";
 
     const onBackToMenuCallback = () => {
       if (this._onBackToMenu) {

@@ -77,7 +77,7 @@ export class GameLoop {
       this._paddle2.mesh.position.y,
       GMCN.TABLE.SIZE.depth / 2 - GMCN.PADDLE.SIZE.depth / 2,
     );
-    this._targetPosition.set(0, GMCN.BALL.RADIUS, 0);
+    this._targetPosition.set(0, GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height / 2 + GMCN.BALL.RADIUS, 0);
 
     this._lastBallPosition = this._ball.mesh.position.clone();
     this._lastSpeedSampleAt = performance.now();
@@ -215,10 +215,10 @@ export class GameLoop {
       const p2State = this._inputController.getPaddle2InputState();
       
       // Convert key state to direction (-1, 0, 1)
-      // Player 1: W/S or A/D (W up, S down)
-      const player1Input = (p1State.w || p1State.a) ? 1 : (p1State.s || p1State.d) ? -1 : 0;
-      // Player 2: Up/Down or J/L (Up arrow up, Down arrow down)
-      const player2Input = (p2State.arrowup || p2State.j) ? 1 : (p2State.arrowdown || p2State.l) ? -1 : 0;
+      // Player 1: A/D keys (A left, D right) - same for AI and Local 2P
+      const player1Input = p1State.a ? -1 : p1State.d ? 1 : 0;
+      // Player 2: J/L keys (J left, L right) - only for Local 2P
+      const player2Input = p2State.j ? -1 : p2State.l ? 1 : 0;
       
       this._localGameState.update(deltaTime, {
         player1Input,

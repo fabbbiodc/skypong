@@ -12,9 +12,12 @@ export interface GameConfig {
   readonly mode: (typeof GAME_MODES)[number];
   readonly difficulty?: (typeof GAME_DIFFICULTIES)[number];
   readonly pointsToWin: number;
-  readonly ballColor: string;
+  readonly player1Color?: string;
+  readonly player2Color?: string;
   readonly roomId?: string;
   readonly onlineRole?: "create" | "join";
+  readonly player1Name?: string;
+  readonly player2Name?: string;
 }
 
 function createGameConfigSchema(t?: TranslationDictionary) {
@@ -34,9 +37,12 @@ function createGameConfigSchema(t?: TranslationDictionary) {
       mode: z.enum(GAME_MODES),
       difficulty: z.enum(GAME_DIFFICULTIES).optional(),
       pointsToWin: z.number().int().min(3).max(11),
-      ballColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+      player1Color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+      player2Color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
       roomId: z.string().min(1).optional(),
       onlineRole: z.enum(["create", "join"]).optional(),
+      player1Name: z.string().optional(),
+      player2Name: z.string().optional(),
     })
     .superRefine((value, ctx) => {
       if (value.mode === "AI" && !value.difficulty) {

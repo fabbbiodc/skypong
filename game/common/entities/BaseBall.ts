@@ -14,8 +14,8 @@ export class BaseBall {
       { diameter: GMCN.BALL.DIAMETER },
       scene,
     );
-    // Default position: on table
-    this.mesh.position.y = GMCN.BALL.RADIUS;
+    // Position on top of table surface
+    this.mesh.position.y = GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height / 2 + GMCN.BALL.RADIUS;
   }
 
   public getPosition(): { x: number; y: number; z: number } {

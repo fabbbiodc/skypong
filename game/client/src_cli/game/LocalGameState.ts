@@ -353,11 +353,16 @@ export class LocalGameState {
     }
   }
 
-  /**
-   * Reset ball for next rally
-   */
+/**
+    * Reset ball for next rally
+    */
   private _resetRally(): void {
     this.physicsEngine.respawnBallAtCenter(this.ballBody);
+    // Launch the ball again after a short delay
+    setTimeout(() => {
+      this.physicsEngine.launchBall(this.ballBody);
+      this._notifyBallUpdate();
+    }, 1000);
     if (this.aiPaddle) {
       this.aiPaddle.partialReset();
     }

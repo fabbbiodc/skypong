@@ -1,6 +1,8 @@
 {
   "scripts": {
     "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve out",
     "check:locales": "node specs/check-locales-parity.mjs"
   },
   "dependencies": {

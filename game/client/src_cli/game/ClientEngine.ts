@@ -61,17 +61,27 @@ export class ClientEngine {
       ? [table.mesh, skybox, ball.mesh]
       : [table.mesh];
 
-    const createPaddle = (name: string) =>
+    const createPaddle = (name: string, color?: Color3) =>
       new ClientPaddle(scene, {
         name,
         materialKey: "CLEARGLASS",
-        albedoColor: new Color3(0.5, 0.5, 0.5),
-        tintColor: new Color3(0.5, 0.5, 0.5),
+        albedoColor: color || new Color3(0.5, 0.5, 0.5),
+        tintColor: color || new Color3(0.5, 0.5, 0.5),
         refractionRenderList,
       });
 
-    const paddle = createPaddle("paddle1");
-    const paddle2 = createPaddle("paddle2");
+    const p1Color = Color3.FromHexString(this._config.playerColor);
+    // AI opponent always uses grey color
+    const isAgainstAI = this._config.gameMode.startsWith("ai-");
+    const aiColor = new Color3(0.5, 0.5, 0.5);
+    const p2Color = isAgainstAI 
+      ? aiColor 
+      : (this._config.player2Color 
+        ? Color3.FromHexString(this._config.player2Color) 
+        : new Color3(0.96, 0.32, 0.11));
+
+    const paddle = createPaddle("paddle1", p1Color);
+    const paddle2 = createPaddle("paddle2", p2Color);
 
     const gui = new GameUIManager(
       scene,
@@ -96,11 +106,11 @@ export class ClientEngine {
 
     this.engineSetup.setResizeTarget(table.mesh);
 
-    const isPvPMode = false;
-    const isAIMode = false;
+    const isPvP = false;
+    const player2Label = isPvP ? "Waiting..." : this._config.gameMode.startsWith("ai-") ? "AI" : player2Name;
     gui.showGameHUD(
       player1Name,
-      isPvPMode ? "Waiting..." : isAIMode ? "AI" : player2Name,
+      player2Label,
     );
 
     this._entities = { ball, table, paddle, paddle2, gui, touchControls };

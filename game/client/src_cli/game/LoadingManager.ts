@@ -38,7 +38,8 @@ export class LoadingManager {
       this._roomManager.signalClientReady();
     }
 
-    const shouldWaitForOpponent = this._isPvP && !initialGameStarted;
+    // Only wait for opponent in online multiplayer, not local modes
+    const shouldWaitForOpponent = this._isOnline && this._isPvP && !initialGameStarted;
     this._waitingForOpponent = shouldWaitForOpponent;
 
     if (shouldWaitForOpponent) {

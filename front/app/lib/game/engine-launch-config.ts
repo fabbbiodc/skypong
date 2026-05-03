@@ -40,28 +40,34 @@ export function toEngineLaunchConfig(
     ...labels,
   };
 
+  const player1 = config.player1Name || resolvedLabels.player1;
+  const player2 = config.player2Name || resolvedLabels.player2;
+  const p1Color = config.player1Color || "#00A6ED";
+  const p2Color = config.player2Color || "#F6511D";
+
   if (config.mode === "AI") {
     return {
-      playerName: resolvedLabels.player1,
-      playerColor: config.ballColor,
+      playerName: player1,
+      playerColor: p1Color,
       gameMode:
         `ai-${config.difficulty.toLowerCase()}` as EngineLaunchConfig["gameMode"],
+      player2Name: "AI",
     };
   }
 
   if (config.mode === "LOCAL") {
     return {
-      playerName: resolvedLabels.player1,
-      playerColor: "#00A6ED",
+      playerName: player1,
+      playerColor: p1Color,
       gameMode: "local-2p",
-      player2Name: resolvedLabels.player2,
-      player2Color: "#F6511D",
+      player2Name: player2,
+      player2Color: p2Color,
     };
   }
 
   return {
-    playerName: resolvedLabels.player1,
-    playerColor: config.ballColor,
+    playerName: player1,
+    playerColor: p1Color,
     gameMode: config.onlineRole === "join" ? "online-join" : "online-create",
     roomId: config.roomId,
   };
