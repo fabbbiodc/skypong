@@ -4,7 +4,7 @@ import { ClientBall } from "../entities/ClientBall";
 import { ClientPaddle } from "../entities/ClientPaddle";
 import { RoomManager } from "./RoomManager";
 import { LocalGameState } from "./LocalGameState";
-import { INTERPOLATION, NETWORK, GMCN } from "@skypong/common/constants";
+import { NETWORK, GMCN } from "@skypong/common/constants";
 import { VISUAL, CLIENT_TIMING } from "../config";
 
 export interface GameLoopConfig {
@@ -30,7 +30,6 @@ export class GameLoop {
   private _paddle2: ClientPaddle;
   private _camera: FreeCamera;
 
-  private _targetPosition: Vector3 = new Vector3(0, 0, 0);
   private _targetPaddlePosition: Vector3 = new Vector3(0, 0, 0);
   private _targetPaddle2Position: Vector3 = new Vector3(0, 0, 0);
 
@@ -47,9 +46,8 @@ export class GameLoop {
   private _speedUpdateCounter: number = 0;
   private _inputSendCounter: number = 0;
 
-  // Velocity tracking for extrapolation and rotation
+  // Velocity tracking for rotation
   private _targetVelocity: Vector3 = new Vector3(0, 0, 0);
-  private _lastServerUpdateTime: number = 0;
 
   private _renderObserver: Observer<Scene> | null = null;
   private _renderObservable: any = null;
@@ -65,8 +63,7 @@ export class GameLoop {
     this._paddle2 = config.paddle2;
     this._camera = config.camera;
 
-    // Set default spawn positions until server state arrives
-    // Table depth is 10, paddles are at ±4.9 (half depth - half paddle depth)
+    // Set default spawn positions
     this._targetPaddlePosition.set(
       0,
       this._paddle.mesh.position.y,
@@ -77,25 +74,9 @@ export class GameLoop {
       this._paddle2.mesh.position.y,
       GMCN.TABLE.SIZE.depth / 2 - GMCN.PADDLE.SIZE.depth / 2,
     );
-    this._targetPosition.set(0, GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height / 2 + GMCN.BALL.RADIUS, 0);
 
     this._lastBallPosition = this._ball.mesh.position.clone();
     this._lastSpeedSampleAt = performance.now();
-  }
-
-  public updateBallPosition(x: number, y: number, z: number): void {
-    if (
-      x === undefined ||
-      y === undefined ||
-      z === undefined ||
-      isNaN(x) ||
-      isNaN(y) ||
-      isNaN(z)
-    ) {
-      return;
-    }
-    this._targetPosition.set(x, y, z);
-    this._lastServerUpdateTime = performance.now();
   }
 
   public updateBallVelocity(vx: number, vy: number, vz: number): void {
@@ -213,13 +194,13 @@ export class GameLoop {
     if (this._localGameState) {
       const p1State = this._inputController.getPaddle1InputState();
       const p2State = this._inputController.getPaddle2InputState();
-      
+
       // Convert key state to direction (-1, 0, 1)
       // Player 1: A/D keys (A left, D right) - same for AI and Local 2P
       const player1Input = p1State.a ? -1 : p1State.d ? 1 : 0;
       // Player 2: J/L keys (J left, L right) - only for Local 2P
       const player2Input = p2State.j ? -1 : p2State.l ? 1 : 0;
-      
+
       this._localGameState.update(deltaTime, {
         player1Input,
         player2Input,
@@ -229,64 +210,11 @@ export class GameLoop {
     const collisionDetected =
       performance.now() - this._lastCollisionAt <
       CLIENT_TIMING.COLLISION.WINDOW_MS;
-    const now = performance.now();
-
-    // Calculate extrapolation: predict where ball will be based on velocity
-    // This compensates for network latency and reduces visual lag
-    // NOTE: Server velocity is in units-per-frame, must convert to units-per-second
-    const SERVER_FPS = 60; // Server physics update rate
-    const timeSinceUpdate = now - this._lastServerUpdateTime;
-
-    // During collision window, reduce extrapolation to avoid overshooting the correction
-    // Outside collision window, extrapolate more aggressively up to 150ms
-    const maxExtrapolation = collisionDetected ? 50 : 150; // Less aggressive during collision
-    const extrapolationTime = Math.min(timeSinceUpdate, maxExtrapolation);
-
-    const extrapolatedPosition = this._targetPosition.clone();
-
-    // Arena bounds for wall reflection (ball center must stay within these)
-    const minX = GMCN.BORDERS.LEFT_EDGE + GMCN.BALL.RADIUS;
-    const maxX = GMCN.BORDERS.RIGHT_EDGE - GMCN.BALL.RADIUS;
-
-    // Extrapolate with wall reflection: simulate bounces off side walls
-    // instead of naively projecting past them (which caused "bounce away from edge" artifacts)
-    if (extrapolationTime > 0) {
-      const extrapolationAmount = extrapolationTime / 1000; // Convert to seconds
-      // Convert velocity from units/frame to units/second by multiplying by FPS
-      const vxPerSec = this._targetVelocity.x * SERVER_FPS;
-      const vyPerSec = this._targetVelocity.y * SERVER_FPS;
-      const vzPerSec = this._targetVelocity.z * SERVER_FPS;
-
-      // Y and Z: no walls to reflect off, extrapolate linearly
-      extrapolatedPosition.y += vyPerSec * extrapolationAmount;
-      extrapolatedPosition.z += vzPerSec * extrapolationAmount;
-
-      // X axis: simulate wall reflections (mirrors server physics)
-      let newX = extrapolatedPosition.x + vxPerSec * extrapolationAmount;
-
-      // Reflect off walls up to 3 times (handles very high speeds)
-      for (let i = 0; i < 3; i++) {
-        if (newX < minX) {
-          newX = minX + (minX - newX);
-        } else if (newX > maxX) {
-          newX = maxX - (newX - maxX);
-        } else {
-          break; // Within bounds, done
-        }
-      }
-
-      extrapolatedPosition.x = newX;
-    }
-
-    // Safety clamp: ensure extrapolated position never exceeds arena bounds
-    extrapolatedPosition.x = Math.max(
-      minX,
-      Math.min(maxX, extrapolatedPosition.x),
-    );
 
     if (
       ++this._speedUpdateCounter >= NETWORK.SYNC.SPEED_UPDATE_INTERVAL_FRAMES
     ) {
+      const now = performance.now();
       const elapsed = (now - this._lastSpeedSampleAt) / 1000;
       this._speed =
         elapsed > 0
@@ -298,32 +226,18 @@ export class GameLoop {
       this._speedUpdateCounter = 0;
     }
 
-    const ballSmoothingSpeed = collisionDetected
-      ? INTERPOLATION.COLLISION_SPEED
-      : INTERPOLATION.DEFAULT_SPEED;
     const paddleSmoothingSpeed = VISUAL.SMOOTHING.PADDLE_LERP_SPEED;
-
-    // Near-wall boost: tighter visual tracking when ball is close to wall boundaries
-    // Reduces the visual gap between render position and actual position at bounce time
-    const distToWall = Math.min(
-      Math.abs(extrapolatedPosition.x - minX),
-      Math.abs(extrapolatedPosition.x - maxX),
-    );
-    const nearWallBoost = distToWall < 0.3 ? 1.5 : 1.0;
-
-    const ballLerpFactor =
-      1 - Math.exp(-ballSmoothingSpeed * nearWallBoost * (deltaTime / 1000));
     const paddleLerpFactor =
       1 - Math.exp(-paddleSmoothingSpeed * (deltaTime / 1000));
 
-    // Pass extrapolated position and velocity to ball
+    // Update ball rotation (position is updated by physics directly)
     this._ball.update(
-      extrapolatedPosition,
-      ballLerpFactor,
       this._isBallEnabled,
       deltaTime,
       this._targetVelocity,
     );
+
+    // Update paddles with smoothing
     this._paddle.update(
       this._targetPaddlePosition,
       paddleLerpFactor,
@@ -350,7 +264,6 @@ export class GameLoop {
 
   public dispose(): void {
     this.stop();
-    this._targetPosition = new Vector3(0, 0, 0);
     this._targetPaddlePosition = new Vector3(0, 0, 0);
     this._targetPaddle2Position = new Vector3(0, 0, 0);
   }

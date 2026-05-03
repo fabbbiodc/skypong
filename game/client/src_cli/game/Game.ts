@@ -120,7 +120,6 @@ export class Game {
             // Local game mode: AI or Local 2P
             const localCallbacks: LocalGameStateCallbacks = {
               onBallUpdate: (params) => {
-                this._gameLoop?.updateBallPosition(params.x, params.y, params.z);
                 this._gameLoop?.updateBallVelocity(params.vx, params.vy, params.vz);
                 this._gameLoop?.setBallEnabled(params.enabled);
               },
@@ -394,8 +393,7 @@ export class Game {
             mat.subSurface.tintColor = Color3.FromHexString(color);
         });
       },
-      onBallUpdate: ({ x, y, z, vx, vy, vz }) => {
-        this._gameLoop?.updateBallPosition(x, y, z);
+      onBallUpdate: ({ vx, vy, vz }) => {
         this._gameLoop?.updateBallVelocity(vx, vy, vz);
       },
       onBallCollision: ({ lastImpactX, lastImpactZ, collisionTime }) => {

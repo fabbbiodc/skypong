@@ -60,45 +60,14 @@ export class ClientBall extends BaseBall {
   }
 
   public update(
-    targetPosition: Vector3,
-    lerpFactor: number,
     enabled: boolean,
     deltaTime: number,
-    targetVelocity?: Vector3,
+    velocity?: Vector3,
   ): void {
-    const justEnabled = enabled && !this.mesh.isEnabled();
-
     this.mesh.setEnabled(enabled);
     this.lastDeltaTime = deltaTime;
-    if (targetVelocity) {
-      this.lastVelocity.copyFrom(targetVelocity);
-    }
-
-    if (enabled) {
-      this.targetPosition.copyFrom(targetPosition);
-
-      // Check for large position jump (ball respawned at center)
-      // If ball moved more than LARGE_JUMP_THRESHOLD units suddenly, snap to new position
-      const distanceToTarget = Vector3.Distance(
-        this.mesh.position,
-        this.targetPosition,
-      );
-      const largeJump = distanceToTarget > ANIMATION.BALL.LARGE_JUMP_THRESHOLD;
-
-      if (justEnabled || largeJump) {
-        // Snap to new position immediately (respawn or just enabled)
-        this.mesh.position.copyFrom(this.targetPosition);
-        this.previousPosition.copyFrom(this.targetPosition);
-      } else {
-        // Approach A: Always smoothly interpolate toward server position
-        this.interpolationEngine.interpolate(
-          this.mesh.position,
-          this.targetPosition,
-          lerpFactor,
-          this.tempPosition,
-        );
-        this.mesh.position.copyFrom(this.tempPosition);
-      }
+    if (velocity) {
+      this.lastVelocity.copyFrom(velocity);
     }
 
     this.updateRotation();
