@@ -61,14 +61,32 @@ Controls:
 - Player 2: J/L keys (J=left, L=right)
 - Previously used W/S and Arrow keys
 
-#### `src_cli/game/ClientEngine.ts`
-- Creates paddles with colors from config
-- AI opponent always gets grey color
-- Shows correct names in HUD (uses config.gameMode to determine "AI" label)
+**Simplified (Physics Cleanup):**
+- Removed interpolation/extrapolation logic (no longer needed for client-side only)
+- Removed `_targetPosition`, `_lastServerUpdateTime` fields
+- Removed `updateBallPosition()` method
+- Ball position now follows physics directly (no smoothing delay)
+- Rolling rotation preserved using velocity
+- Removed unused `INTERPOLATION` import
 
 #### `src_cli/entities/ClientBall.ts`
 - Ball Y position: `GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height/2 + GMCN.BALL.RADIUS`
 - Fixed to sit on table surface (was 0.2, now 0.45)
+
+**Simplified (Physics Cleanup):**
+- Simplified `update()` method: removed interpolation, kept rotation
+- Method signature changed: removed `targetPosition` and `lerpFactor` parameters
+- Ball now renders at physics position directly
+
+#### `src_cli/game/Game.ts`
+**Simplified (Physics Cleanup):**
+- Removed `updateBallPosition` calls from callbacks
+- Updated `onBallUpdate` callbacks to not pass position (only velocity)
+
+#### `src_cli/game/ClientEngine.ts`
+- Creates paddles with colors from config
+- AI opponent always gets grey color
+- Shows correct names in HUD (uses config.gameMode to determine "AI" label)
 
 #### `src_cli/game/LocalGameState.ts`
 - Added 1-second delay before relaunching ball after each score (fixes game stopping after one point)
@@ -113,6 +131,15 @@ Controls:
 
 ### 7. Homepage Ball Navigation
 - Click now goes to `/game-mode` instead of `/play`
+
+### 8. Physics Simplification (Interpolation Removal)
+- **Removed**: `InterpolationEngine` usage in `ClientBall.ts` - no longer needed
+- **Removed**: Extrapolation logic in `GameLoop.ts` (was for network latency compensation)
+- **Removed**: `updateBallPosition()` method and `_targetPosition` field from `GameLoop.ts`
+- **Removed**: `_lastServerUpdateTime` tracking
+- **Simplified**: `ClientBall.update()` - now only handles rotation, position follows physics directly
+- **Result**: Ball movement feels more natural without interpolation lag
+- **Preserved**: Rolling rotation using velocity-based calculation
 
 ## To Run
 
