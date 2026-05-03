@@ -1,4 +1,3 @@
-import { RoomManager } from "./RoomManager";
 import {
   LoadingPhase,
   LoadingState,
@@ -7,46 +6,20 @@ import {
   PHASE_MESSAGES,
 } from "../types/LoadingTypes";
 
-export interface LoadingManagerConfig {
-  roomManager?: RoomManager;
-  isOnline: boolean;
-  isPvP: boolean;
-}
+export interface LoadingManagerConfig {}
 
 export type StateChangeCallback = (state: LoadingState) => void;
 
 export class LoadingManager {
-  private _roomManager: RoomManager | undefined;
-  private _isOnline: boolean;
-  private _isPvP: boolean;
   private _state: LoadingState;
   private _callbacks: StateChangeCallback[] = [];
-  private _hasLaunched: boolean = false;
-  private _waitingForOpponent: boolean = false;
 
   constructor(config: LoadingManagerConfig) {
-    this._roomManager = config.roomManager;
-    this._isOnline = config.isOnline;
-    this._isPvP = config.isPvP;
     this._state = { ...INITIAL_LOADING_STATE };
   }
 
-  public start(initialGameStarted: boolean): void {
-    this._setPhase("connecting");
-
-    if (this._isOnline && this._roomManager) {
-      this._roomManager.signalClientReady();
-    }
-
-    // Only wait for opponent in online multiplayer, not local modes
-    const shouldWaitForOpponent = this._isOnline && this._isPvP && !initialGameStarted;
-    this._waitingForOpponent = shouldWaitForOpponent;
-
-    if (shouldWaitForOpponent) {
-      this._setPhase("waiting-for-opponent");
-    } else {
-      this._setPhase("ready");
-    }
+  public start(): void {
+    this._setPhase("ready");
   }
 
   public getState(): LoadingState {
@@ -66,20 +39,8 @@ export class LoadingManager {
   }
 
   public triggerLaunch(): void {
-    if (this._hasLaunched || this._state.phase === "error") return;
-    this._hasLaunched = true;
+    if (this._state.phase === "error") return;
     this._setPhase("starting");
-  }
-
-  public handleGameStarted(): void {
-    if (this._waitingForOpponent) {
-      this._waitingForOpponent = false;
-      this._setPhase("ready");
-    }
-  }
-
-  public handleRoomExpired(): void {
-    this._setError("room-expired", "No opponent joined within 2 minutes.");
   }
 
   public handleConnectionError(details?: string): void {
@@ -92,8 +53,6 @@ export class LoadingManager {
 
   public dispose(): void {
     this._callbacks = [];
-    this._hasLaunched = false;
-    this._waitingForOpponent = false;
   }
 
   private _setPhase(phase: LoadingPhase): void {

@@ -9,7 +9,6 @@ import {
 import { GMCN } from "@skypong/common/constants";
 import { MaterialFactory } from "../factories/MaterialFactory";
 import { MAT, IMaterialOptions } from "../config/Materials";
-import { InterpolationEngine } from "../physics/InterpolationEngine";
 
 export type MaterialKey = keyof typeof MAT.INFO;
 
@@ -17,10 +16,6 @@ import { BasePaddle } from "@skypong/common/entities/BasePaddle";
 
 export class ClientPaddle extends BasePaddle {
   public mesh: Mesh;
-  private targetPosition: Vector3 = new Vector3();
-  private tempPosition: Vector3 = new Vector3();
-  private interpolationEngine: InterpolationEngine;
-  private scene: Scene;
   private spawnY: number =
     GMCN.TABLE.Y_POSITION +
     GMCN.TABLE.SIZE.height / 2 +
@@ -37,8 +32,6 @@ export class ClientPaddle extends BasePaddle {
     },
   ) {
     super(scene, options?.name ?? "clientPaddle");
-    this.scene = scene;
-    this.interpolationEngine = new InterpolationEngine();
 
     const paddleName = options?.name ?? "clientPaddle";
 
@@ -85,26 +78,11 @@ export class ClientPaddle extends BasePaddle {
 
   public update(
     targetPosition: Vector3,
-    lerpFactor: number,
     enabled: boolean,
   ): void {
-    const justEnabled = enabled && !this.mesh.isEnabled();
     this.mesh.setEnabled(enabled);
-
     if (enabled) {
-      this.targetPosition.copyFrom(targetPosition);
-
-      if (justEnabled) {
-        this.mesh.position.copyFrom(this.targetPosition);
-      } else {
-        this.interpolationEngine.interpolate(
-          this.mesh.position,
-          this.targetPosition,
-          lerpFactor,
-          this.tempPosition,
-        );
-        this.mesh.position.copyFrom(this.tempPosition);
-      }
+      this.mesh.position.copyFrom(targetPosition);
     }
   }
 }

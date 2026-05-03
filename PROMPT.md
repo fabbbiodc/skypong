@@ -141,6 +141,22 @@ Controls:
 - **Result**: Ball movement feels more natural without interpolation lag
 - **Preserved**: Rolling rotation using velocity-based calculation
 
+### 9. Online Mode Removal (Code Cleanup)
+- **Deleted**: `RoomManager.ts` - no longer needed (online multiplayer removed)
+- **Removed**: `colyseus.js` and `@colyseus/schema` from `package.json` dependencies
+- **Simplified**: `Game.ts` - removed online mode handling (`online-create`, `online-join`)
+- **Simplified**: `GameLoop.ts` - removed `RoomManager` dependency and input sending logic
+- **Simplified**: `GameReadyManager.ts` - removed `isPvP`, `isOnline`, `initialGameStarted` config requirements
+- **Simplified**: `LoadingManager.ts` - removed online mode config, simplified to always show "ready" state
+- **Result**: Cleaner codebase focused on local AI and Local 2P modes
+
+### 10. Additional Cleanup (Canvas/Start Pages)
+- **Simplified**: `CanvasPage.tsx` - removed `LoadingManager` references and `isOnlineMode` logic
+- **Updated**: `GameSessionConfig.ts` - removed `"online-create"` and `"online-join"` from `GameMode` type
+- **Updated**: `configDecoder.ts` - removed `online-join` validation for `roomId`
+- **Rewrote**: `StartPage.tsx` - removed all Colyseus/online code (lobby system, room listing, etc.)
+- **Result**: Frontend entry points now only handle local AI and Local 2P modes
+
 ## To Run
 
 ```bash

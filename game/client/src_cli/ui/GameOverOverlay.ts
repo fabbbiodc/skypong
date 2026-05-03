@@ -62,7 +62,7 @@ export class GameOverOverlay {
     this._scoreText = GUIElements.CreateText("finalScoreText", "", scoreStyle);
     this._container.addControl(this._scoreText);
 
-    // Show retry button only for local/AI modes (not for online modes)
+    // Show retry button for all local/AI modes
     const showRetryButton = [
       "ai-easy",
       "ai-medium",

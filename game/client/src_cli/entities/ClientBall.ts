@@ -2,7 +2,6 @@ import { Mesh, MeshBuilder, Scene, Vector3, Space } from "@babylonjs/core";
 import { MaterialFactory } from "../factories/MaterialFactory";
 import { MAT } from "../config/Materials";
 import { GMCN } from "@skypong/common/constants";
-import { InterpolationEngine } from "../physics/InterpolationEngine";
 import { ANIMATION } from "../config";
 
 import { BaseBall } from "@skypong/common/entities/BaseBall";
@@ -10,25 +9,23 @@ import { BaseBall } from "@skypong/common/entities/BaseBall";
 export class ClientBall extends BaseBall {
   public mesh: Mesh;
   private previousPosition: Vector3 = new Vector3();
-  private targetPosition: Vector3 = new Vector3();
-  private tempPosition: Vector3 = new Vector3();
   private rotationAxis: Vector3 = new Vector3();
-  private interpolationEngine: InterpolationEngine;
-  private scene: Scene;
   private lastVelocity: Vector3 = new Vector3();
   private lastDeltaTime: number = 0;
   private tempVelocity: Vector3 = new Vector3();
 
   constructor(scene: Scene) {
     super(scene);
-    this.scene = scene;
     this.mesh = MeshBuilder.CreateSphere(
       "ball",
       { diameter: GMCN.BALL.DIAMETER },
       scene,
     );
     // Position on table surface (same as BaseBall sets, but explicit)
-    this.mesh.position.y = GMCN.TABLE.Y_POSITION + GMCN.TABLE.SIZE.height / 2 + GMCN.BALL.RADIUS;
+    this.mesh.position.y =
+      GMCN.TABLE.Y_POSITION +
+      GMCN.TABLE.SIZE.height / 2 +
+      GMCN.BALL.RADIUS;
 
     const ballMat = MaterialFactory.CreatePBRMaterial(
       scene,
@@ -38,7 +35,6 @@ export class ClientBall extends BaseBall {
     this.mesh.material = ballMat;
 
     this.previousPosition.copyFrom(this.mesh.position);
-    this.interpolationEngine = new InterpolationEngine();
   }
 
   /**
@@ -75,32 +71,40 @@ export class ClientBall extends BaseBall {
   }
 
   private updateRotation(): void {
-    const SERVER_FPS = 60;
     const hasVelocity = this.lastVelocity.lengthSquared() > 0.000001;
-    let angle: number;
+    let angle: number = 0;
 
     if (hasVelocity) {
-      // Velocity-based rotation: physically accurate, immune to lerp damping
-      // Convert server velocity from units/frame to units/sec
-      this.tempVelocity.set(
-        this.lastVelocity.x * SERVER_FPS,
-        this.lastVelocity.y * SERVER_FPS,
-        this.lastVelocity.z * SERVER_FPS,
-      );
-      angle = this.interpolationEngine.calculateRollingRotationFromVelocity(
-        this.tempVelocity,
-        GMCN.BALL.RADIUS,
-        this.lastDeltaTime,
-        this.rotationAxis,
-      );
+      // Velocity-based rotation: physically accurate
+      // Convert from units/frame to units/second (assuming 60fps)
+      const SERVER_FPS = 60;
+      const vxPerSec = this.lastVelocity.x * SERVER_FPS;
+      const vzPerSec = this.lastVelocity.z * SERVER_FPS;
+      const speedXZ = Math.sqrt(vxPerSec * vxPerSec + vzPerSec * vzPerSec);
+
+      if (speedXZ > 0.0001) {
+        // Rotation axis perpendicular to velocity direction
+        this.rotationAxis.set(-vzPerSec, 0, vxPerSec);
+        this.rotationAxis.normalize();
+
+        // Physics formula: ω = v/r, then angle = ω × time (in seconds)
+        const angularVelocity = speedXZ / GMCN.BALL.RADIUS;
+        angle = -angularVelocity * (this.lastDeltaTime / 1000);
+      }
     } else {
-      // Fallback: position-based rotation when no velocity data available
-      angle = this.interpolationEngine.calculateRollingRotation(
-        this.mesh.position,
-        this.previousPosition,
-        GMCN.BALL.RADIUS,
-        this.rotationAxis,
-      );
+      // Fallback: position-based rotation
+      const dx = this.mesh.position.x - this.previousPosition.x;
+      const dz = this.mesh.position.z - this.previousPosition.z;
+      const distance = Math.sqrt(dx * dx + dz * dz);
+
+      if (distance > 0.0001) {
+        // Rotation axis perpendicular to movement direction
+        this.rotationAxis.set(-dz, 0, dx);
+        this.rotationAxis.normalize();
+
+        // Rotation angle = arc length / radius
+        angle = -distance / GMCN.BALL.RADIUS;
+      }
     }
 
     if (angle !== 0) {

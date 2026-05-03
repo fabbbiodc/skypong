@@ -4,7 +4,6 @@ import { decodeConfig } from "../../utils/configDecoder";
 import { startGame } from "../../game/Game";
 import LoadingOverlay from "../LoadingOverlay";
 import { GameSessionConfig } from "../../types/GameSessionConfig";
-import { LoadingManager } from "../../game/LoadingManager";
 import { LoadingState, INITIAL_LOADING_STATE } from "../../types/LoadingTypes";
 
 const CanvasPage = () => {
@@ -13,7 +12,6 @@ const CanvasPage = () => {
   const location = useLocation();
   const initializedRef = useRef(false);
   const initLockRef = useRef(false);
-  const loadingManagerRef = useRef<LoadingManager | null>(null);
   const [, forceUpdate] = useState({});
 
   const [loadingState, setLoadingState] = useState<LoadingState>(
@@ -36,7 +34,6 @@ const CanvasPage = () => {
 
   useEffect(() => {
     setLoadingState(INITIAL_LOADING_STATE);
-    loadingManagerRef.current = null;
   }, [config]);
 
   useEffect(() => {
@@ -86,27 +83,14 @@ const CanvasPage = () => {
       return;
     }
 
-    const isOnlineMode =
-      config.gameMode === "online-create" || config.gameMode === "online-join";
-    const isPvPMode = isOnlineMode; // Only online multiplayer waits for opponent
-
     dispose = startGame(
       canvasRef.current,
       config,
-      (onLaunch, isWaitingForOpponent = false) => {
-        if (isWaitingForOpponent) {
-          setLoadingState((prev) => ({
-            ...prev,
-            phase: "waiting-for-opponent",
-            message: "Waiting for opponent...",
-          }));
-          return;
-        }
-
+      (onLaunch) => {
         setLoadingState((prev) => ({
           ...prev,
-          phase: isOnlineMode ? "starting" : "ready",
-          message: isOnlineMode ? "Starting game..." : "Ready!",
+          phase: "ready",
+          message: "Ready!",
         }));
         handleReady();
 
@@ -120,12 +104,6 @@ const CanvasPage = () => {
       () => {
         // Post message to parent window to trigger game exit
         window.parent.postMessage({ type: "game-exit" }, "*");
-      },
-      (loadingManager) => {
-        loadingManagerRef.current = loadingManager;
-        loadingManager.onStateChange((state: LoadingState) => {
-          setLoadingState(state);
-        });
       },
     );
 
@@ -146,8 +124,6 @@ const CanvasPage = () => {
       if (retryTimeout) {
         clearTimeout(retryTimeout);
       }
-      loadingManagerRef.current?.dispose();
-      loadingManagerRef.current = null;
       dispose?.();
       initializedRef.current = false;
       initLockRef.current = false;

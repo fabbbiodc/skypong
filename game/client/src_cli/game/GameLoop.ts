@@ -2,7 +2,6 @@ import { Vector3, Scene, Engine, Observer, FreeCamera } from "@babylonjs/core";
 import { InputController } from "../input/InputController";
 import { ClientBall } from "../entities/ClientBall";
 import { ClientPaddle } from "../entities/ClientPaddle";
-import { RoomManager } from "./RoomManager";
 import { LocalGameState } from "./LocalGameState";
 import { NETWORK, GMCN } from "@skypong/common/constants";
 import { VISUAL, CLIENT_TIMING } from "../config";
@@ -11,7 +10,6 @@ export interface GameLoopConfig {
   engine: Engine;
   scene: Scene;
   inputController: InputController;
-  roomManager?: RoomManager;
   localGameState?: LocalGameState;
   ball: ClientBall;
   paddle: ClientPaddle;
@@ -23,7 +21,6 @@ export class GameLoop {
   private _engine: Engine;
   private _scene: Scene;
   private _inputController: InputController;
-  private _roomManager: RoomManager | null;
   private _localGameState: LocalGameState | null;
   private _ball: ClientBall;
   private _paddle: ClientPaddle;
@@ -41,10 +38,8 @@ export class GameLoop {
 
   private _lastBallPosition: Vector3 = new Vector3(0, 0, 0);
   private _lastSpeedSampleAt: number = 0;
-  private _lastCollisionAt: number = 0;
   private _speed: number = 0;
   private _speedUpdateCounter: number = 0;
-  private _inputSendCounter: number = 0;
 
   // Velocity tracking for rotation
   private _targetVelocity: Vector3 = new Vector3(0, 0, 0);
@@ -56,7 +51,6 @@ export class GameLoop {
     this._engine = config.engine;
     this._scene = config.scene;
     this._inputController = config.inputController;
-    this._roomManager = config.roomManager || null;
     this._localGameState = config.localGameState || null;
     this._ball = config.ball;
     this._paddle = config.paddle;
@@ -133,14 +127,6 @@ export class GameLoop {
     return this._isPaused;
   }
 
-  /**
-   * Mark collision event for enhanced interpolation speed
-   * Called from Game.ts when server sends collision event
-   */
-  public notifyCollision(): void {
-    this._lastCollisionAt = performance.now();
-  }
-
   public setInitialStates(
     ballEnabled: boolean | undefined,
     paddle1Enabled: boolean | undefined,
@@ -149,23 +135,6 @@ export class GameLoop {
     this._isBallEnabled = ballEnabled ?? true;
     this._isPaddle1Enabled = paddle1Enabled ?? true;
     this._isPaddle2Enabled = paddle2Enabled ?? true;
-  }
-
-  public setupStateListeners(): void {
-    if (this._roomManager) {
-      const room = this._roomManager.room;
-      if (!room) return;
-
-      room.state.ball.listen("enabled", (value: boolean) => {
-        this._isBallEnabled = value ?? true;
-      });
-      room.state.paddle.listen("enabled", (value: boolean) => {
-        this._isPaddle1Enabled = value ?? true;
-      });
-      room.state.paddle2.listen("enabled", (value: boolean) => {
-        this._isPaddle2Enabled = value ?? true;
-      });
-    }
   }
 
   public start(): void {
@@ -207,10 +176,6 @@ export class GameLoop {
       });
     }
 
-    const collisionDetected =
-      performance.now() - this._lastCollisionAt <
-      CLIENT_TIMING.COLLISION.WINDOW_MS;
-
     if (
       ++this._speedUpdateCounter >= NETWORK.SYNC.SPEED_UPDATE_INTERVAL_FRAMES
     ) {
@@ -237,29 +202,15 @@ export class GameLoop {
       this._targetVelocity,
     );
 
-    // Update paddles with smoothing
+    // Update paddles
     this._paddle.update(
       this._targetPaddlePosition,
-      paddleLerpFactor,
       this._isPaddle1Enabled,
     );
     this._paddle2.update(
       this._targetPaddle2Position,
-      paddleLerpFactor,
       this._isPaddle2Enabled,
     );
-
-    if (
-      ++this._inputSendCounter >= NETWORK.SYNC.INPUT_SEND_INTERVAL_FRAMES &&
-      !this._isGameOver &&
-      this._roomManager
-    ) {
-      this._roomManager.sendInput({
-        paddle1: this._inputController.getPaddle1InputState(),
-        paddle2: this._inputController.getPaddle2InputState(),
-      });
-      this._inputSendCounter = 0;
-    }
   }
 
   public dispose(): void {

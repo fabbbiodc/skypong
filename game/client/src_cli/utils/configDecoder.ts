@@ -98,22 +98,14 @@ export function decodeConfig(base64String: string | null): DecodeResult {
     };
   }
 
-  // Validate mode-specific required fields
-  if (gameMode === "local-2p" && !config.player2Name) {
-    return {
-      valid: false,
-      error: "player2Name is required for local-2p mode",
-      missingFields: ["player2Name"],
-    };
-  }
-
-  if (gameMode === "online-join" && !config.roomId) {
-    return {
-      valid: false,
-      error: "roomId is required for online-join mode",
-      missingFields: ["roomId"],
-    };
-  }
+   // Validate mode-specific required fields
+    if (gameMode === "local-2p" && !config.player2Name) {
+      return {
+        valid: false,
+        error: "player2Name is required for local-2p mode",
+        missingFields: ["player2Name"],
+      };
+    }
 
   // Validate optional winningScore
   if (config.winningScore !== undefined) {
