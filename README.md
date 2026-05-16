@@ -5,13 +5,19 @@
 [![Next.js](https://img.shields.io/badge/next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Node.js](https://img.shields.io/badge/node.js-5FA04E?style=flat&logo=node.js&logoColor=white)](https://nodejs.org)
 
-[![Play Now](https://img.shields.io/badge/🎮_Play_Now-Try_It!-brightgreen?style=for-the-badge)](https://fabbbiodc.github.io/skypong/)
 
 ## Demo
 
 ![Screen Recording 01](assets/screenrecording_01.gif)
 
 ![Screen Recording 02](assets/screenrecording_02.gif)
+
+
+<p align="center">
+  <a href="https://fabbbiodc.github.io/skypong/">
+    <img src="https://img.shields.io/badge/🎮_Play_Now-Try_It!-brightgreen?style=for-the-badge" width="300" alt="Play Now">
+  </a>
+</p>
 
 ## Description
 
