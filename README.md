@@ -159,8 +159,8 @@ More detailed documentation is available in the repository:
 ### Setup
 
 ```bash
-git clone https://github.com/Gugor/42-transcendence
-cd 42-transcendence
+git clone https://github.com/fabbbiodc/skypong
+cd skypong
 make config
 make all
 ```
