@@ -16,26 +16,6 @@ const PLAYER_COLORS = [
   { hex: "#F4E04D", name: "Yellow" },
 ];
 
-const GAME_MODES = [
-  {
-    id: "LOCAL",
-    title: "Local 2P",
-    description: "Play against another player on the same keyboard",
-    icon: "👥",
-  },
-  {
-    id: "AI",
-    title: "vs AI",
-    description: "Challenge the computer",
-    icon: "🤖",
-    difficulties: [
-      { id: "EASY", label: "Easy" },
-      { id: "MEDIUM", label: "Medium" },
-      { id: "HARD", label: "Hard" },
-    ],
-  },
-];
-
 function ColorPicker({ selectedColor, onColorSelect, label }) {
   return (
     <div className="flex flex-col gap-2">
@@ -73,6 +53,28 @@ export default function GameModePage() {
   const [player2Color, setPlayer2Color] = useState("#F6511D");
   const [player1Name, setPlayer1Name] = useState("");
   const [player2Name, setPlayer2Name] = useState("");
+
+  const gm = t?.gameMode || {};
+
+  const gameModes = [
+    {
+      id: "LOCAL",
+      title: gm.local2P || "Local 2P",
+      description: gm.local2PDesc || "Play against another player on the same keyboard",
+      icon: "👥",
+    },
+    {
+      id: "AI",
+      title: gm.vsAI || "vs AI",
+      description: gm.vsAIDesc || "Challenge the computer",
+      icon: "🤖",
+      difficulties: [
+        { id: "EASY", label: gm.easy || "Easy" },
+        { id: "MEDIUM", label: gm.medium || "Medium" },
+        { id: "HARD", label: gm.hard || "Hard" },
+      ],
+    },
+  ];
 
   const handleModeSelect = (modeId) => {
     setSelectedMode(modeId);
@@ -125,7 +127,6 @@ export default function GameModePage() {
   };
 
   if (selectedMode === "AI" && !showConfig) {
-    const aiMode = GAME_MODES.find((m) => m.id === "AI");
     return (
       <main className={mainContainers.centeredLayout.wrapper}>
         <Navbar />
@@ -134,12 +135,12 @@ export default function GameModePage() {
             <ContentContainer size="md">
               <div className="flex flex-col gap-8">
                 <div>
-                  <h1 className="text-xl font-bold mb-2">{aiMode?.title}</h1>
-                  <p className="text-sm text-slate-400">Select difficulty level</p>
+                  <h1 className="text-xl font-bold mb-2">{gameModes[1].title}</h1>
+                  <p className="text-sm text-slate-400">{gm.selectDifficulty || "Select difficulty level"}</p>
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  {aiMode?.difficulties?.map((diff) => (
+                  {gameModes[1].difficulties.map((diff) => (
                     <button
                       key={diff.id}
                       onClick={() => handleDifficultySelect(diff.id)}
@@ -151,7 +152,7 @@ export default function GameModePage() {
                 </div>
 
                 <Button onClick={handleBack} variant="secondary" className="w-full">
-                  Back
+                  {gm.back || "Back"}
                 </Button>
               </div>
             </ContentContainer>
@@ -165,7 +166,7 @@ export default function GameModePage() {
   }
 
   if (showConfig && selectedMode) {
-    const mode = GAME_MODES.find((m) => m.id === selectedMode);
+    const mode = gameModes.find((m) => m.id === selectedMode);
     return (
       <main className={mainContainers.centeredLayout.wrapper}>
         <Navbar />
@@ -178,7 +179,7 @@ export default function GameModePage() {
                   <p className="text-sm text-slate-400">{mode?.description}</p>
                   {selectedDifficulty && (
                     <p className="text-sm text-cyan-400 mt-2">
-                      Difficulty: {selectedDifficulty}
+                      {selectedDifficulty}
                     </p>
                   )}
                 </div>
@@ -188,7 +189,7 @@ export default function GameModePage() {
                     <>
                       <div>
                         <label className="block text-sm font-semibold mb-2">
-                          Player 1 Name
+                          {gm.player1Name || "Player 1 Name"}
                         </label>
                         <input
                           type="text"
@@ -200,7 +201,7 @@ export default function GameModePage() {
                       </div>
                       <div>
                         <label className="block text-sm font-semibold mb-2">
-                          Player 2 Name
+                          {gm.player2Name || "Player 2 Name"}
                         </label>
                         <input
                           type="text"
@@ -216,7 +217,7 @@ export default function GameModePage() {
                   {selectedMode === "AI" && (
                     <div>
                       <label className="block text-sm font-semibold mb-2">
-                        Your Name
+                        {gm.yourName || "Your Name"}
                       </label>
                       <input
                         type="text"
@@ -230,7 +231,7 @@ export default function GameModePage() {
 
                   <div>
                     <label className="block text-sm font-semibold mb-2">
-                      Winning Score
+                      {gm.winningScore || "Winning Score"}
                     </label>
                     <select
                       value={pointsToWin}
@@ -248,12 +249,12 @@ export default function GameModePage() {
                   {selectedMode === "LOCAL" && (
                     <>
                       <ColorPicker
-                        label="Player 1 Color"
+                        label={gm.player1Color || "Player 1 Color"}
                         selectedColor={player1Color}
                         onColorSelect={setPlayer1Color}
                       />
                       <ColorPicker
-                        label="Player 2 Color"
+                        label={gm.player2Color || "Player 2 Color"}
                         selectedColor={player2Color}
                         onColorSelect={setPlayer2Color}
                       />
@@ -262,31 +263,31 @@ export default function GameModePage() {
 
                   {selectedMode === "AI" && (
                     <ColorPicker
-                      label="Your Paddle Color"
+                      label={gm.yourPaddleColor || "Your Paddle Color"}
                       selectedColor={player1Color}
                       onColorSelect={setPlayer1Color}
                     />
                   )}
 
                   <div className="p-4 bg-slate-800/50 rounded-lg text-sm text-slate-300">
-                    <p className="font-semibold mb-2">Controls:</p>
+                    <p className="font-semibold mb-2">{gm.controls || "Controls:"}</p>
                     {selectedMode === "LOCAL" ? (
                       <>
-                        <p><strong>P1:</strong> A/D keys</p>
-                        <p><strong>P2:</strong> J/L keys</p>
+                        <p>{gm.p1Controls || "P1: A/D keys"}</p>
+                        <p>{gm.p2Controls || "P2: J/L keys"}</p>
                       </>
                     ) : (
-                      <p><strong>You:</strong> A/D keys</p>
+                      <p>{gm.yourControls || "You: A/D keys"}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="flex gap-4">
                   <Button onClick={handleBack} variant="secondary" className="flex-1">
-                    Back
+                    {gm.back || "Back"}
                   </Button>
                   <Button onClick={handleStartGame} variant="primary" className="flex-1">
-                    Start
+                    {gm.start || "Start"}
                   </Button>
                 </div>
               </div>
@@ -308,12 +309,12 @@ export default function GameModePage() {
           <ContentContainer size="md">
             <div className="flex flex-col gap-8">
               <div>
-                <h1 className="text-2xl font-bold">Select Game Mode</h1>
-                <p className="text-sm text-slate-400 mt-2">Choose how you want to play</p>
+                <h1 className="text-2xl font-bold">{gm.selectGameMode || "Select Game Mode"}</h1>
+                <p className="text-sm text-slate-400 mt-2">{gm.chooseHowToPlay || "Choose how you want to play"}</p>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
-                {GAME_MODES.map((mode) => (
+                {gameModes.map((mode) => (
                   <button
                     key={mode.id}
                     onClick={() => handleModeSelect(mode.id)}

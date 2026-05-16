@@ -89,10 +89,15 @@ export default function GameSceneBackground() {
         let envTexture: EXRCubeTexture | null = null;
         let textureLoadComplete = false;
 
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+        const texturePath = basePath
+          ? `${basePath}/environment/dramatic-sky1.exr`
+          : "/environment/dramatic-sky1.exr";
+
         const loadTextureWithTimeout = new Promise<void>((resolve) => {
           try {
             envTexture = new EXRCubeTexture(
-              GAME_SCENE_BG_CONFIG.ENVIRONMENT.TEXTURE_PATH,
+              texturePath,
               scene,
               GAME_SCENE_BG_CONFIG.ENVIRONMENT.TEXTURE_SIZE,
               false, // doNotLoadCubeMapData

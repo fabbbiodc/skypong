@@ -106,7 +106,11 @@ export class GUIElements {
     button.fontSize = 0;
 
     if (style.iconUrl) {
-      const icon = new Image(`${name}Icon`, style.iconUrl);
+      const baseUrl = import.meta.env.BASE_URL || "/";
+      const iconPath = style.iconUrl.startsWith("/")
+        ? `${baseUrl}${style.iconUrl.slice(1)}`
+        : `${baseUrl}${style.iconUrl}`;
+      const icon = new Image(`${name}Icon`, iconPath);
       icon.width = style.iconWidth;
       icon.height = style.iconHeight;
       icon.stretch = Image.STRETCH_UNIFORM;

@@ -40,7 +40,7 @@ export const GAME_SCENE_BG_CONFIG = {
   MAX_FPS: 60,
 
   // Texture loading timeout (ms)
-  LOAD_TIMEOUT: 3000,
+  LOAD_TIMEOUT: 10000,
 
   // Disable features for background use
   FEATURES: {
