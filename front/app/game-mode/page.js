@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "../hooks/use-translation";
+import { useMediaQuery } from "../hooks/use-media-query";
 import { Navbar, Footer, Button } from "../ui/base";
 import { PageContainer, ContentContainer } from "../ui/patterns";
 import { mainContainers } from "../lib/design-tokens";
@@ -45,6 +46,7 @@ function ColorPicker({ selectedColor, onColorSelect, label }) {
 export default function GameModePage() {
   const { t } = useTranslation();
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [selectedMode, setSelectedMode] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
   const [showConfig, setShowConfig] = useState(false);
@@ -53,6 +55,12 @@ export default function GameModePage() {
   const [player2Color, setPlayer2Color] = useState("#F6511D");
   const [player1Name, setPlayer1Name] = useState("");
   const [player2Name, setPlayer2Name] = useState("");
+
+  useEffect(() => {
+    if (isMobile && selectedMode === null) {
+      setSelectedMode("AI");
+    }
+  }, [isMobile, selectedMode]);
 
   const gm = t?.gameMode || {};
 
@@ -301,47 +309,51 @@ export default function GameModePage() {
     );
   }
 
-  return (
-    <main className={mainContainers.centeredLayout.wrapper}>
-      <Navbar />
-      <div className={mainContainers.centeredLayout.contentArea}>
-        <PageContainer>
-          <ContentContainer size="md">
-            <div className="flex flex-col gap-8">
-              <div>
-                <h1 className="text-2xl font-bold">{gm.selectGameMode || "Select Game Mode"}</h1>
-                <p className="text-sm text-slate-400 mt-2">{gm.chooseHowToPlay || "Choose how you want to play"}</p>
-              </div>
+  if (selectedMode === null && !isMobile) {
+    return (
+      <main className={mainContainers.centeredLayout.wrapper}>
+        <Navbar />
+        <div className={mainContainers.centeredLayout.contentArea}>
+          <PageContainer>
+            <ContentContainer size="md">
+              <div className="flex flex-col gap-8">
+                <div>
+                  <h1 className="text-2xl font-bold">{gm.selectGameMode || "Select Game Mode"}</h1>
+                  <p className="text-sm text-slate-400 mt-2">{gm.chooseHowToPlay || "Choose how you want to play"}</p>
+                </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {gameModes.map((mode) => (
-                  <button
-                    key={mode.id}
-                    onClick={() => handleModeSelect(mode.id)}
-                    className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-800 hover:border-cyan-500 transition-all text-left group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-3xl">{mode.icon}</div>
-                      <div className="flex-1">
-                        <h2 className="font-bold group-hover:text-cyan-400 transition-colors">
-                          {mode.title}
-                        </h2>
-                        <p className="text-sm text-slate-400">{mode.description}</p>
+                <div className="grid grid-cols-1 gap-4">
+                  {gameModes.map((mode) => (
+                    <button
+                      key={mode.id}
+                      onClick={() => handleModeSelect(mode.id)}
+                      className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-800 hover:border-cyan-500 transition-all text-left group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="text-3xl">{mode.icon}</div>
+                        <div className="flex-1">
+                          <h2 className="font-bold group-hover:text-cyan-400 transition-colors">
+                            {mode.title}
+                          </h2>
+                          <p className="text-sm text-slate-400">{mode.description}</p>
+                        </div>
+                        <div className="text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                          →
+                        </div>
                       </div>
-                      <div className="text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                        →
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          </ContentContainer>
-        </PageContainer>
-      </div>
-      <div className={mainContainers.centeredLayout.footer}>
-        <Footer />
-      </div>
-    </main>
-  );
+            </ContentContainer>
+          </PageContainer>
+        </div>
+        <div className={mainContainers.centeredLayout.footer}>
+          <Footer />
+        </div>
+      </main>
+    );
+  }
+
+  return null;
 }
