@@ -114,7 +114,8 @@ export function InteractiveMarbleBall({
         marbleMat.roughness = 0.15;
         marbleMat.forceIrradianceInFragment = true;
 
-        const textureBase = "/textures/marble/";
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+        const textureBase = `${basePath}/textures/marble/`;
         const albedoTex = new Texture(
           `${textureBase}marble_albedo.jpg`,
           scene,

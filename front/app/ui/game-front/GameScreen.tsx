@@ -41,7 +41,7 @@ export default function GameScreen({ config, onExit }: Props) {
       player2: t?.game?.player(2) || "Player 2",
     });
     const encoded = encodeEngineLaunchConfig(engineConfig);
-    return `${basePath}/game/canvas?config=${encodeURIComponent(encoded)}`;
+    return `${basePath}/game/#/canvas?config=${encodeURIComponent(encoded)}`;
   }, [config, t, GAME_CLIENT_URL, basePath]);
 
   useEffect(() => {
