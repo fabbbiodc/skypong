@@ -29,6 +29,7 @@ export const PHYSICS = {
 
   RESPAWN: {
     DELAY_MS: 1000, // 1 second before respawn
+    FALL_DELAY_MS: 1000, // 1 second of visible falling before ball disappears
     FALL_THRESHOLD: -5,
   },
 

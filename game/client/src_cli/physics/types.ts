@@ -22,12 +22,13 @@ export interface PhysicsBody {
  */
 export interface BallBody extends PhysicsBody {
   isInFall: boolean;
+  fallStartTime: number;
   fallThreshold: number;
   spawnY: number;
   tableWidthHalf: number;
   tableDepthHalf: number;
-  previousX: number; // For continuous collision detection on X axis
-  previousZ: number; // For continuous collision detection on Z axis (paddle collisions)
+  previousX: number;
+  previousZ: number;
 }
 
 /**

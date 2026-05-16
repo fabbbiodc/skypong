@@ -64,14 +64,7 @@ export class ClientPhysicsEngine {
         `Ball marked as falling: z=${body.mesh.position.z.toFixed(2)}, threshold=${ROOM_CONFIG.FALL_THRESHOLD_Z}`,
       );
       body.isInFall = true;
-    }
-
-    // Check if ball fell below threshold
-    if (body.isInFall && body.mesh.position.y <= body.fallThreshold) {
-      clientLogger.physics(
-        `Ball disabled: y=${body.mesh.position.y.toFixed(2)}, fallThreshold=${body.fallThreshold}`,
-      );
-      this.disableBody(body);
+      body.fallStartTime = performance.now();
     }
   }
 
@@ -351,6 +344,7 @@ export class ClientPhysicsEngine {
       restitution: PHYSICS.BALL.BOUNCE_RESTITUTION,
       friction: PHYSICS.BALL.FRICTION,
       isInFall: false,
+      fallStartTime: 0,
       fallThreshold: PHYSICS.RESPAWN.FALL_THRESHOLD,
       spawnY,
       tableWidthHalf: tableWidth / 2,

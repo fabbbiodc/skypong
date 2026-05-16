@@ -2,7 +2,7 @@ import { Mesh } from "@babylonjs/core";
 import { ClientPhysicsEngine } from "../physics/ClientPhysicsEngine";
 import { BallBody, PaddleBody } from "../physics/types";
 import { ClientAIPaddle, Difficulty } from "./ClientAIPaddle";
-import { GMCN, TIMING } from "@skypong/common/constants";
+import { GMCN, PHYSICS, TIMING } from "@skypong/common/constants";
 import { GameSessionConfig } from "../types/GameSessionConfig";
 
 /**
@@ -324,15 +324,18 @@ export class LocalGameState {
   private _checkForGoals(): void {
     if (!this.ballBody.isInFall) return;
 
+    const fallElapsed = performance.now() - this.ballBody.fallStartTime;
+    if (fallElapsed < PHYSICS.RESPAWN.FALL_DELAY_MS) return;
+
     // Determine which player scored
     let scorerIndex: 1 | 2;
     if (this.ballBody.mesh.position.z > 0) {
-      // Ball in positive Z - player 1 scored
       scorerIndex = 1;
     } else {
-      // Ball in negative Z - player 2 scored
       scorerIndex = 2;
     }
+
+    this.physicsEngine.disableBody(this.ballBody);
 
     if (scorerIndex === 1) {
       this.player1Score++;
@@ -342,13 +345,11 @@ export class LocalGameState {
 
     this._notifyScoreUpdate();
 
-    // Check for game over
     if (this.player1Score >= this.winningScore) {
       this._endGame(this.player1Name);
     } else if (this.player2Score >= this.winningScore) {
       this._endGame(this.player2Name);
     } else {
-      // Reset for next rally
       this._resetRally();
     }
   }
