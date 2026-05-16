@@ -21,6 +21,7 @@ export default function GameLauncher() {
   }, []);
 
   useEffect(() => {
+    if (!encodedConfig) return;
     try {
       const verifiedConfig = decodeGameConfig(encodedConfig);
       const verifiedToken = encodeGameConfig(verifiedConfig);

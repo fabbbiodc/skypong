@@ -40,6 +40,7 @@ interface HeroProps {
   titleSize?: TitleSize;
   ballSize?: "sm" | "md" | "lg";
   className?: string;
+  onReady?: () => void;
 }
 
 export function Hero({
@@ -47,6 +48,7 @@ export function Hero({
   titleSize = "md",
   ballSize = "sm",
   className,
+  onReady,
 }: HeroProps) {
   return (
     <section className={cn(heroVariants({ alignment }), className)}>
@@ -56,7 +58,7 @@ export function Hero({
         </h1>
       </div>
       <div>
-        <BallCTA size={ballSize} />
+        <BallCTA size={ballSize} onReady={onReady} />
       </div>
     </section>
   );

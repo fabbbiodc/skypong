@@ -7,7 +7,7 @@ export class CloudObject {
 
   public sprite: Sprite;
 
-  constructor(scene: Scene, position: Vector3) {
+  constructor(scene: Scene, position: Vector3, onProgress?: (progress: number) => void) {
     CloudObject._scene = scene;
 
     if (CloudObject.spriteManager) {
@@ -27,11 +27,13 @@ export class CloudObject {
       const texture = CloudObject.spriteManager!.texture;
 
       if (texture.isReady()) {
+        onProgress?.(55);
         resolve();
         return;
       }
 
       texture.onLoadObservable.addOnce(() => {
+        onProgress?.(55);
         resolve();
       });
 

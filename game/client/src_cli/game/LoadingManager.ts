@@ -38,6 +38,27 @@ export class LoadingManager {
     }
   }
 
+  public setPhase(phase: LoadingPhase, progress?: number): void {
+    if (this._state.phase === "error") return;
+    this._state = {
+      ...this._state,
+      phase,
+      message: PHASE_MESSAGES[phase],
+      error: null,
+      progress: progress !== undefined ? progress : this._state.progress,
+    };
+    this._notifyStateChange();
+  }
+
+  public setProgress(progress: number): void {
+    if (this._state.phase === "error") return;
+    this._state = {
+      ...this._state,
+      progress: Math.min(100, Math.max(0, progress)),
+    };
+    this._notifyStateChange();
+  }
+
   public triggerLaunch(): void {
     if (this._state.phase === "error") return;
     this._setPhase("starting");

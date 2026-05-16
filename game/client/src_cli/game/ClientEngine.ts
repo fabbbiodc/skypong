@@ -42,6 +42,7 @@ export class ClientEngine {
   public async init(
     player1Name: string,
     player2Name: string,
+    onProgress?: (progress: number) => void,
     onBackToMenu?: () => void,
     onResume?: () => void,
     onRetry?: () => void,
@@ -51,7 +52,9 @@ export class ClientEngine {
 
     this.engineSetup.camera.setTarget(Vector3.Zero());
 
-    const shadowGenerator = SceneLights.Create(scene);
+    onProgress?.(10);
+
+    const shadowGenerator = SceneLights.Create(scene, onProgress);
 
     const ball = new ClientBall(scene);
     const table = new ClientTable(scene);
@@ -106,6 +109,8 @@ export class ClientEngine {
 
     this.engineSetup.setResizeTarget(table.mesh);
 
+    onProgress?.(70);
+
     const isPvP = false;
     const player2Label = isPvP ? "Waiting..." : this._config.gameMode.startsWith("ai-") ? "AI" : player2Name;
     gui.showGameHUD(
@@ -116,6 +121,8 @@ export class ClientEngine {
     this._entities = { ball, table, paddle, paddle2, gui, touchControls };
 
     await SceneLights.waitForLoad();
+
+    onProgress?.(85);
 
     return this._entities;
   }

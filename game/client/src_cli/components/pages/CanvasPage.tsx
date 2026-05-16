@@ -5,6 +5,7 @@ import { startGame } from "../../game/Game";
 import LoadingOverlay from "../LoadingOverlay";
 import { GameSessionConfig } from "../../types/GameSessionConfig";
 import { LoadingState, INITIAL_LOADING_STATE } from "../../types/LoadingTypes";
+import { LoadingManager } from "../../game/LoadingManager";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -91,6 +92,7 @@ const CanvasPage = () => {
           ...prev,
           phase: "ready",
           message: "Ready!",
+          progress: 100,
         }));
         handleReady();
 
@@ -104,6 +106,11 @@ const CanvasPage = () => {
       () => {
         // Post message to parent window to trigger game exit
         window.parent.postMessage({ type: "game-exit" }, "*");
+      },
+      (loadingManager: LoadingManager) => {
+        loadingManager.onStateChange((state) => {
+          setLoadingState(state);
+        });
       },
     );
 

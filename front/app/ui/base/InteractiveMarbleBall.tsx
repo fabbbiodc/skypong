@@ -48,6 +48,7 @@ export interface InteractiveMarbleBallProps {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  onReady?: () => void;
 }
 
 export function InteractiveMarbleBall({
@@ -55,6 +56,7 @@ export function InteractiveMarbleBall({
   className,
   onClick,
   disabled = false,
+  onReady,
 }: InteractiveMarbleBallProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
@@ -165,6 +167,8 @@ export function InteractiveMarbleBall({
         marbleMat.metallic = 0.0;
 
         sphere.material = marbleMat;
+
+        onReady?.();
 
         const dirLight = new DirectionalLight(
           "dirLight",

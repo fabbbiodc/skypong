@@ -152,6 +152,8 @@ export default function GameSceneBackground() {
         if (!mounted) return;
 
         setIsLoading(false);
+        (window as any).__SKYBOX_READY__ = true;
+        window.dispatchEvent(new CustomEvent("skybox-ready"));
 
         // Setup window resize handler
         const handleResize = () => {

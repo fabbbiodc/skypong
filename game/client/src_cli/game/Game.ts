@@ -84,9 +84,28 @@ export class Game {
       this._clientEngine = clientEngine;
       const engine = clientEngine.engineSetup.engine;
 
+      this._loadingManager = new LoadingManager({});
+
+      if (onLoadingManagerReady) {
+        onLoadingManagerReady(this._loadingManager);
+      }
+
+      const progressToPhase = (progress: number): void => {
+        if (progress < 20) {
+          this._loadingManager?.setPhase("initializing", progress);
+        } else if (progress < 55) {
+          this._loadingManager?.setPhase("loading-sky", progress);
+        } else if (progress < 80) {
+          this._loadingManager?.setPhase("loading-textures", progress);
+        } else {
+          this._loadingManager?.setPhase("preparing", progress);
+        }
+      };
+
       const entities = await clientEngine.init(
         player1Name,
         initialPlayer2Name,
+        progressToPhase,
         onBackToMenuCallback,
         () => {
           this._gameLoop?.resume();
@@ -176,12 +195,6 @@ export class Game {
             onGameReady: this._onGameReady ?? undefined,
           });
 
-          this._loadingManager = new LoadingManager({});
-
-          if (onLoadingManagerReady) {
-            onLoadingManagerReady(this._loadingManager);
-          }
-
           const input = new InputController(scene);
           this._input = input;
 
@@ -267,6 +280,7 @@ export const startGame = (
   config: GameSessionConfig,
   onGameReady?: (onLaunch: () => void, isWaitingForOpponent?: boolean) => void,
   onBackToMenu?: () => void,
+  onLoadingManagerReady?: (loadingManager: LoadingManager) => void,
 ) => {
   const game = new Game();
   return game.startGame(
@@ -274,5 +288,6 @@ export const startGame = (
     config,
     onGameReady,
     onBackToMenu,
+    onLoadingManagerReady,
   );
 };

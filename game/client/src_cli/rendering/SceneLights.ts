@@ -23,7 +23,7 @@ export class SceneLights {
     await CloudObject.waitForLoad();
   }
 
-  public static Create(scene: Scene): ShadowGenerator {
+  public static Create(scene: Scene, onProgress?: (progress: number) => void): ShadowGenerator {
     SceneLights._scene = scene;
 
     if (SceneLights._envTexture) {
@@ -44,11 +44,13 @@ export class SceneLights {
 
     SceneLights._loadingPromise = new Promise<void>((resolve) => {
       if (envTexture.isReady()) {
+        onProgress?.(40);
         resolve();
         return;
       }
 
       envTexture.onLoadObservable.addOnce(() => {
+        onProgress?.(40);
         resolve();
       });
 
@@ -82,7 +84,7 @@ export class SceneLights {
     );
 
     const cloudPos = new Vector3(1, -5, 0);
-    const cloudObject = new CloudObject(scene, cloudPos);
+    const cloudObject = new CloudObject(scene, cloudPos, onProgress);
 
     dirLight.position = RENDERING.LIGHTS.DIRECTIONAL.POSITION;
     dirLight.intensity = RENDERING.LIGHTS.DIRECTIONAL.INTENSITY;

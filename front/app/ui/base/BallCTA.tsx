@@ -25,6 +25,7 @@ export interface BallCTAProps {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  onReady?: () => void;
 }
 
 export function BallCTA({
@@ -32,13 +33,14 @@ export function BallCTA({
   className,
   onClick,
   disabled = false,
+  onReady,
 }: BallCTAProps) {
   const { t } = useTranslation();
   const label = (t as unknown as { game?: { clickToPlay?: string } })?.game?.clickToPlay ?? "Click to play";
 
   return (
     <div className={cn(ballCTAVariants({ size }), className)}>
-      <InteractiveMarbleBall size={size} onClick={onClick} disabled={disabled} />
+      <InteractiveMarbleBall size={size} onClick={onClick} disabled={disabled} onReady={onReady} />
       <span className="text-sm font-medium text-slate-300 opacity-80">{label}</span>
     </div>
   );
