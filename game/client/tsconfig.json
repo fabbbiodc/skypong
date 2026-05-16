@@ -11,14 +11,12 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@skypong/common/*": ["../common/*"],
-      "@skypong/common": ["../common/GameState.ts"]
+      "@skypong/common/*": ["../common/*"]
     },
     "types": ["vite/client"]
   },
   "include": [
     "src_cli/**/*.ts",
-    "src_cli/**/*.tsx",
-    "../common/adjustcameraexample.ts"
+    "src_cli/**/*.tsx"
   ]
 }

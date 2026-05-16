@@ -2,13 +2,7 @@
   "name": "@skypong/common",
   "version": "1.0.0",
   "type": "module",
-  "main": "GameState.js",
-  "types": "GameState.d.ts",
   "exports": {
-    ".": "./GameState.js",
-    "./GameState": "./GameState.js",
-    "./GameConstants": "./GameConstants.js",
-    "./PhysicsConstants": "./PhysicsConstants.js",
     "./constants": "./constants/index.js",
     "./constants/*": "./constants/*.js",
     "./entities": "./entities/index.js",

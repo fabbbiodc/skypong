@@ -3,191 +3,123 @@
 [![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Babylon.js](https://img.shields.io/badge/babylon.js-351961?style=flat&logo=html5)](https://www.babylonjs.com)
 [![Next.js](https://img.shields.io/badge/next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org)
-[![Node.js](https://img.shields.io/badge/node.js-5FA04E?style=flat&logo=node.js&logoColor=white)](https://nodejs.org)
 
+A 3D Pong game with a modern web frontend. Play against AI or a friend on the same keyboard.
 
 ## Demo
 
-![Screen Recording 01](assets/screenrecording_01.gif)
+![Screen Recording](assets/screenrecording_01.gif)
 
-![Screen Recording 02](assets/screenrecording_02.gif)
+## Features
 
-## Description
+- **Game modes** — AI (3 difficulties) and local 2-player
+- **PBR rendering** — Babylon.js 3D engine with environment-based lighting, refractive glass paddles, marble materials
+- **Design system** — TypeScript tokens, CVA components, responsive mobile layout
+- **i18n** — Full UI in English, Spanish, and Italian
 
-SkyPong is a production-style multiplayer Pong platform built as a microservices architecture. The core is a real-time 3D Pong game with server-authoritative physics, PBR rendering, and multiple game modes. Around it sits a full product platform with authentication, profiles, social features, and game statistics.
+## Tech Stack
 
-This is a reupload with a fresh frontend UI of a project originally built by a team of 4 developers. The new version features a complete redesign of the Next.js web application with a unified design system while keeping the robust game engine and backend services intact.
-
-## Technologies & Concepts
-
-- **Web application** — Next.js (React), TypeScript, Tailwind v4, class-variance-authority, i18n (EN/ES/IT)
-- **Game client** — Babylon.js 8, React 18, Vite 5, Colyseus.js client
-- **Game server** — Colyseus 0.15, Babylon.js NullEngine (headless physics), Express
-- **Backend services** — Fastify, SQLite, JWT (Argon2), Sharp (avatar processing)
-- **Infrastructure** — Docker Compose, NGINX (TLS gateway), Prometheus, Grafana, Alertmanager
-- **Real-time sync** — WebSocket via Colyseus, Schema-based state diffs, client-side interpolation
-- **Physics** — Server-authoritative, continuous collision detection, angle-based bounce response
-- **Rendering** — PBR materials, EXR environment maps, refractive glass, real-time shadows
-- **Design system** — Unified design tokens, full CVA component library, responsive mobile layout
-
-## Frontend Redesign
-
-A complete redesign of the Next.js web application targeting consistency, maintainability, and scalable UI:
-
-- **Design tokens** — Single source of truth with TypeScript types for colors, typography, spacing, shadows
-- **Component library** — Full class-variance-authority patterns (Button, Card, TextField, Chip, Avatar, Badge, StatCard, Tabs)
-- **Pattern components** — Section, ListRow, EmptyState, LoadingState, PageContainer, FormCard, ProfileLayout
-- **Simplified CSS** — Reduced globals.css from 1300 to ~250 lines
-- **Background & shadow tokens** — Unified system replacing hardcoded values
-- **Navbar** — Auth-aware navigation with scroll behavior, dropdown menu
-- **Homepage** — Hero section, Footer, LanguageSelector, interactive PBR marble ball CTA
-- **Game scene background** — Babylon.js rotating EXR skybox integrated into Next.js layout
-- **i18n** — 477 translation keys verified across English, Spanish, and Italian
-- **TypeScript** — Strict typing on auth context, translation context, form validation
-- **Color system** — Updated from purple to slate palette for better contrast
-
-## How It Works
-
-### Architecture Overview
-
-```
-Client (Browser)                    Gateway (NGINX)                    Services (Docker)
-┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
-│ Next.js app      │ ─HTTPS─► │ TLS termination  │          │ auth-service     │
-│ (port 3000)     │          │ Route mapping    │◄──REST──►│ profile-service  │
-│                 │          │ WebSocket proxy │          │ stats-service   │
-├──────────────────┤          └──────────────────┘          ├──────────────────┤
-│ Game client      │ ─WS───► │                │◄──WS────►│ game-service    │
-│ (iframe/port 5173)          │          │               │          │ (Colyseus)      │
-└──────────────────┘          └──────────────────┘          └──────────────────┘
-                                              │
-                                         ┌─────┴─────┐
-                                         │ Observability│
-                                         │ (Prometheus │
-                                         │ Grafana)    │
-                                         └───────────┘
-```
-
-All external traffic enters via NGINX over HTTPS. Services communicate internally over Docker bridge networks with shared service tokens.
-
-### Game State Flow
-
-1. Player sends input (keyboard/touch) via WebSocket message
-2. Server aggregates input, runs physics at 60 Hz (Babylon.js NullEngine)
-3. Server detects collisions (CCD), updates scores, broadcasts state diffs
-4. Client receives diffs, interpolates ball position toward extrapolated target
-5. Client renders at browser refresh rate (60-144 Hz)
-
-## Key Features
-
-- **Game modes** — AI (3 difficulties), local 2-player, online PvP with room matchmaking
-- **PBR rendering** — Environment-based lighting, refractive glass paddles, marble materials, EXR skybox
-- **Server-authoritative** — Physics runs server-side (NullEngine), preventing cheating
-- **Real-time multiplayer** — WebSocket via Colyseus with 60 Hz server tick
-- **Client interpolation** — Exponential smoothing, wall reflection extrapolation, adaptive distance
-- **Design system** — TypeScript tokens, CVA components, unified shadows and backgrounds
-- **i18n** — Full UI in English, Spanish, and Italian with type-safe translation context
-- **Authentication** — JWT with access/refresh tokens, optional 2FA
-- **Social** — Friendship graph (send/accept/reject/block), global chat
-- **Statistics** — Game result ingestion, leaderboard aggregation
-- **Monitoring** — Prometheus metrics, Grafana dashboards, Alertmanager alerts
-- **Responsive** — Mobile touch controls, adaptive HUD sizing
+| Layer | Technologies |
+|-------|-------------|
+| **Web App** | Next.js, React 19, TypeScript, Tailwind v4, CVA |
+| **Game Client** | Babylon.js 8, React 18, Vite 5 |
+| **Build** | Static export, deployed to GitHub Pages |
 
 ## Project Structure
 
 ```
 skypong/
-├── front/                      # Next.js web application (redesigned)
+├── front/                      # Next.js web application
 │   └── app/
-│       ├── lib/design-tokens.ts   # Single source of truth for design values
-│       ├── ui/base/             # CVA component library
-│       ├── ui/patterns/         # Reusable page patterns
-│       ├── ui/GameSceneBackground.tsx  # Babylon.js skybox
-│       └── ui/base/InteractiveMarbleBall.tsx  # PBR marble CTA
+│       ├── game-mode/          # Game mode selection (AI/Local 2P)
+│       ├── launch/             # Config validation route
+│       ├── canvas/             # Game screen (iframe)
+│       ├── lib/                # Config encoding, i18n, design tokens
+│       └── ui/                 # Components and patterns
 │
-├── game/                      # SkyPong game engine
-│   ├── client/src_cli/
-│   │   ├── game/GameLoop.ts     # Interpolation + extrapolation
-│   │   ├── ui/GameHUD.ts       # Real-time overlay
-│   │   └── entities/           # Client-side ball/paddle/table
-│   ├── server/src_serv/
-│   │   ├── physics/PhysicsEngine.ts  # Server-side physics (CCD, collision response)
-│   │   ├── rooms/             # Colyseus rooms (Game, AI, PvP)
-│   │   └── entities/           # Server-side ball/paddle/table
-│   └── common/                # Shared Schema, constants
+├── game/
+│   ├── client/                 # Vite game client (Babylon.js 3D)
+│   │   └── src_cli/
+│   │       ├── game/           # Game loop, local state, engine
+│   │       ├── entities/       # Ball, paddle, table
+│   │       └── components/     # React UI overlays
+│   └── common/                 # Shared constants and base entities
 │
-├── auth-service/            # Identity, tokens, 2FA
-├── profile-service/         # Profiles, avatars, friendships
-├── statistics-service/     # Stats, leaderboard
-├── nginx-gateway/          # TLS termination + routing
-├── prometheus/              # Metrics + alert rules
-├── grafana/                # Dashboards
-└── docker-compose.yml      # Orchestrates all services
+└── scripts/
+    └── build.sh                # Production build script
 ```
 
-## Additional Documentation
-
-More detailed documentation is available in the repository:
-
-- [Game Engine README](game/README.md) — Full game architecture, PBR rendering, server setup, Docker deployment, troubleshooting
-- [Frontend README](front/README.md) — Next.js web application structure and components
-- [Design System README](front/Design/README.md) — Design tokens, CVA components, refactoring documentation
-- [Auth Service README](auth-service/README.md) — Authentication service API, JWT, 2FA
-- [Profile Service README](profile-service/README.md) — Profile management, avatars, friendships
-- [Statistics Service README](statistics-service/README.md) — Game stats, leaderboard aggregation
-
-
-## Tech Stack
-
-| Layer                | Technologies                                           |
-| -------------------- | ------------------------------------------------------ |
-| **Web App**          | Next.js, React 18, TypeScript, Tailwind v4, CVA        |
-| **Game Client**      | Babylon.js 8, React 18, Vite 5, Colyseus.js            |
-| **Game Server**      | Colyseus 0.15, Babylon.js NullEngine, Express, Node.js |
-| **Backend Services** | Fastify, SQLite, JWT, Argon2, Sharp                    |
-| **Infrastructure**   | Docker, NGINX, Prometheus, Grafana                     |
-| **Languages**        | TypeScript (full-stack), CSS, GLSL                     |
-
-## Installation
+## Getting Started
 
 ### Prerequisites
 
-- Docker + Docker Compose plugin
-- GNU Make
-- Git
+- Node.js 20+
+- npm
 
-### Setup
-
-```bash
-git clone https://github.com/Gugor/42-transcendence
-cd 42-transcendence
-make config
-make all
-```
-
-This will:
-
-- Create `.env` from `.env.example` if missing
-- Sync missing environment variables
-- Generate `docker-compose.yml` from the template
-- Replace host path placeholders with local `./volumes/*` paths
-- Build and start all containers
-
-### Running
+### Installation
 
 ```bash
-make up      # Start all services
-make down    # Stop all services
-make logs    # View logs
-make ps      # Show container status
+npm run install:all
 ```
 
-### Access
+This installs dependencies for the root, frontend, and game client in one command.
 
-- Main app: `https://localhost:8443`
-- Grafana: `https://localhost:3001`
+### Development
 
-## Repository
+```bash
+npm run dev
+```
+
+This starts both the Next.js frontend (port 3000) and the Vite game client (port 5173) concurrently. Visit `http://localhost:3000/` to play.
+
+### Production Build
+
+```bash
+BASE_PATH=/skypong npm run build
+```
+
+The static output is in `front/out/` and can be deployed to any static host.
+
+## Deployment
+
+### GitHub Pages
+
+This project is configured for GitHub Pages deployment via GitHub Actions. Push to the `deployB` branch to trigger an automatic build and deploy.
+
+The deployed site will be available at `https://fabbbiodc.github.io/skypong/`.
+
+### Other Static Hosts
+
+The `front/out/` directory contains a fully static site that can be deployed to:
+- **Vercel** — Connect repo, set build command to `npm run build`
+- **Netlify** — Set publish directory to `front/out`
+- **Cloudflare Pages** — Set output directory to `front/out`
+- **Any static host** — Upload `front/out/` contents
+
+## Architecture
+
+SkyPong is a static frontend-only application. The game runs entirely in the browser using Babylon.js for 3D rendering. There is no backend server — all game logic (physics, AI, scoring) runs client-side.
+
+The frontend (Next.js) handles the homepage, game mode selection, and configuration. It embeds the game client in an iframe, passing game settings via URL-encoded configuration.
+
+```
+┌─────────────────────────────────────────────┐
+│                 Browser                      │
+│                                              │
+│  ┌──────────────┐    ┌────────────────────┐  │
+│  │  Next.js     │    │  Game Client       │  │
+│  │  (iframe)    │───►│  (Babylon.js 3D)   │  │
+│  │              │    │                    │  │
+│  │  - Homepage  │    │  - Physics         │  │
+│  │  - Mode sel  │    │  - AI              │  │
+│  │  - Config    │    │  - Rendering       │  │
+│  └──────────────┘    └────────────────────┘  │
+└─────────────────────────────────────────────┘
+```
+
+## Original Project
+
+This is a simplified version of a larger multiplayer Pong platform. The original project included authentication, profiles, social features, and server-authoritative multiplayer.
 
 - [Original Project](https://github.com/Gugor/42-transcendence)
 

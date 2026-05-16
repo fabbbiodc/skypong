@@ -1,14 +1,16 @@
 {
-  "dependencies": {
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
-  },
   "devDependencies": {
-    "prettier": "^3.8.2"
+    "prettier": "^3.8.2",
+    "concurrently": "^9.1.0"
   },
   "scripts": {
-    "format": "prettier --write \"src/**/*.{js,ts,json,css}\""
+    "format": "prettier --write \"**/*.{js,ts,json,css,jsx,tsx}\"",
+    "install:all": "npm install && npm --prefix front install && npm --prefix game install",
+    "dev": "concurrently \"npm run dev:front\" \"npm run dev:game\" --names \"FRONT,GAME\" --prefix-colors \"cyan,yellow\"",
+    "dev:front": "npm --prefix front run dev",
+    "dev:game": "npm --prefix game run dev",
+    "build": "bash scripts/build.sh",
+    "build:game": "npm --prefix game run build",
+    "build:front": "npm --prefix front run build"
   }
 }

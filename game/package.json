@@ -3,7 +3,10 @@
   "private": true,
   "workspaces": [
     "common",
-    "server",
     "client"
-  ]
+  ],
+  "scripts": {
+    "dev": "cd client && vite",
+    "build": "cd client && tsc && vite build"
+  }
 }

@@ -19,7 +19,30 @@ export default function GameScreen({ config, onExit }: Props) {
   const exitLabel = t?.game?.quit ?? "Quit";
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const GAME_CLIENT_URL = process.env.NEXT_PUBLIC_GAME_CLIENT_URL || "http://localhost:5173";
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const GAME_CLIENT_URL = process.env.NEXT_PUBLIC_GAME_CLIENT_URL;
+
+  const gameSrc = useMemo(() => {
+    if (GAME_CLIENT_URL) {
+      return GAME_CLIENT_URL;
+    }
+    if (!basePath) {
+      return "http://localhost:5173/canvas?config=" + encodeURIComponent(
+        encodeEngineLaunchConfig(
+          toEngineLaunchConfig(config, {
+            player1: t?.game?.player(1) || "Player 1",
+            player2: t?.game?.player(2) || "Player 2",
+          })
+        )
+      );
+    }
+    const engineConfig = toEngineLaunchConfig(config, {
+      player1: t?.game?.player(1) || "Player 1",
+      player2: t?.game?.player(2) || "Player 2",
+    });
+    const encoded = encodeEngineLaunchConfig(engineConfig);
+    return `${basePath}/game/canvas?config=${encodeURIComponent(encoded)}`;
+  }, [config, t, GAME_CLIENT_URL, basePath]);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -32,20 +55,11 @@ export default function GameScreen({ config, onExit }: Props) {
     return () => window.removeEventListener("message", handleMessage);
   }, [onExit]);
 
-  const launchUrl = useMemo(() => {
-    const engineConfig = toEngineLaunchConfig(config, {
-      player1: t?.game?.player(1) || "Player 1",
-      player2: t?.game?.player(2) || "Player 2",
-    });
-    const encoded = encodeEngineLaunchConfig(engineConfig);
-    return `${GAME_CLIENT_URL}/canvas?config=${encodeURIComponent(encoded)}`;
-  }, [config, t, GAME_CLIENT_URL]);
-
   return (
     <div className="fixed inset-0 z-50 bg-slate-950">
       <iframe
         ref={iframeRef}
-        src={launchUrl}
+        src={gameSrc}
         title="Game"
         className="h-full w-full border-0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
