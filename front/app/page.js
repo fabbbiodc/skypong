@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "./hooks/use-translation";
-import { Navbar, Footer, Hero, LanguageSelector } from "./ui/base";
+import { Navbar, Footer, Hero, LanguageSelector, AboutModal } from "./ui/base";
 import { homepage, responsiveSpacing } from "./lib/design-tokens";
 import { cn } from "./lib/utils";
 
@@ -10,6 +10,7 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [ballReady, setBallReady] = useState(false);
   const [skyReady, setSkyReady] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const skyReadyRef = useRef(false);
 
   useEffect(() => {
@@ -41,11 +42,18 @@ export default function HomePage() {
         <div className={cn(homepage.contentCard.width.mobile, homepage.contentCard.maxWidth, homepage.contentCard.width.desktop, "flex flex-col items-center", "max-h-[70dvh]")}>
           <Hero titleSize="lg" ballSize="lg" onReady={handleBallReady} />
           <LanguageSelector className="mt-2" />
+          <button
+            onClick={() => setAboutOpen(true)}
+            className="mt-3 text-sm font-semibold text-slate-400 transition-colors hover:text-white"
+          >
+            {t.homePage?.about ?? "About"}
+          </button>
         </div>
       </div>
       <div className={homepage.footer.position}>
         <Footer />
       </div>
+      <AboutModal isOpen={aboutOpen} onClose={() => setAboutOpen(false)} />
       {!isReady && (
         <div
           style={{

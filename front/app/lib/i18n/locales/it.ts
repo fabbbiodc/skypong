@@ -4,6 +4,12 @@ const it = {
     welcome: "Benvenuto nel cielo del Pong",
     description: "Un'esperienza celestiale di Pong",
     label: "Vai alla Home",
+    about: "Informazioni",
+    aboutModal: {
+      title: "Informazioni",
+      description: "SkyPong è un gioco di Pong 3D realizzato con Babylon.js. Questa è una versione semplificata con modalità IA locale e 2 giocatori. Il progetto completo con multiplayer online, profili giocatore e altro è disponibile su GitHub.",
+      repoLink: "Scopri il progetto completo su GitHub →",
+    },
   },
   user: {
     hi: ({ name, className, url }) =>

@@ -15,6 +15,7 @@ export { LanguageSelector } from "./LanguageSelector";
 export { Toast } from "./Toast";
 export { InteractiveMarbleBall } from "./InteractiveMarbleBall";
 export { BallCTA } from "./BallCTA";
+export { AboutModal } from "./AboutModal";
 
 // Design tokens exports (single source of truth)
 export {
