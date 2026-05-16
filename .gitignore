@@ -37,5 +37,8 @@ game/common/**/*.js
 *.tsbuildinfo
 game/common/tsconfig.tsbuildinfo
 
+# Platform-specific lockfiles
+game/package-lock.json
+
 # Documentation
 .opencode
