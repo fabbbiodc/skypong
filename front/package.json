@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@babylonjs/core": "^9.3.1",
+    "@babylonjs/loaders": "^9.3.1",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.1",
@@ -17,9 +18,9 @@
     "next": "^15",
     "ogl": "^1.0.11",
     "postcss": "^8.5.6",
-    "react-hook-form": "^7.65.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hook-form": "^7.65.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.1.18",
     "zod": "^4.3.6"

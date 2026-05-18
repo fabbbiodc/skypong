@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import "@babylonjs/loaders";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   Engine,
   Scene,
@@ -11,21 +12,88 @@ import {
 } from "@babylonjs/core";
 import { GAME_SCENE_BG_CONFIG } from "./GameSceneBackgroundConfig";
 
-/**
- * GameSceneBackground Component
- *
- * Renders a slowly rotating Babylon.js skybox using the game's EXR environment map.
- * This creates a visually cohesive experience between the frontend and game.
- *
- * The EXR file is copied to front/public/environment/ during setup.
- *
- * Features:
- * - Async EXR texture loading with timeout
- * - Smooth rotation animation (~60s per full revolution)
- * - Responsive to window resize
- * - Proper cleanup on unmount (prevents memory leaks)
- * - Fallback to clear color if texture fails
- */
+function isMobileDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  const ua = navigator.userAgent;
+  return (
+    /iPad|iPhone|iPod|Android/.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+    window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
+function getEXRPath(): string {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const filename = isMobileDevice()
+    ? "dramatic-sky1-mobile.exr"
+    : "dramatic-sky1.exr";
+  return basePath ? `${basePath}/environment/${filename}` : `/environment/${filename}`;
+}
+
+async function loadEXRWithRetry(
+  scene: Scene,
+  maxRetries = 3,
+  timeoutMs = 8000,
+): Promise<EXRCubeTexture | null> {
+  const texturePath = getEXRPath();
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(
+        `[GameSceneBackground] Loading EXR (attempt ${attempt}/${maxRetries}): ${texturePath}`,
+      );
+
+      const envTexture = new EXRCubeTexture(
+        texturePath,
+        scene,
+        GAME_SCENE_BG_CONFIG.ENVIRONMENT.TEXTURE_SIZE,
+        false,
+        true,
+        false,
+        true,
+      );
+
+      const loadPromise = new Promise<EXRCubeTexture>((resolve, reject) => {
+        if (envTexture.isReady()) {
+          resolve(envTexture);
+          return;
+        }
+
+        const timeoutId = setTimeout(() => {
+          if (envTexture.isReady()) {
+            resolve(envTexture);
+          } else {
+            reject(new Error("EXR load timeout"));
+          }
+        }, timeoutMs);
+
+        envTexture.onLoadObservable.addOnce(() => {
+          clearTimeout(timeoutId);
+          resolve(envTexture);
+        });
+      });
+
+      const result = await loadPromise;
+      console.log(`[GameSceneBackground] EXR loaded successfully on attempt ${attempt}`);
+      return result;
+    } catch (error) {
+      console.warn(
+        `[GameSceneBackground] EXR load attempt ${attempt} failed:`,
+        error,
+      );
+
+      if (attempt === maxRetries) {
+        console.error("[GameSceneBackground] All EXR load attempts failed");
+        return null;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+    }
+  }
+
+  return null;
+}
+
 export default function GameSceneBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
@@ -33,6 +101,12 @@ export default function GameSceneBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+
+  const signalReady = useCallback(() => {
+    setIsLoading(false);
+    (window as any).__SKYBOX_READY__ = true;
+    window.dispatchEvent(new CustomEvent("skybox-ready"));
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -43,15 +117,14 @@ export default function GameSceneBackground() {
 
     const initializeScene = async () => {
       try {
-        // Create canvas element
         const canvas = document.createElement("canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.style.display = "block";
+        canvas.style.touchAction = "none";
         containerRef.current!.appendChild(canvas);
         canvasRef.current = canvas;
 
-        // Create engine with canvas
         const engine = new Engine(canvas, true, {
           preserveDrawingBuffer: false,
           disableWebGL2Support: false,
@@ -60,84 +133,31 @@ export default function GameSceneBackground() {
 
         engineRef.current = engine;
 
-        // Create scene
         const scene = new Scene(engine);
         scene.clearColor = new Color4(
           GAME_SCENE_BG_CONFIG.CLEAR_COLOR.r,
           GAME_SCENE_BG_CONFIG.CLEAR_COLOR.g,
           GAME_SCENE_BG_CONFIG.CLEAR_COLOR.b,
-          1.0
+          1.0,
         );
         scene.useRightHandedSystem = false;
         sceneRef.current = scene;
 
-        // Create camera (not visible, just for scene management)
         const camera = new ArcRotateCamera(
           "bgCamera",
           Math.PI / 2,
           Math.PI / 2,
           GAME_SCENE_BG_CONFIG.CAMERA.DISTANCE,
           Vector3.Zero(),
-          scene
+          scene,
         );
         camera.attachControl(canvas, true);
-        camera.inertia = 0; // No inertia/smoothing, direct control
-        camera.angularSensibilityX = 0; // Disable mouse input
+        camera.inertia = 0;
+        camera.angularSensibilityX = 0;
         camera.angularSensibilityY = 0;
 
-        // Load environment texture (EXR cubemap)
-        let envTexture: EXRCubeTexture | null = null;
-        let textureLoadComplete = false;
+        const envTexture = await loadEXRWithRetry(scene);
 
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-        const texturePath = basePath
-          ? `${basePath}/environment/dramatic-sky1.exr`
-          : "/environment/dramatic-sky1.exr";
-
-        const loadTextureWithTimeout = new Promise<void>((resolve) => {
-          try {
-            envTexture = new EXRCubeTexture(
-              texturePath,
-              scene,
-              GAME_SCENE_BG_CONFIG.ENVIRONMENT.TEXTURE_SIZE,
-              false, // doNotLoadCubeMapData
-              true, // useInvertY
-              false, // coerceToRenderTargetTexture
-              true // useSRGBBuffer
-            );
-
-            // Setup load listeners
-            if (envTexture.isReady()) {
-              textureLoadComplete = true;
-              resolve();
-              return;
-            }
-
-            envTexture.onLoadObservable.addOnce(() => {
-              textureLoadComplete = true;
-              resolve();
-            });
-
-            // Timeout fallback
-            const timeoutId = setTimeout(() => {
-              if (!textureLoadComplete && mounted) {
-                console.warn(
-                  "GameSceneBackground: EXR texture load timeout, continuing with fallback"
-                );
-                resolve();
-              }
-            }, GAME_SCENE_BG_CONFIG.LOAD_TIMEOUT);
-
-            return () => clearTimeout(timeoutId);
-          } catch (error) {
-            console.error("GameSceneBackground: Failed to create texture:", error);
-            resolve();
-          }
-        });
-
-        await loadTextureWithTimeout;
-
-        // Apply environment if successfully loaded
         if (envTexture && mounted) {
           scene.environmentIntensity =
             GAME_SCENE_BG_CONFIG.ENVIRONMENT.INTENSITY;
@@ -145,17 +165,16 @@ export default function GameSceneBackground() {
           scene.createDefaultSkybox(
             envTexture,
             true,
-            GAME_SCENE_BG_CONFIG.ENVIRONMENT.SKYBOX_SCALE
+            GAME_SCENE_BG_CONFIG.ENVIRONMENT.SKYBOX_SCALE,
           );
+        } else if (mounted) {
+          setHasError(true);
         }
 
         if (!mounted) return;
 
-        setIsLoading(false);
-        (window as any).__SKYBOX_READY__ = true;
-        window.dispatchEvent(new CustomEvent("skybox-ready"));
+        signalReady();
 
-        // Setup window resize handler
         const handleResize = () => {
           if (engine && !engine.isDisposed) {
             engine.resize();
@@ -167,7 +186,6 @@ export default function GameSceneBackground() {
         });
         resizeObserver.observe(containerRef.current!);
 
-        // Animation loop with rotation
         let lastFrameTime = Date.now();
         const render = () => {
           if (!mounted || !engine || !scene) {
@@ -176,12 +194,11 @@ export default function GameSceneBackground() {
 
           try {
             const now = Date.now();
-            const deltaTime = (now - lastFrameTime) / 1000; // Convert to seconds
+            const deltaTime = (now - lastFrameTime) / 1000;
             lastFrameTime = now;
 
-            // Rotate camera around center (creates rotating skybox effect)
             camera.alpha +=
-              GAME_SCENE_BG_CONFIG.ROTATION.SPEED * (deltaTime * 60); // Normalize to 60 FPS
+              GAME_SCENE_BG_CONFIG.ROTATION.SPEED * (deltaTime * 60);
 
             scene.render();
           } catch (error) {
@@ -196,28 +213,24 @@ export default function GameSceneBackground() {
         console.error("GameSceneBackground: Initialization error:", error);
         if (mounted) {
           setHasError(true);
-          setIsLoading(false);
+          signalReady();
         }
       }
     };
 
     initializeScene();
 
-    // Cleanup function
     return () => {
       mounted = false;
 
-      // Cancel animation frame
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
 
-      // Disconnect resize observer
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
 
-      // Dispose Babylon.js resources
       if (sceneRef.current) {
         sceneRef.current.dispose();
         sceneRef.current = null;
@@ -228,7 +241,6 @@ export default function GameSceneBackground() {
         engineRef.current = null;
       }
 
-      // Remove canvas from DOM
       if (canvasRef.current && containerRef.current) {
         try {
           containerRef.current.removeChild(canvasRef.current);
@@ -238,7 +250,7 @@ export default function GameSceneBackground() {
         canvasRef.current = null;
       }
     };
-  }, []);
+  }, [signalReady]);
 
   return (
     <div className="game-scene-bg-wrapper">
@@ -248,11 +260,9 @@ export default function GameSceneBackground() {
         role="presentation"
         aria-hidden="true"
       />
-      {/* Optional loading indicator */}
       {isLoading && !hasError && (
         <div className="game-scene-bg-loading" aria-busy="true" />
       )}
-      {/* Optional error fallback message (hidden by default) */}
       {hasError && (
         <div className="game-scene-bg-error" style={{ display: "none" }}>
           Background loading failed, using fallback color

@@ -20,6 +20,7 @@ coverage/
 out/
 volumes/
 sqlite-admin/
+front/public/game/
 
 # OS / IDE
 .DS_Store

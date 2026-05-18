@@ -10,17 +10,92 @@ import {
 } from "@babylonjs/core";
 import { RENDERING } from "../config";
 import { CloudObject } from "./CloudObject";
+import { shouldUseMobileEXR } from "../utils/deviceDetection";
 
 export class SceneLights {
   private static _envTexture: EXRCubeTexture | null = null;
   private static _loadingPromise: Promise<void> | null = null;
   private static _scene: Scene | null = null;
+  private static _skyboxCreated = false;
 
   public static async waitForLoad(): Promise<void> {
     if (SceneLights._loadingPromise) {
       await SceneLights._loadingPromise;
     }
     await CloudObject.waitForLoad();
+  }
+
+  private static getTexturePath(): string {
+    if (shouldUseMobileEXR()) {
+      return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", "-mobile.exr");
+    }
+    return RENDERING.ENVIRONMENT.TEXTURE_PATH;
+  }
+
+  private static async loadEXRWithRetry(
+    scene: Scene,
+    onProgress?: (progress: number) => void,
+  ): Promise<EXRCubeTexture | null> {
+    const maxRetries = 3;
+    const timeoutMs = 5000;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const texturePath = this.getTexturePath();
+        console.log(
+          `[SceneLights] Loading EXR (attempt ${attempt}/${maxRetries}): ${texturePath}`,
+        );
+
+        const envTexture = new EXRCubeTexture(
+          texturePath,
+          scene,
+          RENDERING.ENVIRONMENT.TEXTURE_SIZE,
+          false,
+          true,
+          false,
+          true,
+        );
+
+        const loadPromise = new Promise<EXRCubeTexture>((resolve, reject) => {
+          if (envTexture.isReady()) {
+            resolve(envTexture);
+            return;
+          }
+
+          const timeoutId = setTimeout(() => {
+            if (envTexture.isReady()) {
+              resolve(envTexture);
+            } else {
+              reject(new Error("EXR load timeout"));
+            }
+          }, timeoutMs);
+
+          envTexture.onLoadObservable.addOnce(() => {
+            clearTimeout(timeoutId);
+            resolve(envTexture);
+          });
+        });
+
+        const result = await loadPromise;
+        onProgress?.(40);
+        console.log(`[SceneLights] EXR loaded successfully on attempt ${attempt}`);
+        return result;
+      } catch (error) {
+        console.warn(
+          `[SceneLights] EXR load attempt ${attempt} failed:`,
+          error,
+        );
+
+        if (attempt === maxRetries) {
+          console.error("[SceneLights] All EXR load attempts failed");
+          return null;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+      }
+    }
+
+    return null;
   }
 
   public static Create(scene: Scene, onProgress?: (progress: number) => void): ShadowGenerator {
@@ -30,42 +105,23 @@ export class SceneLights {
       SceneLights._envTexture.dispose();
     }
 
-    const envTexture = new EXRCubeTexture(
-      RENDERING.ENVIRONMENT.TEXTURE_PATH,
-      scene,
-      RENDERING.ENVIRONMENT.TEXTURE_SIZE,
-      false,
-      true,
-      false,
-      true,
-    );
+    SceneLights._loadingPromise = (async () => {
+      const envTexture = await this.loadEXRWithRetry(scene, onProgress);
 
-    SceneLights._envTexture = envTexture;
-
-    SceneLights._loadingPromise = new Promise<void>((resolve) => {
-      if (envTexture.isReady()) {
-        onProgress?.(40);
-        resolve();
-        return;
+      if (envTexture) {
+        SceneLights._envTexture = envTexture;
+        scene.environmentIntensity = RENDERING.ENVIRONMENT.INTENSITY;
+        scene.environmentTexture = envTexture;
+        scene.createDefaultSkybox(
+          envTexture,
+          true,
+          RENDERING.ENVIRONMENT.SKYBOX_SCALE,
+        );
+        SceneLights._skyboxCreated = true;
+      } else {
+        console.error("[SceneLights] Failed to load EXR texture after retries. Skybox will not be created.");
       }
-
-      envTexture.onLoadObservable.addOnce(() => {
-        onProgress?.(40);
-        resolve();
-      });
-
-      setTimeout(() => {
-        resolve();
-      }, 3000);
-    });
-
-    scene.environmentIntensity = RENDERING.ENVIRONMENT.INTENSITY;
-    scene.environmentTexture = envTexture;
-    scene.createDefaultSkybox(
-      envTexture,
-      true,
-      RENDERING.ENVIRONMENT.SKYBOX_SCALE,
-    );
+    })();
 
     const hemiLight = new HemisphericLight(
       "hemiLight",
@@ -106,5 +162,9 @@ export class SceneLights {
     pointLight.specular = RENDERING.LIGHTS.POINT.SPECULAR;
 
     return shadowGenerator;
+  }
+
+  public static hasSkybox(): boolean {
+    return SceneLights._skyboxCreated;
   }
 }

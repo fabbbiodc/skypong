@@ -11,6 +11,7 @@ export type ErrorCode =
   | "connection-failed"
   | "room-expired"
   | "configuration-invalid"
+  | "startup-timeout"
   | "unknown";
 
 export interface LoadingState {

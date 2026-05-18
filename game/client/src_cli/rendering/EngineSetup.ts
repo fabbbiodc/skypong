@@ -18,18 +18,24 @@ export class EngineSetup {
 
   private _resizeTarget: Mesh | null = null;
   private _resizeHandler: (() => void) | null = null;
-  private _isPlayer2: boolean = false; // Track if this is Player 2 (for camera flip)
+  private _isPlayer2: boolean = false;
   private _cameraView: CameraViewType = "angled";
+  private _contextLostHandler: ((e: Event) => void) | null = null;
+  private _contextRestoredHandler: (() => void) | null = null;
+  private _onContextLost: (() => void) | null = null;
 
   constructor(
     canvas: HTMLCanvasElement,
     isFPV: boolean = false,
     cameraView: CameraViewType = "angled",
+    onContextLost?: () => void,
   ) {
     this._cameraView = cameraView;
+    this._onContextLost = onContextLost || null;
     this.engine = this.createEngine(canvas);
     this.scene = this.createScene();
     this.camera = this.createCamera(isFPV);
+    this.setupContextLossHandling(canvas);
   }
 
   public setResizeTarget(mesh: Mesh): void {
@@ -37,15 +43,32 @@ export class EngineSetup {
     this.handleResize();
   }
 
-  /**
-   * Set whether this client is Player 2 (for camera flip on resize)
-   */
   public setIsPlayer2(isPlayer2: boolean): void {
     this._isPlayer2 = isPlayer2;
   }
 
+  private setupContextLossHandling(canvas: HTMLCanvasElement): void {
+    this._contextLostHandler = (e: Event) => {
+      e.preventDefault();
+      console.warn("[EngineSetup] WebGL context lost");
+      this._onContextLost?.();
+    };
+
+    this._contextRestoredHandler = () => {
+      console.log("[EngineSetup] WebGL context restored, reloading page");
+      window.location.reload();
+    };
+
+    canvas.addEventListener("webglcontextlost", this._contextLostHandler);
+    canvas.addEventListener("webglcontextrestored", this._contextRestoredHandler);
+  }
+
   private createEngine(canvas: HTMLCanvasElement): Engine {
-    const engine = new Engine(canvas, true);
+    const engine = new Engine(canvas, true, {
+      preserveDrawingBuffer: false,
+      disableWebGL2Support: false,
+      useHighPrecisionFloats: true,
+    });
 
     this._resizeHandler = () => {
       this.handleResize();
@@ -60,6 +83,15 @@ export class EngineSetup {
       window.removeEventListener("resize", this._resizeHandler);
       this._resizeHandler = null;
     }
+
+    const canvas = this.engine.getRenderingCanvas();
+    if (canvas && this._contextLostHandler) {
+      canvas.removeEventListener("webglcontextlost", this._contextLostHandler);
+    }
+    if (canvas && this._contextRestoredHandler) {
+      canvas.removeEventListener("webglcontextrestored", this._contextRestoredHandler);
+    }
+
     this.camera.detachControl();
     this._resizeTarget = null;
   }
@@ -72,7 +104,6 @@ export class EngineSetup {
           this._resizeTarget.getBoundingInfo().boundingBox.centerWorld;
         adjustCamera(this.camera, this._resizeTarget, this.engine);
 
-        // If Player 2, flip camera after adjust
         if (this._isPlayer2) {
           this.camera.position = new Vector3(
             this.camera.position.x,
@@ -113,8 +144,6 @@ export class EngineSetup {
     }
 
     camera.attachControl();
-
-    // Disable arrow keys for camera movement (keep only mouse drag)
     camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
 
     return camera;

@@ -130,7 +130,8 @@ export default function GameScreen({ config, onExit }: Props) {
         src={gameSrc}
         title="Game"
         className="h-full w-full border-0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        style={{ height: "100dvh" }}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webgl"
         onLoad={() => setIframeLoaded(true)}
       />
     </div>

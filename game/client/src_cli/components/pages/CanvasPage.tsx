@@ -104,7 +104,6 @@ const CanvasPage = () => {
         }, 200);
       },
       () => {
-        // Post message to parent window to trigger game exit
         window.parent.postMessage({ type: "game-exit" }, "*");
       },
       (loadingManager: LoadingManager) => {
@@ -113,6 +112,20 @@ const CanvasPage = () => {
         });
       },
     );
+
+    const startupTimeout = setTimeout(() => {
+      if (!initializedRef.current) {
+        setLoadingState((prev) => ({
+          ...prev,
+          phase: "error",
+          message: "Game failed to start within the expected time.",
+          error: {
+            code: "startup-timeout",
+            details: "The game did not initialize within 15 seconds.",
+          },
+        }));
+      }
+    }, 15000);
 
     if (dispose !== null) {
       initializedRef.current = true;
@@ -131,6 +144,7 @@ const CanvasPage = () => {
       if (retryTimeout) {
         clearTimeout(retryTimeout);
       }
+      clearTimeout(startupTimeout);
       dispose?.();
       initializedRef.current = false;
       initLockRef.current = false;
@@ -141,8 +155,8 @@ const CanvasPage = () => {
     loadingState.phase !== "error" || loadingState.error !== null;
 
   return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      <canvas ref={canvasRef} id="renderCanvas" style={{ display: "block" }} />
+    <div style={{ width: "100%", height: "100dvh", position: "relative" }}>
+      <canvas ref={canvasRef} id="renderCanvas" style={{ display: "block", width: "100%", height: "100%", touchAction: "none" }} />
       <LoadingOverlay state={loadingState} visible={isOverlayVisible} />
     </div>
   );

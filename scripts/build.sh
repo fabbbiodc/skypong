@@ -3,6 +3,9 @@ set -e
 
 BASE_PATH="${BASE_PATH:-/skypong}"
 
+echo "=== Creating mobile-optimized EXR files ==="
+bash "$(dirname "$0")/optimize-exr-mobile.sh"
+
 echo "=== Building game client ==="
 cd game/client
 VITE_BASE_PATH="${BASE_PATH}/game/" npx vite build

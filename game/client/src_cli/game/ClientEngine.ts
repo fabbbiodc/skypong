@@ -35,6 +35,10 @@ export class ClientEngine {
       canvas,
       false,
       cameraView || (isLocal2P ? "top-down" : "angled"),
+      () => {
+        console.warn("[ClientEngine] WebGL context lost, notifying UI");
+        this._entities?.gui?.showError("Graphics context lost. Please refresh the page.");
+      },
     );
     this.scene = this.engineSetup.scene;
   }
