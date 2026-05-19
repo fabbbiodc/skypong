@@ -10,7 +10,6 @@ import {
 } from "@babylonjs/core";
 import { RENDERING } from "../config";
 import { CloudObject } from "./CloudObject";
-import { shouldUseMobileEXR } from "../utils/deviceDetection";
 
 export class SceneLights {
   private static _envTexture: CubeTexture | null = null;
@@ -26,9 +25,6 @@ export class SceneLights {
   }
 
   private static getTexturePath(): string {
-    if (shouldUseMobileEXR()) {
-      return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", "-mobile.env");
-    }
     return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", ".env");
   }
 

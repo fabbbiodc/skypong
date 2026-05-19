@@ -11,22 +11,9 @@ import {
 } from "@babylonjs/core";
 import { GAME_SCENE_BG_CONFIG } from "./GameSceneBackgroundConfig";
 
-function isMobileDevice(): boolean {
-  if (typeof window === "undefined") return false;
-  const ua = navigator.userAgent;
-  return (
-    /iPad|iPhone|iPod|Android/.test(ua) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
-    window.matchMedia("(pointer: coarse)").matches
-  );
-}
-
 function getEnvPath(): string {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-  const filename = isMobileDevice()
-    ? "dramatic-sky1-mobile.env"
-    : "dramatic-sky1.env";
-  return basePath ? `${basePath}/environment/${filename}` : `/environment/${filename}`;
+  return basePath ? `${basePath}/environment/dramatic-sky1.env` : `/environment/dramatic-sky1.env`;
 }
 
 async function loadEnvWithRetry(
