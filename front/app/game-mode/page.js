@@ -279,7 +279,9 @@ export default function GameModePage() {
 
                   <div className="p-4 bg-slate-800/50 rounded-lg text-sm text-slate-300">
                     <p className="font-semibold mb-2">{gm.controls || "Controls:"}</p>
-                    {selectedMode === "LOCAL" ? (
+                    {isMobile ? (
+                      <p>{gm.mobileControls || "Use on-screen touch controls during gameplay"}</p>
+                    ) : selectedMode === "LOCAL" ? (
                       <>
                         <p>{gm.p1Controls || "P1: A/D keys"}</p>
                         <p>{gm.p2Controls || "P2: J/L keys"}</p>

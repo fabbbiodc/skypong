@@ -35,7 +35,6 @@ export class GameHUD {
   private _winningScore: string;
   private _scorePopupText: TextBlock;
   private _scorePopupTimeout: any = null;
-  private _mobileControlHints: TextBlock[] = [];
 
   constructor(
     private _texture: AdvancedDynamicTexture,
@@ -160,27 +159,6 @@ export class GameHUD {
         this._controlHintTexts.push(tb);
       });
     }
-
-    if (this._isMobile && gameMode) {
-      const controlHintTexts: ControlHintTexts = UITexts[language].controlHints;
-      const tb = new TextBlock("mobileControlHint", controlHintTexts.paddleControlMobile);
-      tb.color = GUI_STYLES.TEXT.CONTROL_HINT.color;
-      tb.fontSize = GUI_STYLES.TEXT.CONTROL_HINT.fontSize;
-      tb.fontFamily = GUI_STYLES.FONT_FAMILY;
-      tb.shadowColor = GUI_STYLES.TEXT.CONTROL_HINT.shadowColor!;
-      tb.shadowOffsetX = GUI_STYLES.TEXT.CONTROL_HINT.shadowOffsetX!;
-      tb.shadowOffsetY = GUI_STYLES.TEXT.CONTROL_HINT.shadowOffsetY!;
-      tb.shadowBlur = GUI_STYLES.TEXT.CONTROL_HINT.shadowBlur!;
-      tb.resizeToFit = true;
-      tb.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-      tb.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-      tb.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-      tb.left = "20px";
-      tb.top = "-60px";
-      tb.isVisible = false;
-      this._texture.addControl(tb);
-      this._mobileControlHints.push(tb);
-    }
   }
 
   public showPauseButton(onClick: () => void): void {
@@ -212,7 +190,6 @@ export class GameHUD {
     this._countdownText.isVisible = false;
 
     this._controlHintTexts.forEach((tb) => (tb.isVisible = true));
-    this._mobileControlHints.forEach((tb) => (tb.isVisible = true));
   }
 
   public hide(): void {
@@ -222,7 +199,6 @@ export class GameHUD {
     this._scorePopupText.isVisible = false;
 
     this._controlHintTexts.forEach((tb) => (tb.isVisible = false));
-    this._mobileControlHints.forEach((tb) => (tb.isVisible = false));
   }
 
   public updateCountdown(text: string): void {

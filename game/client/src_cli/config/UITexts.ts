@@ -24,7 +24,6 @@ export interface ControlHintTexts {
   paddleControlSingle: string;
   paddleControlP1: string;
   paddleControlP2: string;
-  paddleControlMobile: string;
 }
 
 export interface LanguageTexts {
@@ -58,7 +57,6 @@ export const UITexts: Record<string, LanguageTexts> = {
       paddleControlSingle: "Paddle control keys : A - D",
       paddleControlP1: "Paddle control keys P1: A - D",
       paddleControlP2: "Paddle control keys P2: J - L",
-      paddleControlMobile: "Use on-screen controls to move",
     },
   },
   es: {
@@ -84,7 +82,6 @@ export const UITexts: Record<string, LanguageTexts> = {
       paddleControlSingle: "Teclas de control de paleta : A - D",
       paddleControlP1: "Teclas de control de paleta P1: A - D",
       paddleControlP2: "Teclas de control de paleta P2: J - L",
-      paddleControlMobile: "Usa los controles en pantalla para mover",
     },
   },
   it: {
@@ -110,7 +107,6 @@ export const UITexts: Record<string, LanguageTexts> = {
       paddleControlSingle: "Tasti di controllo racchetta : A - D",
       paddleControlP1: "Tasti di controllo racchetta P1: A - D",
       paddleControlP2: "Tasti di controllo racchetta P2: J - L",
-      paddleControlMobile: "Usa i controlli sullo schermo per muoverti",
     },
   },
 };

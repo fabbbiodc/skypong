@@ -25,7 +25,7 @@ export const GMCN = {
     SERVE_VELOCITY_Z: 0.05,
   },
   PADDLE: {
-    SIZE: { width: 2, depth: 0.2, height: 0.2 },
+    SIZE: { width: 1, depth: 0.2, height: 0.2 },
     SPEED: 0.2,
   },
   BORDERS: {
