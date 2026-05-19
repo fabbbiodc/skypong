@@ -112,8 +112,12 @@ export class GameHUD {
     );
     this._texture.addControl(this._countdownText);
 
-    // Create control hints for non-touch devices
-    if (!this._isMobile && gameMode) {
+    // Create control hints for non-touch desktop devices
+    const isDesktop =
+      !this._isMobile &&
+      typeof window !== "undefined" &&
+      window.innerWidth >= 768;
+    if (isDesktop && gameMode) {
       const controlHintTexts: ControlHintTexts = UITexts[language].controlHints;
       const lines: string[] =
         gameMode === "local-2p"

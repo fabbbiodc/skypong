@@ -16,6 +16,7 @@ export interface EngineLaunchConfig {
   readonly player2Name?: string;
   readonly player2Color?: string;
   readonly roomId?: string;
+  readonly winningScore?: number;
 }
 
 interface EngineLaunchLabels {
@@ -52,6 +53,7 @@ export function toEngineLaunchConfig(
       gameMode:
         `ai-${config.difficulty.toLowerCase()}` as EngineLaunchConfig["gameMode"],
       player2Name: "AI",
+      winningScore: config.pointsToWin,
     };
   }
 
@@ -62,6 +64,7 @@ export function toEngineLaunchConfig(
       gameMode: "local-2p",
       player2Name: player2,
       player2Color: p2Color,
+      winningScore: config.pointsToWin,
     };
   }
 
@@ -70,6 +73,7 @@ export function toEngineLaunchConfig(
     playerColor: p1Color,
     gameMode: config.onlineRole === "join" ? "online-join" : "online-create",
     roomId: config.roomId,
+    winningScore: config.pointsToWin,
   };
 }
 
