@@ -22,6 +22,10 @@ export function isMobile(): boolean {
   );
 }
 
-export function shouldUseMobileEXR(): boolean {
+export function shouldUseMobileEnv(): boolean {
   return isMobile();
+}
+
+export function shouldUseMobileEXR(): boolean {
+  return shouldUseMobileEnv();
 }

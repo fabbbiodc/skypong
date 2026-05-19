@@ -1,6 +1,5 @@
 "use client";
 
-import "@babylonjs/loaders";
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
   Engine,
@@ -8,7 +7,7 @@ import {
   ArcRotateCamera,
   Vector3,
   Color4,
-  EXRCubeTexture,
+  CubeTexture,
 } from "@babylonjs/core";
 import { GAME_SCENE_BG_CONFIG } from "./GameSceneBackgroundConfig";
 
@@ -22,38 +21,33 @@ function isMobileDevice(): boolean {
   );
 }
 
-function getEXRPath(): string {
+function getEnvPath(): string {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
   const filename = isMobileDevice()
-    ? "dramatic-sky1-mobile.exr"
-    : "dramatic-sky1.exr";
+    ? "dramatic-sky1-mobile.env"
+    : "dramatic-sky1.env";
   return basePath ? `${basePath}/environment/${filename}` : `/environment/${filename}`;
 }
 
-async function loadEXRWithRetry(
+async function loadEnvWithRetry(
   scene: Scene,
   maxRetries = 3,
   timeoutMs = 8000,
-): Promise<EXRCubeTexture | null> {
-  const texturePath = getEXRPath();
+): Promise<CubeTexture | null> {
+  const texturePath = getEnvPath();
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       console.log(
-        `[GameSceneBackground] Loading EXR (attempt ${attempt}/${maxRetries}): ${texturePath}`,
+        `[GameSceneBackground] Loading .env (attempt ${attempt}/${maxRetries}): ${texturePath}`,
       );
 
-      const envTexture = new EXRCubeTexture(
+      const envTexture = CubeTexture.CreateFromPrefilteredData(
         texturePath,
         scene,
-        GAME_SCENE_BG_CONFIG.ENVIRONMENT.TEXTURE_SIZE,
-        false,
-        true,
-        false,
-        true,
       );
 
-      const loadPromise = new Promise<EXRCubeTexture>((resolve, reject) => {
+      const loadPromise = new Promise<CubeTexture>((resolve, reject) => {
         if (envTexture.isReady()) {
           resolve(envTexture);
           return;
@@ -63,27 +57,27 @@ async function loadEXRWithRetry(
           if (envTexture.isReady()) {
             resolve(envTexture);
           } else {
-            reject(new Error("EXR load timeout"));
+            reject(new Error(".env load timeout"));
           }
         }, timeoutMs);
 
-        envTexture.onLoadObservable.addOnce(() => {
+        envTexture.onLoadObservable?.addOnce?.(() => {
           clearTimeout(timeoutId);
           resolve(envTexture);
         });
       });
 
       const result = await loadPromise;
-      console.log(`[GameSceneBackground] EXR loaded successfully on attempt ${attempt}`);
+      console.log(`[GameSceneBackground] .env loaded successfully on attempt ${attempt}`);
       return result;
     } catch (error) {
       console.warn(
-        `[GameSceneBackground] EXR load attempt ${attempt} failed:`,
+        `[GameSceneBackground] .env load attempt ${attempt} failed:`,
         error,
       );
 
       if (attempt === maxRetries) {
-        console.error("[GameSceneBackground] All EXR load attempts failed");
+        console.error("[GameSceneBackground] All .env load attempts failed");
         return null;
       }
 
@@ -156,11 +150,9 @@ export default function GameSceneBackground() {
         camera.angularSensibilityX = 0;
         camera.angularSensibilityY = 0;
 
-        const envTexture = await loadEXRWithRetry(scene);
+        const envTexture = await loadEnvWithRetry(scene);
 
         if (envTexture && mounted) {
-          scene.environmentIntensity =
-            GAME_SCENE_BG_CONFIG.ENVIRONMENT.INTENSITY;
           scene.environmentTexture = envTexture;
           scene.createDefaultSkybox(
             envTexture,

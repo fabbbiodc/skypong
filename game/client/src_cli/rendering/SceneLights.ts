@@ -6,14 +6,14 @@ import {
   ShadowGenerator,
   Color3,
   PointLight,
-  EXRCubeTexture,
+  CubeTexture,
 } from "@babylonjs/core";
 import { RENDERING } from "../config";
 import { CloudObject } from "./CloudObject";
 import { shouldUseMobileEXR } from "../utils/deviceDetection";
 
 export class SceneLights {
-  private static _envTexture: EXRCubeTexture | null = null;
+  private static _envTexture: CubeTexture | null = null;
   private static _loadingPromise: Promise<void> | null = null;
   private static _scene: Scene | null = null;
   private static _skyboxCreated = false;
@@ -27,15 +27,15 @@ export class SceneLights {
 
   private static getTexturePath(): string {
     if (shouldUseMobileEXR()) {
-      return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", "-mobile.exr");
+      return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", "-mobile.env");
     }
-    return RENDERING.ENVIRONMENT.TEXTURE_PATH;
+    return RENDERING.ENVIRONMENT.TEXTURE_PATH.replace(".exr", ".env");
   }
 
-  private static async loadEXRWithRetry(
+  private static async loadEnvWithRetry(
     scene: Scene,
     onProgress?: (progress: number) => void,
-  ): Promise<EXRCubeTexture | null> {
+  ): Promise<CubeTexture | null> {
     const maxRetries = 3;
     const timeoutMs = 5000;
 
@@ -43,20 +43,15 @@ export class SceneLights {
       try {
         const texturePath = this.getTexturePath();
         console.log(
-          `[SceneLights] Loading EXR (attempt ${attempt}/${maxRetries}): ${texturePath}`,
+          `[SceneLights] Loading .env (attempt ${attempt}/${maxRetries}): ${texturePath}`,
         );
 
-        const envTexture = new EXRCubeTexture(
+        const envTexture = CubeTexture.CreateFromPrefilteredData(
           texturePath,
           scene,
-          RENDERING.ENVIRONMENT.TEXTURE_SIZE,
-          false,
-          true,
-          false,
-          true,
         );
 
-        const loadPromise = new Promise<EXRCubeTexture>((resolve, reject) => {
+        const loadPromise = new Promise<CubeTexture>((resolve, reject) => {
           if (envTexture.isReady()) {
             resolve(envTexture);
             return;
@@ -66,11 +61,11 @@ export class SceneLights {
             if (envTexture.isReady()) {
               resolve(envTexture);
             } else {
-              reject(new Error("EXR load timeout"));
+              reject(new Error(".env load timeout"));
             }
           }, timeoutMs);
 
-          envTexture.onLoadObservable.addOnce(() => {
+          envTexture.onLoadObservable?.addOnce?.(() => {
             clearTimeout(timeoutId);
             resolve(envTexture);
           });
@@ -78,16 +73,16 @@ export class SceneLights {
 
         const result = await loadPromise;
         onProgress?.(40);
-        console.log(`[SceneLights] EXR loaded successfully on attempt ${attempt}`);
+        console.log(`[SceneLights] .env loaded successfully on attempt ${attempt}`);
         return result;
       } catch (error) {
         console.warn(
-          `[SceneLights] EXR load attempt ${attempt} failed:`,
+          `[SceneLights] .env load attempt ${attempt} failed:`,
           error,
         );
 
         if (attempt === maxRetries) {
-          console.error("[SceneLights] All EXR load attempts failed");
+          console.error("[SceneLights] All .env load attempts failed");
           return null;
         }
 
@@ -106,11 +101,10 @@ export class SceneLights {
     }
 
     SceneLights._loadingPromise = (async () => {
-      const envTexture = await this.loadEXRWithRetry(scene, onProgress);
+      const envTexture = await this.loadEnvWithRetry(scene, onProgress);
 
       if (envTexture) {
         SceneLights._envTexture = envTexture;
-        scene.environmentIntensity = RENDERING.ENVIRONMENT.INTENSITY;
         scene.environmentTexture = envTexture;
         scene.createDefaultSkybox(
           envTexture,
@@ -119,7 +113,7 @@ export class SceneLights {
         );
         SceneLights._skyboxCreated = true;
       } else {
-        console.error("[SceneLights] Failed to load EXR texture after retries. Skybox will not be created.");
+        console.error("[SceneLights] Failed to load .env texture after retries. Skybox will not be created.");
       }
     })();
 
