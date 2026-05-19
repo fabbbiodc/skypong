@@ -3,17 +3,11 @@ set -e
 
 BASE_PATH="${BASE_PATH:-/skypong}"
 
-echo "=== Converting EXR to HDR (if needed) ==="
-bash "$(dirname "$0")/convert-exr-to-hdr.sh"
-
-echo ""
 echo "=== Checking for .env files ==="
 
 ENV_FILES=(
   "front/public/environment/dramatic-sky1.env"
-  "front/public/environment/dramatic-sky1-mobile.env"
   "game/client/public/environment/dramatic-sky1.env"
-  "game/client/public/environment/dramatic-sky1-mobile.env"
 )
 
 MISSING_ENV=false
@@ -29,10 +23,10 @@ done
 if [ "$MISSING_ENV" = true ]; then
   echo ""
   echo "ERROR: .env files are missing!"
-  echo "Please convert the HDR files to .env using the Babylon.js IBL Texture Tool:"
+  echo "Please generate them using the Babylon.js IBL Texture Tool:"
   echo "  1. Open https://www.babylonjs.com/tools/textures/"
-  echo "  2. Drag each .hdr file into the tool"
-  echo "  3. Save as .env in the same directory"
+  echo "  2. Drag your EXR/HDR file into the tool"
+  echo "  3. Save as .env in front/public/environment/ and game/client/public/environment/"
   echo ""
   exit 1
 fi
