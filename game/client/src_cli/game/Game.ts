@@ -136,6 +136,8 @@ export class Game {
                   params.player2Score,
                   this._winningScore ?? "5"
                 );
+                const scorerColor = params.scorer === player1Name ? player1Color : player2Color;
+                gui.hud.showScorePopup(params.scorer, scorerColor);
               }
             },
             onGameOver: (params) => {

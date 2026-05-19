@@ -42,6 +42,7 @@ export interface LocalGameStateCallbacks {
   onScoreUpdate?: (params: {
     player1Score: number;
     player2Score: number;
+    scorer: string;
   }) => void;
   onGameOver?: (params: {
     winner: string;
@@ -343,7 +344,7 @@ export class LocalGameState {
       this.player2Score++;
     }
 
-    this._notifyScoreUpdate();
+    this._notifyScoreUpdate(scorerIndex === 1 ? this.player1Name : this.player2Name);
 
     if (this.player1Score >= this.winningScore) {
       this._endGame(this.player1Name);
@@ -466,11 +467,12 @@ export class LocalGameState {
     }
   }
 
-  private _notifyScoreUpdate(): void {
+  private _notifyScoreUpdate(scorer: string): void {
     if (this.callbacks.onScoreUpdate) {
       this.callbacks.onScoreUpdate({
         player1Score: this.player1Score,
         player2Score: this.player2Score,
+        scorer,
       });
     }
   }

@@ -18,6 +18,7 @@ export interface GameConfig {
   readonly onlineRole?: "create" | "join";
   readonly player1Name?: string;
   readonly player2Name?: string;
+  readonly language?: string;
 }
 
 function createGameConfigSchema(t?: TranslationDictionary) {
@@ -43,6 +44,7 @@ function createGameConfigSchema(t?: TranslationDictionary) {
       onlineRole: z.enum(["create", "join"]).optional(),
       player1Name: z.string().optional(),
       player2Name: z.string().optional(),
+      language: z.string().optional(),
     })
     .superRefine((value, ctx) => {
       if (value.mode === "AI" && !value.difficulty) {

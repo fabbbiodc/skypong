@@ -9,7 +9,7 @@ import { useTranslation } from "../hooks/use-translation";
 /** Final gameplay route that renders the game canvas with verified configuration. */
 export default function CanvasPage() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [config, setConfig] = useState<GameConfig | null | undefined>(
     undefined,
   );
@@ -19,11 +19,12 @@ export default function CanvasPage() {
       new URLSearchParams(window.location.search).get("config") ?? "";
 
     try {
-      setConfig(decodeGameConfig(encoded));
+      const decoded = decodeGameConfig(encoded);
+      setConfig({ ...decoded, language: locale });
     } catch {
       setConfig(null);
     }
-  }, []);
+  }, [locale]);
 
   if (config === undefined) {
     return (

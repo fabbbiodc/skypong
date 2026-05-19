@@ -170,6 +170,18 @@ export const GUI_STYLES = {
       paddingLeft: "20px",
       paddingBottom: "20px",
     } as ITextStyle,
+    SCORE_POPUP: {
+      color: "#FFFFFF",
+      fontSize: 56,
+      fontFamily: FONT_FAMILY,
+      fontWeight: "bold",
+      shadowColor: "#01040080",
+      shadowOffsetX: 2,
+      shadowOffsetY: 2,
+      shadowBlur: 8,
+      textHorizontalAlignment: Control.HORIZONTAL_ALIGNMENT_CENTER,
+      textVerticalAlignment: Control.VERTICAL_ALIGNMENT_CENTER,
+    } as ITextStyle,
   },
 
   BUTTON: {

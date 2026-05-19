@@ -3,6 +3,7 @@ export interface HUDTexts {
   player1Default: string;
   player2Default: string;
   scoreDefault: string;
+  scoresText: string;
 }
 
 export interface PauseTexts {
@@ -23,6 +24,7 @@ export interface ControlHintTexts {
   paddleControlSingle: string;
   paddleControlP1: string;
   paddleControlP2: string;
+  paddleControlMobile: string;
 }
 
 export interface LanguageTexts {
@@ -50,11 +52,13 @@ export const UITexts: Record<string, LanguageTexts> = {
       player1Default: "Player 1",
       player2Default: "Player 2",
       scoreDefault: "0",
+      scoresText: "scores!",
     },
     controlHints: {
       paddleControlSingle: "Paddle control keys : A - D",
       paddleControlP1: "Paddle control keys P1: A - D",
       paddleControlP2: "Paddle control keys P2: J - L",
+      paddleControlMobile: "Use on-screen controls to move",
     },
   },
   es: {
@@ -74,11 +78,13 @@ export const UITexts: Record<string, LanguageTexts> = {
       player1Default: "Jugador 1",
       player2Default: "Jugador 2",
       scoreDefault: "0",
+      scoresText: "¡anota!",
     },
     controlHints: {
       paddleControlSingle: "Teclas de control de paleta : A - D",
       paddleControlP1: "Teclas de control de paleta P1: A - D",
       paddleControlP2: "Teclas de control de paleta P2: J - L",
+      paddleControlMobile: "Usa los controles en pantalla para mover",
     },
   },
   it: {
@@ -98,11 +104,13 @@ export const UITexts: Record<string, LanguageTexts> = {
       player1Default: "Giocatore 1",
       player2Default: "Giocatore 2",
       scoreDefault: "0",
+      scoresText: "segna!",
     },
     controlHints: {
       paddleControlSingle: "Tasti di controllo racchetta : A - D",
       paddleControlP1: "Tasti di controllo racchetta P1: A - D",
       paddleControlP2: "Tasti di controllo racchetta P2: J - L",
+      paddleControlMobile: "Usa i controlli sullo schermo per muoverti",
     },
   },
 };

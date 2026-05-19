@@ -32,16 +32,22 @@ export class GameHUD {
   private _player2Score: number = 0;
   private _isMobile: boolean;
   private _texts: HUDTexts;
+  private _winningScore: string;
+  private _scorePopupText: TextBlock;
+  private _scorePopupTimeout: any = null;
+  private _mobileControlHints: TextBlock[] = [];
 
   constructor(
     private _texture: AdvancedDynamicTexture,
     language: Language = "en",
     gameMode?: GameMode,
+    winningScore: string = "5",
   ) {
     this._isMobile = touchDetection();
     this._texts = UITexts[language].hud;
     this._player1Name = this._texts.player1Default;
     this._player2Name = this._texts.player2Default;
+    this._winningScore = winningScore;
 
     this._player2Container = GUIElements.CreateStackPanel(
       "player2Container",
@@ -64,7 +70,7 @@ export class GameHUD {
     );
     this._player2ScoreText = GUIElements.CreateText(
       "player2ScoreText",
-      this._texts.scoreDefault,
+      "0/" + this._winningScore,
       player2ScoreStyle,
     );
 
@@ -93,7 +99,7 @@ export class GameHUD {
 
     this._player1ScoreText = GUIElements.CreateText(
       "player1ScoreText",
-      this._texts.scoreDefault,
+      "0/" + this._winningScore,
       player1ScoreStyle,
     );
     this._player1Text = GUIElements.CreateText(
@@ -111,6 +117,16 @@ export class GameHUD {
       GUI_STYLES.TEXT.COUNTDOWN,
     );
     this._texture.addControl(this._countdownText);
+
+    this._scorePopupText = GUIElements.CreateText(
+      "scorePopupText",
+      "",
+      GUI_STYLES.TEXT.SCORE_POPUP,
+    );
+    this._scorePopupText.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    this._scorePopupText.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    this._scorePopupText.isVisible = false;
+    this._texture.addControl(this._scorePopupText);
 
     // Create control hints for non-touch desktop devices
     const isDesktop =
@@ -144,6 +160,27 @@ export class GameHUD {
         this._controlHintTexts.push(tb);
       });
     }
+
+    if (this._isMobile && gameMode) {
+      const controlHintTexts: ControlHintTexts = UITexts[language].controlHints;
+      const tb = new TextBlock("mobileControlHint", controlHintTexts.paddleControlMobile);
+      tb.color = GUI_STYLES.TEXT.CONTROL_HINT.color;
+      tb.fontSize = GUI_STYLES.TEXT.CONTROL_HINT.fontSize;
+      tb.fontFamily = GUI_STYLES.FONT_FAMILY;
+      tb.shadowColor = GUI_STYLES.TEXT.CONTROL_HINT.shadowColor!;
+      tb.shadowOffsetX = GUI_STYLES.TEXT.CONTROL_HINT.shadowOffsetX!;
+      tb.shadowOffsetY = GUI_STYLES.TEXT.CONTROL_HINT.shadowOffsetY!;
+      tb.shadowBlur = GUI_STYLES.TEXT.CONTROL_HINT.shadowBlur!;
+      tb.resizeToFit = true;
+      tb.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+      tb.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+      tb.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+      tb.left = "20px";
+      tb.top = "-60px";
+      tb.isVisible = false;
+      this._texture.addControl(tb);
+      this._mobileControlHints.push(tb);
+    }
   }
 
   public showPauseButton(onClick: () => void): void {
@@ -175,14 +212,17 @@ export class GameHUD {
     this._countdownText.isVisible = false;
 
     this._controlHintTexts.forEach((tb) => (tb.isVisible = true));
+    this._mobileControlHints.forEach((tb) => (tb.isVisible = true));
   }
 
   public hide(): void {
     this._player1Container.isVisible = false;
     this._player2Container.isVisible = false;
     this._countdownText.isVisible = false;
+    this._scorePopupText.isVisible = false;
 
     this._controlHintTexts.forEach((tb) => (tb.isVisible = false));
+    this._mobileControlHints.forEach((tb) => (tb.isVisible = false));
   }
 
   public updateCountdown(text: string): void {
@@ -226,5 +266,20 @@ export class GameHUD {
       player1Score: this._player1Score,
       player2Score: this._player2Score,
     };
+  }
+
+  public showScorePopup(playerName: string, color: string): void {
+    if (this._scorePopupTimeout) {
+      clearTimeout(this._scorePopupTimeout);
+    }
+
+    this._scorePopupText.text = `${playerName} ${this._texts.scoresText}`;
+    this._scorePopupText.color = color;
+    this._scorePopupText.alpha = 1;
+    this._scorePopupText.isVisible = true;
+
+    this._scorePopupTimeout = setTimeout(() => {
+      this._scorePopupText.isVisible = false;
+    }, 1500);
   }
 }

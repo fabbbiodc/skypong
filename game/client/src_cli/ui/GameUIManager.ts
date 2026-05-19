@@ -49,7 +49,7 @@ export class GameUIManager {
       language,
     );
 
-    this.hud = new GameHUD(this.texture, language, config.gameMode);
+    this.hud = new GameHUD(this.texture, language, config.gameMode, config.winningScore?.toString());
     this.gameOverOverlay = new GameOverOverlay(
       this.texture,
       onBackToMenu,
