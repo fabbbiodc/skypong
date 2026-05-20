@@ -20,7 +20,7 @@ const funnelSans = Funnel_Sans({
 
 export const metadata = {
   title: "SkyPong",
-  description: "Una Experiencia Trascendental de Pong",
+  description: "Pong, but in the sky",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
