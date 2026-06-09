@@ -56,23 +56,22 @@ A complete redesign of the Next.js web application targeting consistency, mainta
 ## How It Works
 
 ### Architecture Overview
-
 ```
-Client (Browser)                    Gateway (NGINX)                    Services (Docker)
-┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
-│ Next.js app      │ ─HTTPS─► │ TLS termination  │          │ auth-service     │
-│ (port 3000)     │          │ Route mapping    │◄──REST──►│ profile-service  │
-│                 │          │ WebSocket proxy │          │ stats-service   │
-├──────────────────┤          └──────────────────┘          ├──────────────────┤
-│ Game client      │ ─WS───► │                │◄──WS────►│ game-service    │
-│ (iframe/port 5173)          │          │               │          │ (Colyseus)      │
-└──────────────────┘          └──────────────────┘          └──────────────────┘
-                                              │
-                                         ┌─────┴─────┐
-                                         │ Observability│
-                                         │ (Prometheus │
-                                         │ Grafana)    │
-                                         └───────────┘
+   Client (Browser)             Gateway (NGINX)              Services (Docker)
+ ┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
+ │ Next.js app      │──HTTPS──►│ TLS termination  │          │ auth-service     │
+ │ (port 3000)      │          │ Route mapping    │◄─REST───►│ profile-service  │
+ │                  │          │ WebSocket proxy  │          │ stats-service    │
+ ├──────────────────┤          └──────────────────┘          ├──────────────────┤
+ │ Game client      │───WS────►│                  │◄──WS────►│ game-service     │
+ │ (Vite 5, 5173)   │          │                  │          │ (Colyseus)       │
+ └──────────────────┘          └──────────────────┘          └──────────────────┘
+                                         │
+                               ┌─────────┴────────┐
+                               │ Observability    │
+                               │  Prometheus      │
+                               │  Grafana         │
+                               └──────────────────┘
 ```
 
 All external traffic enters via NGINX over HTTPS. Services communicate internally over Docker bridge networks with shared service tokens.
